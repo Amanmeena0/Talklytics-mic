@@ -9,42 +9,50 @@ import Footer from '@/components/Footer';
 export default function Home() {
   return (
     <Layout>
-      <main className="md:ml-64 mt-16 p-margin-desktop min-h-screen">
-        <div className="max-w-container-max mx-auto space-y-stack-lg">
-          {/* Page Header & Quick Stats */}
-          <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <main className="main-content">
+        <div className="content-container">
+          {/* Page Header */}
+          <header style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: 'var(--space-4)', marginBottom: 'var(--space-8)' }}>
             <div>
-              <div className="flex items-center gap-2 mb-2">
-                <span className="bg-secondary-container/20 text-secondary-fixed text-xs font-bold px-2 py-0.5 rounded uppercase tracking-wider">Enterprise Sale</span>
-                <span className="text-outline font-label-mono text-xs">Call ID: CS-9842-X</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginBottom: 'var(--space-2)' }}>
+                <span className="badge badge-accent">Enterprise Sale</span>
+                <span className="text-caption">Call ID: CS-9842-X</span>
               </div>
-              <h1 className="font-headline-lg text-headline-lg text-on-surface">Post-Call Summary: Acme Corp Q4 Renewal</h1>
-              <p className="text-on-surface-variant mt-1">Conducted on Oct 24, 2023 • 24m 12s Duration</p>
+              <h1 className="text-page-title">Post-Call Summary: Acme Corp Q4 Renewal</h1>
+              <p className="text-body" style={{ marginTop: 'var(--space-1)' }}>Conducted on Oct 24, 2023 • 24m 12s Duration</p>
             </div>
-            <div className="flex gap-3">
-              <button className="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-lg hover:bg-surface-bright transition-colors">
-                <span className="material-symbols-outlined text-[20px]">share</span>
-                <span className="font-label-sm">Share Report</span>
+            <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
+              <button className="btn btn-secondary">
+                <span className="material-symbols-outlined">share</span>
+                Share Report
               </button>
-              <button className="flex items-center gap-2 px-4 py-2 bg-surface-container-highest border border-outline-variant rounded-lg hover:bg-surface-bright transition-colors">
-                <span className="material-symbols-outlined text-[20px]">download</span>
-                <span className="font-label-sm">Export CSV</span>
+              <button className="btn btn-secondary">
+                <span className="material-symbols-outlined">download</span>
+                Export CSV
               </button>
             </div>
           </header>
-          {/* Top Bento Row */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+
+          {/* Row 1: Executive Summary + Engagement Timeline */}
+          <div className="grid-dashboard">
             <ExecutiveSummary />
             <EngagementTimeline />
           </div>
-          {/* Middle Row */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+
+          {/* Row 2: BANT Analysis + Next Steps */}
+          <div className="grid-dashboard" style={{ marginTop: 'var(--space-5)' }}>
             <BANTAnalysis />
             <NextSteps />
           </div>
-          {/* Bottom Row */}
-          <TranscriptLog />
+
+          {/* Row 3: Transcript Log (full width) */}
+          <div className="grid-dashboard" style={{ marginTop: 'var(--space-5)' }}>
+            <div style={{ gridColumn: '1 / -1' }}>
+              <TranscriptLog />
+            </div>
+          </div>
         </div>
+
         <Footer />
       </main>
     </Layout>
