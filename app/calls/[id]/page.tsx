@@ -18,19 +18,19 @@ function CallDetailContent({ id }: { id: string }) {
 
   if (isLoading) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '60vh', gap: 'var(--space-4)' }}>
-        <div className="pulse-dot" style={{ width: '16px', height: '16px' }} />
-        <p className="text-body" style={{ color: 'var(--text-secondary)' }}>Loading call intelligence report...</p>
+      <div className="loading-state-container">
+        <div className="pulse-dot pulse-dot-large" />
+        <p className="text-body">Loading call intelligence report...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '60vh', gap: 'var(--space-4)', textAlign: 'center' }}>
-        <span className="material-symbols-outlined" style={{ fontSize: '48px', color: 'var(--error)' }}>error</span>
+      <div className="error-state-container">
+        <span className="material-symbols-outlined fs-48 color-error">error</span>
         <h3 className="text-section-heading">Failed to load report</h3>
-        <p className="text-body" style={{ color: 'var(--text-secondary)', maxWidth: '400px' }}>{error}</p>
+        <p className="text-body max-w-400px">{error}</p>
       </div>
     );
   }
@@ -47,14 +47,14 @@ function CallDetailContent({ id }: { id: string }) {
       </div>
 
       {/* Row 2: BANT Analysis + Next Steps */}
-      <div className="grid-dashboard" style={{ marginTop: 'var(--space-5)' }}>
+      <div className="grid-dashboard mt-5">
         <BANTAnalysis />
         <NextSteps />
       </div>
 
       {/* Row 3: Transcript Log (full width) */}
-      <div className="grid-dashboard" style={{ marginTop: 'var(--space-5)' }}>
-        <div style={{ gridColumn: '1 / -1' }}>
+      <div className="grid-dashboard mt-5">
+        <div className="grid-col-all">
           <TranscriptLog />
         </div>
       </div>

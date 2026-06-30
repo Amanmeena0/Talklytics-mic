@@ -20,29 +20,13 @@ export default function ConnectionIndicator() {
   const config = statusConfig[status];
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 'var(--space-2)',
-        padding: '6px 12px',
-        borderRadius: 'var(--radius-full)',
-        background: 'var(--bg-elevated)',
-        border: '1px solid var(--border-subtle)',
-        fontSize: '12px',
-        fontWeight: 600,
-        transition: 'all 0.3s ease',
-      }}
-    >
+    <div className="connection-indicator-container">
       <span
+        className="connection-indicator-dot"
         style={{
-          width: 8,
-          height: 8,
-          borderRadius: '50%',
           background: config.color,
           boxShadow: status === 'connected' ? `0 0 8px ${config.color}` : 'none',
           animation: status === 'connected' ? 'pulse-glow 2s ease-in-out infinite' : 'none',
-          transition: 'all 0.3s ease',
         }}
       />
       <span style={{ color: config.color }}>{config.label}</span>

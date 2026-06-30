@@ -83,11 +83,11 @@ export default function BANTAnalysis() {
 
   return (
     <section className="card lg:col-span-7">
-      <h2 className="text-section-heading" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginBottom: 'var(--space-6)' }}>
-        <span className="material-symbols-outlined" style={{ color: 'var(--accent)', fontSize: 20 }}>fact_check</span>
+      <h2 className="text-section-heading d-flex align-center gap-2 mb-6">
+        <span className="material-symbols-outlined color-accent fs-20">fact_check</span>
         BANT Analysis
         {hasData && (
-          <span className="badge badge-accent" style={{ marginLeft: 'var(--space-2)', fontSize: 10 }}>
+          <span className="badge badge-accent ml-2 fs-10">
             {isLive ? 'Live' : 'Verified'}
           </span>
         )}
@@ -95,13 +95,13 @@ export default function BANTAnalysis() {
 
       <div className="bant-grid">
         {bantItems.map((item) => (
-          <div key={item.label} className="bant-item" style={{ transition: 'all 0.3s ease', opacity: hasData ? 1 : 0.7 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--space-2)' }}>
+          <div key={item.label} className="bant-item" style={{ opacity: hasData ? 1 : 0.7 }}>
+            <div className="d-flex align-center justify-between mb-2">
               <span className="text-overline">{item.label}</span>
-              <span className="material-symbols-outlined" style={{ color: item.iconColor, fontSize: 18, transition: 'color 0.3s ease' }}>{item.icon}</span>
+              <span className="material-symbols-outlined bant-icon" style={{ color: item.iconColor }}>{item.icon}</span>
             </div>
-            <p style={{ color: 'var(--text-primary)', fontWeight: 600, marginBottom: 'var(--space-1)', fontSize: 14 }}>{item.title}</p>
-            <p className="text-body" style={{ margin: 0 }}>{item.description}</p>
+            <p className="color-primary font-semibold mb-1 fs-14">{item.title}</p>
+            <p className="text-body m-0">{item.description}</p>
           </div>
         ))}
       </div>

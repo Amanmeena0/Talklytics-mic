@@ -93,10 +93,10 @@ export default function Home() {
         <main className="main-content">
           <div className="content-container">
             <h1 className="text-page-title">Workspace Dashboard</h1>
-            <p className="text-body" style={{ color: 'var(--text-secondary)' }}>Loading dashboard...</p>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 'var(--space-4)', marginTop: '20px' }}>
+            <p className="text-body">Loading dashboard...</p>
+            <div className="analytics-grid">
               {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="card animate-pulse" style={{ height: '110px' }} />
+                <div key={i} className="card animate-pulse analytics-skeleton-card" />
               ))}
             </div>
           </div>
@@ -112,19 +112,19 @@ export default function Home() {
         <div className="content-container">
           
           {/* Header */}
-          <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--space-8)' }}>
+          <header className="d-flex justify-between align-start mb-8">
             <div>
-              <span className="badge badge-accent" style={{ marginBottom: 'var(--space-2)' }}>Enterprise Agent</span>
+              <span className="badge badge-accent mb-2">Enterprise Agent</span>
               <h1 className="text-page-title">Welcome Back, {activeUser?.name || 'Jane'}</h1>
-              <p className="text-body" style={{ marginTop: 'var(--space-1)' }}>
+              <p className="text-body mt-1">
                 Here is your AI conversation intelligence activity for today.
               </p>
             </div>
             
-            <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
-              <Link href="/calls/live" style={{ textDecoration: 'none' }}>
+            <div className="d-flex gap-3">
+              <Link href="/calls/live" className="no-underline">
                 <button className="btn btn-primary">
-                  <span className="material-symbols-outlined" style={{ fontSize: '16px', marginRight: '6px' }}>sensors</span>
+                  <span className="material-symbols-outlined fs-16 mr-6">sensors</span>
                   Go Live Monitor
                 </button>
               </Link>
@@ -132,55 +132,55 @@ export default function Home() {
           </header>
 
           {/* Metric cards grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 'var(--space-4)', marginBottom: 'var(--space-6)' }}>
+          <div className="analytics-metrics-grid">
             <div className="card">
-              <p className="text-overline" style={{ color: 'var(--text-secondary)' }}>TOTAL CALLS</p>
-              <h3 style={{ fontSize: '28px', fontWeight: 700, margin: '8px 0 0 0', color: 'var(--text-primary)' }}>{stats?.totalCalls || 0}</h3>
-              <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: 'var(--text-secondary)' }}>{stats?.totalDurationMinutes || 0} minutes total</p>
+              <p className="text-overline color-secondary">TOTAL CALLS</p>
+              <h3 className="fs-28 font-bold mt-2 mb-1 color-primary">{stats?.totalCalls || 0}</h3>
+              <p className="mt-1 fs-11 color-secondary">{stats?.totalDurationMinutes || 0} minutes total</p>
             </div>
 
             <div className="card">
-              <p className="text-overline" style={{ color: 'var(--text-secondary)' }}>AVG INTEREST SCORE</p>
-              <h3 style={{ fontSize: '28px', fontWeight: 700, margin: '8px 0 0 0', color: 'var(--accent)' }}>{(stats?.averageScore || 0).toFixed(1)}/5</h3>
-              <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: 'var(--success)' }}>🟢 High Engagement Avg</p>
+              <p className="text-overline color-secondary">AVG INTEREST SCORE</p>
+              <h3 className="fs-28 font-bold mt-2 mb-1 color-accent">{(stats?.averageScore || 0).toFixed(1)}/5</h3>
+              <p className="mt-1 fs-11 color-success">🟢 High Engagement Avg</p>
             </div>
 
             <div className="card">
-              <p className="text-overline" style={{ color: 'var(--text-secondary)' }}>CONVERSION CHANCE</p>
-              <h3 style={{ fontSize: '28px', fontWeight: 700, margin: '8px 0 0 0', color: 'var(--success)' }}>{stats?.averageConversionProbability || 0}%</h3>
-              <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: 'var(--text-secondary)' }}>Aggregated Win Chance</p>
+              <p className="text-overline color-secondary">CONVERSION CHANCE</p>
+              <h3 className="fs-28 font-bold mt-2 mb-1 color-success">{stats?.averageConversionProbability || 0}%</h3>
+              <p className="mt-1 fs-11 color-secondary">Aggregated Win Chance</p>
             </div>
 
             <div className="card">
-              <p className="text-overline" style={{ color: 'var(--text-secondary)' }}>BANT COMPLETION</p>
-              <h3 style={{ fontSize: '28px', fontWeight: 700, margin: '8px 0 0 0', color: 'var(--info)' }}>{stats?.bantCompletionRate || 0}%</h3>
-              <p style={{ margin: '4px 0 0 0', fontSize: '11px', color: 'var(--text-secondary)' }}>Compliance qualification</p>
+              <p className="text-overline color-secondary">BANT COMPLETION</p>
+              <h3 className="fs-28 font-bold mt-2 mb-1 color-info">{stats?.bantCompletionRate || 0}%</h3>
+              <p className="mt-1 fs-11 color-secondary">Compliance qualification</p>
             </div>
           </div>
 
           <div className="grid-dashboard">
             {/* Recent Calls */}
             <div className="card-flush lg:col-span-8">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--space-4) var(--space-6)', borderBottom: '1px solid var(--border-default)', background: 'var(--bg-elevated)' }}>
-                <h2 className="text-section-heading" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span className="material-symbols-outlined" style={{ fontSize: '20px', color: 'var(--accent)' }}>history</span>
+              <div className="d-flex justify-between align-center p-4 gap-4" style={{ borderBottom: '1px solid var(--border-default)', background: 'var(--bg-elevated)', paddingLeft: 'var(--space-6)', paddingRight: 'var(--space-6)' }}>
+                <h2 className="text-section-heading m-0 d-flex align-center gap-8px">
+                  <span className="material-symbols-outlined fs-20 color-accent">history</span>
                   Recent Conversation Records
                 </h2>
-                <Link href="/calls" style={{ textDecoration: 'none', fontSize: '12px', color: 'var(--accent)', fontWeight: 600 }}>
+                <Link href="/calls" className="no-underline fs-12 color-accent font-semibold">
                   View All History →
                 </Link>
               </div>
 
-              <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+              <div className="overflow-x-auto">
+                <table className="dashboard-table">
                   <thead>
-                    <tr style={{ borderBottom: '1px solid var(--border-default)', background: 'rgba(255,255,255,0.01)' }}>
-                      <th style={{ padding: '12px var(--space-6)', width: '48px' }} />
-                      <th style={{ padding: '12px var(--space-6)', fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)' }}>CLIENT</th>
-                      <th style={{ padding: '12px var(--space-6)', fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)' }}>TITLE</th>
-                      <th style={{ padding: '12px var(--space-6)', fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)' }}>DURATION</th>
-                      <th style={{ padding: '12px var(--space-6)', fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)' }}>SENTIMENT</th>
-                      <th style={{ padding: '12px var(--space-6)', fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'right' }}>SCORE</th>
+                    <tr className="dashboard-table-header-row">
+                      <th className="dashboard-table-th-star" />
+                      <th className="dashboard-table-th">CLIENT</th>
+                      <th className="dashboard-table-th">TITLE</th>
+                      <th className="dashboard-table-th">DURATION</th>
+                      <th className="dashboard-table-th">SENTIMENT</th>
+                      <th className="dashboard-table-th text-right">SCORE</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -188,38 +188,38 @@ export default function Home() {
                       recentCalls.map(call => (
                         <tr
                           key={call.id}
-                          style={{ borderBottom: '1px solid var(--border-subtle)', cursor: 'pointer' }}
-                          className="hover:bg-[rgba(255,255,255,0.01)]"
+                          className="dashboard-table-row hover:bg-[rgba(255,255,255,0.01)]"
                         >
-                          <td style={{ padding: '12px var(--space-6)' }} onClick={(e) => e.stopPropagation()}>
+                          <td className="dashboard-table-td" onClick={(e) => e.stopPropagation()}>
                             <button
                               onClick={() => handleToggleFavorite(call.id, call.isFavorite)}
-                              style={{ background: 'none', border: 'none', cursor: 'pointer', color: call.isFavorite ? 'var(--warning)' : 'var(--text-muted)', padding: 0 }}
+                              style={{ color: call.isFavorite ? 'var(--warning)' : 'var(--text-muted)' }}
+                              className="dashboard-star-btn"
                             >
-                              <span className="material-symbols-outlined" style={{ fontSize: '18px', fontVariationSettings: call.isFavorite ? "'FILL' 1" : undefined }}>star</span>
+                              <span className="material-symbols-outlined fs-18" style={{ fontVariationSettings: call.isFavorite ? "'FILL' 1" : undefined }}>star</span>
                             </button>
                           </td>
-                          <td style={{ padding: '12px var(--space-6)', fontWeight: 600, fontSize: '13px' }} onClick={() => router.push(`/calls/${call.id}`)}>
+                          <td className="dashboard-table-td font-semibold fs-13" onClick={() => router.push(`/calls/${call.id}`)}>
                             {call.clientName}
                           </td>
-                          <td style={{ padding: '12px var(--space-6)', fontSize: '13px' }} onClick={() => router.push(`/calls/${call.id}`)}>
+                          <td className="dashboard-table-td fs-13" onClick={() => router.push(`/calls/${call.id}`)}>
                             <div>{call.title}</div>
-                            <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>{formatDate(call.date)}</span>
+                            <span className="fs-10 color-muted">{formatDate(call.date)}</span>
                           </td>
-                          <td style={{ padding: '12px var(--space-6)', color: 'var(--text-secondary)', fontSize: '13px' }} onClick={() => router.push(`/calls/${call.id}`)}>
+                          <td className="dashboard-table-td color-secondary fs-13" onClick={() => router.push(`/calls/${call.id}`)}>
                             {formatDuration(call.duration)}
                           </td>
-                          <td style={{ padding: '12px var(--space-6)' }} onClick={() => router.push(`/calls/${call.id}`)}>
+                          <td className="dashboard-table-td" onClick={() => router.push(`/calls/${call.id}`)}>
                             <SentimentBadge sentiment={call.overallSentiment} />
                           </td>
-                          <td style={{ padding: '12px var(--space-6)', textAlign: 'right', fontWeight: 700, fontSize: '13px', color: 'var(--accent)' }} onClick={() => router.push(`/calls/${call.id}`)}>
+                          <td className="dashboard-table-td text-right font-bold fs-13 color-accent" onClick={() => router.push(`/calls/${call.id}`)}>
                             {call.averageScore.toFixed(1)}/5
                           </td>
                         </tr>
                       ))
                     ) : (
                       <tr>
-                        <td colSpan={6} style={{ padding: 'var(--space-8) 0', textAlign: 'center', color: 'var(--text-muted)' }}>
+                        <td colSpan={6} className="dashboard-table-td text-center color-muted" style={{ paddingTop: 'var(--space-8)', paddingBottom: 'var(--space-8)' }}>
                           No call recordings available. Connect to the WebSocket stream to capture logs.
                         </td>
                       </tr>
@@ -232,30 +232,29 @@ export default function Home() {
             {/* Notifications & System Updates */}
             <div className="card lg:col-span-4 flex flex-col justify-between">
               <div>
-                <h2 className="text-section-heading" style={{ marginBottom: 'var(--space-6)' }}>Workspace Notifications</h2>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+                <h2 className="text-section-heading mb-6">Workspace Notifications</h2>
+                <div className="d-flex flex-col gap-4">
                   {notifications.length > 0 ? (
                     notifications.map(n => (
-                      <div key={n.id} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '12px' }}>
-                        <span className="material-symbols-outlined" style={{
-                          fontSize: '20px',
+                      <div key={n.id} className="dashboard-notif-item">
+                        <span className="material-symbols-outlined fs-20" style={{
                           color: n.type === 'SUCCESS' ? 'var(--success)' : n.type === 'WARNING' ? 'var(--warning)' : 'var(--accent)'
                         }}>
                           {n.type === 'SUCCESS' ? 'check_circle' : n.type === 'WARNING' ? 'warning' : 'info'}
                         </span>
                         <div>
-                          <span style={{ fontSize: '12px', fontWeight: 600, display: 'block', color: 'var(--text-primary)' }}>{n.title}</span>
-                          <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{n.description}</span>
+                          <span className="fs-12 font-semibold d-block color-primary">{n.title}</span>
+                          <span className="fs-11 color-secondary">{n.description}</span>
                         </div>
                       </div>
                     ))
                   ) : (
-                    <p className="text-caption" style={{ margin: 0 }}>No new alerts.</p>
+                    <p className="text-caption m-0">No new alerts.</p>
                   )}
                 </div>
               </div>
 
-              <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: 'var(--space-4)', marginTop: 'var(--space-4)', display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-muted)' }}>
+              <div className="analytics-footer-info">
                 <span>Role: {activeUser?.role || 'Guest'}</span>
                 <span>Active User: {activeUser?.name || 'Jane'}</span>
               </div>

@@ -197,7 +197,7 @@ function SettingsContent() {
         <main className="main-content">
           <div className="content-container">
             <h1 className="text-page-title">Settings &amp; Integrations</h1>
-            <p className="text-body" style={{ color: 'var(--text-secondary)' }}>Loading configurations...</p>
+            <p className="text-body">Loading configurations...</p>
           </div>
           <Footer />
         </main>
@@ -210,94 +210,87 @@ function SettingsContent() {
       <main className="main-content">
         <div className="content-container">
           {/* Header */}
-          <header style={{ marginBottom: 'var(--space-6)' }}>
+          <header className="mb-6">
             <h1 className="text-page-title">Settings &amp; Integrations</h1>
-            <p className="text-body" style={{ marginTop: 'var(--space-1)' }}>
+            <p className="text-body mt-1">
               Configure your workspace options, security API keys, and third-party CRM connections.
             </p>
           </header>
 
           {/* Banner notification */}
           {notification && (
-            <div style={{
-              background: notification.type === 'success' ? 'var(--success-muted)' : 'var(--error-muted)',
-              color: notification.type === 'success' ? 'var(--success)' : 'var(--error)',
-              border: `1px solid ${notification.type === 'success' ? 'var(--success)' : 'var(--error)'}`,
-              padding: '12px var(--space-4)',
-              borderRadius: 'var(--radius-md)',
-              marginBottom: 'var(--space-6)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              animation: 'fadeInUp 0.2s ease',
-              fontSize: '13px'
-            }}>
+            <div
+              className="p-3 rounded-md mb-6 d-flex align-center gap-2 fs-13"
+              style={{
+                background: notification.type === 'success' ? 'var(--success-muted)' : 'var(--error-muted)',
+                color: notification.type === 'success' ? 'var(--success)' : 'var(--error)',
+                border: `1px solid ${notification.type === 'success' ? 'var(--success)' : 'var(--error)'}`,
+                animation: 'fadeInUp 0.2s ease',
+              }}
+            >
               <span className="material-symbols-outlined">{notification.type === 'success' ? 'check_circle' : 'error'}</span>
               <span>{notification.text}</span>
             </div>
           )}
 
           {/* Sidebar tabs + Content panel layout */}
-          <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: 'var(--space-8)' }}>
+          <div className="settings-grid-layout">
             {/* Tabs List */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div className="d-flex flex-col gap-1">
               <button
                 onClick={() => handleTabChange('profile')}
-                className={`filter-tab ${activeTab === 'profile' ? 'active' : ''}`}
-                style={{ justifyContent: 'flex-start', padding: '10px 16px', fontSize: '13px', width: '100%', height: 'auto', textAlign: 'left', display: 'flex', alignItems: 'center', gap: '8px' }}
+                className={`filter-tab settings-tab-btn ${activeTab === 'profile' ? 'active' : ''}`}
               >
-                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>person</span>
+                <span className="material-symbols-outlined fs-18">person</span>
                 User Profile
               </button>
               
               <button
                 onClick={() => handleTabChange('integrations')}
-                className={`filter-tab ${activeTab === 'integrations' ? 'active' : ''}`}
-                style={{ justifyContent: 'flex-start', padding: '10px 16px', fontSize: '13px', width: '100%', height: 'auto', textAlign: 'left', display: 'flex', alignItems: 'center', gap: '8px' }}
+                className={`filter-tab settings-tab-btn ${activeTab === 'integrations' ? 'active' : ''}`}
               >
-                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>extension</span>
+                <span className="material-symbols-outlined fs-18">extension</span>
                 CRM Integrations
               </button>
 
               <button
                 onClick={() => handleTabChange('keys')}
-                className={`filter-tab ${activeTab === 'keys' ? 'active' : ''}`}
-                style={{ justifyContent: 'flex-start', padding: '10px 16px', fontSize: '13px', width: '100%', height: 'auto', textAlign: 'left', display: 'flex', alignItems: 'center', gap: '8px' }}
+                className={`filter-tab settings-tab-btn ${activeTab === 'keys' ? 'active' : ''}`}
               >
-                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>vpn_key</span>
+                <span className="material-symbols-outlined fs-18">vpn_key</span>
                 API Keys
               </button>
             </div>
 
             {/* Content panel */}
-            <div className="card" style={{ padding: 'var(--space-6)', minHeight: '400px' }}>
+            <div className="card min-h-400px p-6">
               
               {/* PROFILE TAB */}
               {activeTab === 'profile' && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
+                <div className="d-flex flex-col gap-6">
                   <div>
-                    <h2 className="text-section-heading" style={{ marginBottom: '8px' }}>User Account Profile</h2>
-                    <p className="text-body" style={{ color: 'var(--text-secondary)' }}>Switch accounts or view your permission levels in the workspace.</p>
+                    <h2 className="text-section-heading mb-2">User Account Profile</h2>
+                    <p className="text-body">Switch accounts or view your permission levels in the workspace.</p>
                   </div>
 
-                  <div style={{ display: 'flex', gap: 'var(--space-4)', alignItems: 'center', background: 'var(--bg-elevated)', padding: 'var(--space-4)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-default)' }}>
-                    <div style={{ width: '64px', height: '64px', borderRadius: '50%', overflow: 'hidden', border: '2px solid var(--accent)' }}>
-                      <img src={user?.avatarUrl} alt="Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <div className="settings-user-card">
+                    <div className="settings-avatar-container">
+                      <img src={user?.avatarUrl} alt="Avatar" className="settings-avatar-img" />
                     </div>
                     <div>
-                      <h4 style={{ margin: 0, fontSize: '16px', fontWeight: 600 }}>{user?.name}</h4>
-                      <p className="text-caption" style={{ margin: '2px 0 6px 0' }}>{user?.email}</p>
-                      <span className="badge badge-accent" style={{ fontSize: '10px', textTransform: 'uppercase' }}>{user?.role}</span>
+                      <h4 className="m-0 fs-16 font-semibold">{user?.name}</h4>
+                      <p className="text-caption mt-1 mb-2">{user?.email}</p>
+                      <span className="badge badge-accent fs-10" style={{ textTransform: 'uppercase' }}>{user?.role}</span>
                     </div>
                   </div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)', borderTop: '1px solid var(--border-subtle)', paddingTop: 'var(--space-4)' }}>
+                  <div className="d-flex flex-col gap-4 border-t-subtle pt-4">
                     <h3 className="text-section-heading">Demo Workspace Role Switcher</h3>
-                    <p className="text-body" style={{ color: 'var(--text-secondary)' }}>Toggle roles to check the system behavior under different account access modes.</p>
-                    <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                      <button onClick={() => handleSwitchUser('jane.smith@convincesense.com')} className="btn btn-secondary" style={{ flex: 1 }}> Jane Smith (Sales Rep) </button>
-                      <button onClick={() => handleSwitchUser('manager@convincesense.com')} className="btn btn-secondary" style={{ flex: 1 }}> Sarah Connor (Manager) </button>
-                      <button onClick={() => handleSwitchUser('admin@convincesense.com')} className="btn btn-secondary" style={{ flex: 1 }}> Alex Rivera (Admin) </button>
+                    <p className="text-body">Toggle roles to check the system behavior under different account access modes.</p>
+                    <div className="d-flex gap-12px flex-wrap">
+                      <button onClick={() => handleSwitchUser('jane.smith@convincesense.com')} className="btn btn-secondary flex-1"> Jane Smith (Sales Rep) </button>
+                      <button onClick={() => handleSwitchUser('manager@convincesense.com')} className="btn btn-secondary flex-1"> Sarah Connor (Manager) </button>
+                      <button onClick={() => handleSwitchUser('admin@convincesense.com')} className="btn btn-secondary flex-1"> Alex Rivera (Admin) </button>
                     </div>
                   </div>
                 </div>
@@ -305,26 +298,26 @@ function SettingsContent() {
 
               {/* INTEGRATIONS TAB */}
               {activeTab === 'integrations' && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
+                <div className="d-flex flex-col gap-6">
                   <div>
-                    <h2 className="text-section-heading" style={{ marginBottom: '8px' }}>CRM &amp; Messaging Integrations</h2>
-                    <p className="text-body" style={{ color: 'var(--text-secondary)' }}>Connect real-time coaching metrics and compliance logs to your Salesforce CRM or Slack channels.</p>
+                    <h2 className="text-section-heading mb-2">CRM &amp; Messaging Integrations</h2>
+                    <p className="text-body">Connect real-time coaching metrics and compliance logs to your Salesforce CRM or Slack channels.</p>
                   </div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+                  <div className="d-flex flex-col gap-4">
                     {integrations.map(int => {
                       const isSlack = int.name === 'Slack';
                       const isSF = int.name === 'Salesforce';
                       return (
-                        <div key={int.id} style={{ border: '1px solid var(--border-default)', borderRadius: 'var(--radius-lg)', background: 'var(--bg-elevated)', padding: 'var(--space-4)' }}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-3)' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                              <span className="material-symbols-outlined" style={{ fontSize: '32px', color: int.connected ? 'var(--accent)' : 'var(--text-muted)' }}>
+                        <div key={int.id} className="settings-integration-card">
+                          <div className="d-flex justify-between align-center mb-3">
+                            <div className="d-flex align-center gap-12px">
+                              <span className="material-symbols-outlined fs-32" style={{ color: int.connected ? 'var(--accent)' : 'var(--text-muted)' }}>
                                 {isSlack ? 'chat' : isSF ? 'cloud_done' : 'hub'}
                               </span>
                               <div>
-                                <h4 style={{ margin: 0, fontWeight: 600 }}>{int.name}</h4>
-                                <span style={{ fontSize: '11px', color: int.connected ? 'var(--success)' : 'var(--text-muted)' }}>
+                                <h4 className="m-0 font-semibold">{int.name}</h4>
+                                <span className={`fs-11 ${int.connected ? 'color-success' : 'color-muted'}`}>
                                   {int.connected ? '● Connected' : 'Disconnected'}
                                 </span>
                               </div>
@@ -344,26 +337,26 @@ function SettingsContent() {
                           </div>
 
                           {int.connected && (
-                            <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: 'var(--space-3)', marginTop: 'var(--space-3)' }}>
-                              <h5 style={{ margin: '0 0 var(--space-2) 0', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)' }}>Config options</h5>
+                            <div className="border-t-subtle pt-3 mt-3">
+                              <h5 className="m-0 mb-2 fs-12 font-semibold color-secondary">Config options</h5>
                               {isSlack && (
-                                <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                                <div className="d-flex gap-12px align-center">
                                   <input
                                     type="text"
                                     defaultValue={int.config?.channel || '#sales-alerts'}
                                     placeholder="Slack channel"
-                                    style={{ background: 'var(--bg-root)', color: 'var(--text-primary)', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-sm)', padding: '6px 12px', fontSize: '12px', flex: 1 }}
+                                    className="settings-config-input"
                                     onBlur={(e) => handleSaveIntegrationConfig(int.name, { ...int.config, channel: e.target.value })}
                                   />
                                 </div>
                               )}
                               {isSF && (
-                                <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                                <div className="d-flex gap-12px align-center">
                                   <input
                                     type="text"
                                     defaultValue={int.config?.instanceUrl || 'https://acme.my.salesforce.com'}
                                     placeholder="Salesforce domain"
-                                    style={{ background: 'var(--bg-root)', color: 'var(--text-primary)', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-sm)', padding: '6px 12px', fontSize: '12px', flex: 1 }}
+                                    className="settings-config-input"
                                     onBlur={(e) => handleSaveIntegrationConfig(int.name, { ...int.config, instanceUrl: e.target.value })}
                                   />
                                 </div>
@@ -379,30 +372,30 @@ function SettingsContent() {
 
               {/* API KEYS TAB */}
               {activeTab === 'keys' && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
+                <div className="d-flex flex-col gap-6">
                   <div>
-                    <h2 className="text-section-heading" style={{ marginBottom: '8px' }}>Security API Keys</h2>
-                    <p className="text-body" style={{ color: 'var(--text-secondary)' }}>Manage access tokens to secure REST API routes for your local agents.</p>
+                    <h2 className="text-section-heading mb-2">Security API Keys</h2>
+                    <p className="text-body">Manage access tokens to secure REST API routes for your local agents.</p>
                   </div>
 
                   {/* Create Key Form */}
-                  <form onSubmit={handleGenerateKey} style={{ display: 'flex', gap: '12px' }}>
+                  <form onSubmit={handleGenerateKey} className="d-flex gap-12px">
                     <input
                       type="text"
                       placeholder="Key name (e.g. CLI tool)"
                       value={newKeyName}
                       onChange={(e) => setNewKeyName(e.target.value)}
-                      style={{ background: 'var(--bg-root)', color: 'var(--text-primary)', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-sm)', padding: '8px 16px', fontSize: '13px', flex: 1, outline: 'none' }}
+                      className="settings-api-input"
                     />
                     <button type="submit" className="btn btn-primary" disabled={!newKeyName.trim()}>Generate Key</button>
                   </form>
 
                   {/* Generated key display */}
                   {generatedKey && (
-                    <div style={{ background: 'var(--accent-muted)', border: '1px dashed var(--accent)', borderRadius: 'var(--radius-md)', padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                      <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--accent)' }}>COPY THIS KEY NOW. It will not be shown again.</span>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <code style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '13px', wordBreak: 'break-all' }}>{generatedKey}</code>
+                    <div className="settings-generated-key-box">
+                      <span className="fs-11 font-semibold color-accent">COPY THIS KEY NOW. It will not be shown again.</span>
+                      <div className="d-flex justify-between align-center">
+                        <code className="word-break-all fs-13" style={{ fontFamily: 'var(--font-geist-mono)' }}>{generatedKey}</code>
                         <button
                           onClick={() => {
                             navigator.clipboard.writeText(generatedKey);
@@ -418,22 +411,22 @@ function SettingsContent() {
                   )}
 
                   {/* Keys list */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <h4 className="text-section-heading" style={{ fontSize: '13px' }}>Active API Keys</h4>
+                  <div className="d-flex flex-col gap-2">
+                    <h4 className="text-section-heading fs-13">Active API Keys</h4>
                     {apiKeys.length > 0 ? (
                       apiKeys.map(k => (
-                        <div key={k.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg-elevated)', padding: '12px var(--space-4)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-default)' }}>
+                        <div key={k.id} className="settings-key-row">
                           <div>
-                            <span style={{ fontWeight: 600, fontSize: '13px', display: 'block' }}>{k.name}</span>
-                            <span style={{ fontFamily: 'var(--font-geist-mono)', fontSize: '11px', color: 'var(--text-muted)' }}>
+                            <span className="font-semibold fs-13 d-block">{k.name}</span>
+                            <span className="fs-11 color-muted" style={{ fontFamily: 'var(--font-geist-mono)' }}>
                               CS-key-...{k.key.substring(k.key.length - 8)}
                             </span>
                           </div>
-                          <button onClick={() => handleRevokeKey(k.id)} className="btn btn-ghost" style={{ color: 'var(--error)' }}>Revoke</button>
+                          <button onClick={() => handleRevokeKey(k.id)} className="btn btn-ghost color-error">Revoke</button>
                         </div>
                       ))
                     ) : (
-                      <p className="text-caption" style={{ margin: 0 }}>No active API keys created yet.</p>
+                      <p className="text-caption m-0">No active API keys created yet.</p>
                     )}
                   </div>
                 </div>

@@ -1,0 +1,350 @@
+/* Styles for Call History & Recording Database Page */
+
+.calls-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-8);
+}
+
+.calls-header-sub {
+  margin-top: var(--space-1);
+}
+
+.calls-header-icon {
+  font-size: 16px;
+  margin-right: 6px;
+}
+
+.calls-link {
+  text-decoration: none;
+}
+
+.calls-filter-bar {
+  margin-bottom: var(--space-6);
+  padding: var(--space-4);
+}
+
+.calls-filter-flex {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  align-items: center;
+  width: 100%;
+}
+
+.calls-search-container {
+  flex: 1 1 240px;
+  margin: 0;
+  border: 1px solid var(--border-default);
+}
+
+.calls-search-icon {
+  font-size: 18px;
+  color: var(--text-muted);
+}
+
+.calls-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.calls-filter-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.calls-select {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  outline: none;
+}
+
+.calls-btn-star {
+  background: var(--bg-card);
+  border-color: var(--border-default);
+  color: var(--text-primary);
+  font-size: 12px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.calls-btn-star-active {
+  background: var(--accent-muted) !important;
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+}
+
+.calls-btn-star-icon {
+  font-size: 16px;
+}
+
+.calls-btn-star-icon-filled {
+  font-variation-settings: "FILL" 1;
+}
+
+.calls-sort-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.calls-btn-sort-order {
+  border: 1px solid var(--border-default);
+  height: 34px;
+  width: 34px;
+  border-radius: var(--radius-sm);
+}
+
+.calls-icon-18 {
+  font-size: 18px;
+}
+
+.calls-error-banner {
+  background: var(--error-muted);
+  color: var(--error);
+  border: 1px solid var(--error);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-6);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.calls-table-container {
+  overflow: hidden;
+}
+
+.calls-table-responsive {
+  overflow-x: auto;
+}
+
+.calls-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.calls-table-header-row {
+  border-bottom: 1px solid var(--border-default);
+  background: var(--bg-elevated);
+}
+
+.calls-th {
+  padding: var(--space-4) var(--space-6);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.calls-th-star {
+  padding: var(--space-4) var(--space-6);
+  width: 48px;
+}
+
+.calls-th-right {
+  padding: var(--space-4) var(--space-6);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: right;
+}
+
+.calls-tr-skeleton {
+  border-bottom: 1px solid var(--border-subtle);
+  opacity: 0.5;
+}
+
+.calls-td {
+  padding: var(--space-4) var(--space-6);
+}
+
+.calls-skeleton-client {
+  width: 80px;
+  height: 14px;
+  background: var(--border-default);
+  border-radius: 4px;
+}
+
+.calls-skeleton-title {
+  width: 180px;
+  height: 14px;
+  background: var(--border-default);
+  border-radius: 4px;
+}
+
+.calls-skeleton-date {
+  width: 70px;
+  height: 14px;
+  background: var(--border-default);
+  border-radius: 4px;
+}
+
+.calls-skeleton-duration {
+  width: 50px;
+  height: 14px;
+  background: var(--border-default);
+  border-radius: 4px;
+}
+
+.calls-skeleton-sentiment {
+  width: 60px;
+  height: 20px;
+  background: var(--border-default);
+  border-radius: 10px;
+}
+
+.calls-skeleton-score {
+  width: 40px;
+  height: 14px;
+  background: var(--border-default);
+  border-radius: 4px;
+}
+
+.calls-tr {
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background 0.2s ease;
+  cursor: pointer;
+}
+
+.calls-btn-favorite-star {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: 0;
+  display: flex;
+}
+
+.calls-btn-favorite-star-active {
+  color: var(--warning) !important;
+}
+
+.calls-favorite-star-icon {
+  font-size: 20px;
+}
+
+.calls-favorite-star-icon-filled {
+  font-variation-settings: "FILL" 1;
+}
+
+.calls-td-client {
+  padding: var(--space-4) var(--space-6);
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 13px;
+}
+
+.calls-cell-title {
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.calls-cell-rep {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.calls-td-secondary {
+  padding: var(--space-4) var(--space-6);
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.calls-score-badge {
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.calls-score-high {
+  color: var(--success);
+}
+
+.calls-score-medium {
+  color: var(--warning);
+}
+
+.calls-score-low {
+  color: var(--error);
+}
+
+.calls-td-actions {
+  padding: var(--space-4) var(--space-6);
+  text-align: right;
+}
+
+.calls-actions-flex {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.calls-btn-details {
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.calls-btn-delete {
+  color: var(--error);
+  padding: 4px;
+}
+
+.calls-empty-cell {
+  padding: var(--space-12) var(--space-6);
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.calls-empty-icon {
+  font-size: 48px;
+  opacity: 0.3;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.calls-empty-title {
+  font-weight: 500;
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.calls-empty-subtitle {
+  margin-top: 4px;
+}
+
+.calls-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-4) var(--space-6);
+  border-top: 1px solid var(--border-default);
+  background: var(--bg-elevated);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.calls-pagination-label {
+  font-size: 12px;
+}
+
+.calls-pagination-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.calls-btn-pagination {
+  padding: 4px 12px;
+  font-size: 12px;
+}

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Layout from '@/components/Layout';
 import Footer from '@/components/Footer';
 import SentimentBadge from '@/shared/Components/SentimentBadge';
+import './calls.css';
 
 import { useRouter } from 'next/navigation';
 
@@ -132,28 +133,28 @@ export default function CallHistoryPage() {
       <main className="main-content">
         <div className="content-container">
           {/* Header */}
-          <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--space-8)' }}>
+          <header className="calls-header">
             <div>
               <h1 className="text-page-title">Call History &amp; Recording Database</h1>
-              <p className="text-body" style={{ marginTop: 'var(--space-1)' }}>
+              <p className="text-body calls-header-sub">
                 Browse, search, and analyze all completed sales conversation summaries ({totalCount} total)
               </p>
             </div>
             
-            <Link href="/calls/live" style={{ textDecoration: 'none' }}>
+            <Link href="/calls/live" className="calls-link">
               <button className="btn btn-primary">
-                <span className="material-symbols-outlined" style={{ fontSize: '16px', marginRight: '6px' }}>sensors</span>
+                <span className="material-symbols-outlined calls-header-icon">sensors</span>
                 Start Live Coaching
               </button>
             </Link>
           </header>
 
           {/* Search & Advanced Filters Bar */}
-          <div className="card" style={{ marginBottom: 'var(--space-6)', padding: 'var(--space-4)' }}>
-            <div style={{ display: 'flex', gap: 'var(--space-3)', flexWrap: 'wrap', alignItems: 'center' }}>
+          <div className="card calls-filter-bar">
+            <div className="calls-filter-flex">
               {/* Search input */}
-              <div className="search-input" style={{ flex: '1 1 240px', margin: 0, border: '1px solid var(--border-default)' }}>
-                <span className="material-symbols-outlined" style={{ fontSize: '18px', color: 'var(--text-muted)' }}>search</span>
+              <div className="search-input calls-search-container">
+                <span className="material-symbols-outlined calls-search-icon">search</span>
                 <input
                   placeholder="Search client, title, transcript keywords..."
                   type="text"
@@ -163,20 +164,13 @@ export default function CallHistoryPage() {
               </div>
 
               {/* Sentiment filter */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: 600 }}>Sentiment:</span>
+              <div className="calls-filter-group">
+                <span className="calls-filter-label">Sentiment:</span>
                 <select
                   value={sentiment}
                   onChange={(e) => { setSentiment(e.target.value); setPage(1); }}
-                  style={{
-                    background: 'var(--bg-elevated)',
-                    border: '1px solid var(--border-default)',
-                    color: 'var(--text-primary)',
-                    padding: '6px 12px',
-                    borderRadius: 'var(--radius-sm)',
-                    fontSize: '12px',
-                    outline: 'none'
-                  }}
+                  className="calls-select"
+                  title="Filter by sentiment"
                 >
                   <option value="All">All Sentiments</option>
                   <option value="Positive">Positive</option>
@@ -186,20 +180,13 @@ export default function CallHistoryPage() {
               </div>
 
               {/* Min score filter */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: 600 }}>Min Score:</span>
+              <div className="calls-filter-group">
+                <span className="calls-filter-label">Min Score:</span>
                 <select
                   value={minScore}
                   onChange={(e) => { setMinScore(e.target.value); setPage(1); }}
-                  style={{
-                    background: 'var(--bg-elevated)',
-                    border: '1px solid var(--border-default)',
-                    color: 'var(--text-primary)',
-                    padding: '6px 12px',
-                    borderRadius: 'var(--radius-sm)',
-                    fontSize: '12px',
-                    outline: 'none'
-                  }}
+                  className="calls-select"
+                  title="Filter by minimum score"
                 >
                   <option value="All">All Scores</option>
                   <option value="4">4.0+ / 5</option>
@@ -211,37 +198,20 @@ export default function CallHistoryPage() {
               {/* Favorite toggle */}
               <button
                 onClick={() => { setIsFavoriteOnly(!isFavoriteOnly); setPage(1); }}
-                className="btn btn-secondary"
-                style={{
-                  background: isFavoriteOnly ? 'var(--accent-muted)' : 'var(--bg-card)',
-                  borderColor: isFavoriteOnly ? 'var(--accent)' : 'var(--border-default)',
-                  color: isFavoriteOnly ? 'var(--accent)' : 'var(--text-primary)',
-                  fontSize: '12px',
-                  height: '34px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px'
-                }}
+                className={`btn btn-secondary calls-btn-star ${isFavoriteOnly ? 'calls-btn-star-active' : ''}`}
               >
-                <span className="material-symbols-outlined" style={{ fontSize: '16px', fontVariationSettings: isFavoriteOnly ? "'FILL' 1" : undefined }}>star</span>
+                <span className={`material-symbols-outlined calls-btn-star-icon ${isFavoriteOnly ? 'calls-btn-star-icon-filled' : ''}`}>star</span>
                 Starred Only
               </button>
 
               {/* Sort selector */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: 'auto' }}>
-                <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: 600 }}>Sort By:</span>
+              <div className="calls-sort-container">
+                <span className="calls-filter-label">Sort By:</span>
                 <select
                   value={sortBy}
                   onChange={(e) => { setSortBy(e.target.value); setPage(1); }}
-                  style={{
-                    background: 'var(--bg-elevated)',
-                    border: '1px solid var(--border-default)',
-                    color: 'var(--text-primary)',
-                    padding: '6px 12px',
-                    borderRadius: 'var(--radius-sm)',
-                    fontSize: '12px',
-                    outline: 'none'
-                  }}
+                  className="calls-select"
+                  title="Sort calls by"
                 >
                   <option value="date">Date</option>
                   <option value="score">Engagement Score</option>
@@ -251,11 +221,10 @@ export default function CallHistoryPage() {
 
                 <button
                   onClick={() => { setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc'); setPage(1); }}
-                  className="icon-btn"
-                  style={{ border: '1px solid var(--border-default)', height: '34px', width: '34px', borderRadius: 'var(--radius-sm)' }}
+                  className="icon-btn calls-btn-sort-order"
                   title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
                 >
-                  <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
+                  <span className="material-symbols-outlined calls-icon-18">
                     {sortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward'}
                   </span>
                 </button>
@@ -265,127 +234,113 @@ export default function CallHistoryPage() {
 
           {/* Error message */}
           {error && (
-            <div style={{ background: 'var(--error-muted)', color: 'var(--error)', border: '1px solid var(--error)', padding: 'var(--space-4)', borderRadius: 'var(--radius-md)', marginBottom: 'var(--space-6)', display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <div className="calls-error-banner">
               <span className="material-symbols-outlined">error</span>
               <span>{error}</span>
             </div>
           )}
 
           {/* Recordings List */}
-          <div className="card-flush" style={{ overflow: 'hidden' }}>
-            <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+          <div className="card-flush calls-table-container">
+            <div className="calls-table-responsive">
+              <table className="calls-table">
                 <thead>
-                  <tr style={{ borderBottom: '1px solid var(--border-default)', background: 'var(--bg-elevated)' }}>
-                    <th style={{ padding: 'var(--space-4) var(--space-6)', width: '48px' }} />
-                    <th style={{ padding: 'var(--space-4) var(--space-6)', fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)' }}>CLIENT</th>
-                    <th style={{ padding: 'var(--space-4) var(--space-6)', fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)' }}>RECORDING TITLE</th>
-                    <th style={{ padding: 'var(--space-4) var(--space-6)', fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)' }}>DATE</th>
-                    <th style={{ padding: 'var(--space-4) var(--space-6)', fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)' }}>DURATION</th>
-                    <th style={{ padding: 'var(--space-4) var(--space-6)', fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)' }}>SENTIMENT</th>
-                    <th style={{ padding: 'var(--space-4) var(--space-6)', fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)' }}>AVG SCORE</th>
-                    <th style={{ padding: 'var(--space-4) var(--space-6)', fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'right' }}>ACTIONS</th>
+                  <tr className="calls-table-header-row">
+                    <th className="calls-th-star" />
+                    <th className="calls-th">CLIENT</th>
+                    <th className="calls-th">RECORDING TITLE</th>
+                    <th className="calls-th">DATE</th>
+                    <th className="calls-th">DURATION</th>
+                    <th className="calls-th">SENTIMENT</th>
+                    <th className="calls-th">AVG SCORE</th>
+                    <th className="calls-th-right">ACTIONS</th>
                   </tr>
                 </thead>
                 <tbody>
                   {isLoading ? (
                     // Skeleton Rows
                     Array.from({ length: 5 }).map((_, i) => (
-                      <tr key={i} style={{ borderBottom: '1px solid var(--border-subtle)', opacity: 0.5 }}>
-                        <td style={{ padding: 'var(--space-4) var(--space-6)' }} />
-                        <td style={{ padding: 'var(--space-4) var(--space-6)' }}><div style={{ width: '80px', height: '14px', background: 'var(--border-default)', borderRadius: '4px' }} className="animate-pulse" /></td>
-                        <td style={{ padding: 'var(--space-4) var(--space-6)' }}><div style={{ width: '180px', height: '14px', background: 'var(--border-default)', borderRadius: '4px' }} className="animate-pulse" /></td>
-                        <td style={{ padding: 'var(--space-4) var(--space-6)' }}><div style={{ width: '70px', height: '14px', background: 'var(--border-default)', borderRadius: '4px' }} className="animate-pulse" /></td>
-                        <td style={{ padding: 'var(--space-4) var(--space-6)' }}><div style={{ width: '50px', height: '14px', background: 'var(--border-default)', borderRadius: '4px' }} className="animate-pulse" /></td>
-                        <td style={{ padding: 'var(--space-4) var(--space-6)' }}><div style={{ width: '60px', height: '20px', background: 'var(--border-default)', borderRadius: '10px' }} className="animate-pulse" /></td>
-                        <td style={{ padding: 'var(--space-4) var(--space-6)' }}><div style={{ width: '40px', height: '14px', background: 'var(--border-default)', borderRadius: '4px' }} className="animate-pulse" /></td>
-                        <td style={{ padding: 'var(--space-4) var(--space-6)' }} />
+                      <tr key={i} className="calls-tr-skeleton">
+                        <td className="calls-td" />
+                        <td className="calls-td"><div className="calls-skeleton-client animate-pulse" /></td>
+                        <td className="calls-td"><div className="calls-skeleton-title animate-pulse" /></td>
+                        <td className="calls-td"><div className="calls-skeleton-date animate-pulse" /></td>
+                        <td className="calls-td"><div className="calls-skeleton-duration animate-pulse" /></td>
+                        <td className="calls-td"><div className="calls-skeleton-sentiment animate-pulse" /></td>
+                        <td className="calls-td"><div className="calls-skeleton-score animate-pulse" /></td>
+                        <td className="calls-td" />
                       </tr>
                     ))
                   ) : calls.length > 0 ? (
                     calls.map((call) => (
                       <tr
                         key={call.id}
-                        style={{
-                          borderBottom: '1px solid var(--border-subtle)',
-                          transition: 'background 0.2s ease',
-                          cursor: 'pointer'
-                        }}
-                        className="hover:bg-[rgba(255,255,255,0.01)]"
+                        className="calls-tr hover:bg-[rgba(255,255,255,0.01)]"
                       >
                         {/* Star / Favorite toggle */}
-                        <td style={{ padding: 'var(--space-4) var(--space-6)' }} onClick={(e) => e.stopPropagation()}>
+                        <td className="calls-td" onClick={(e) => e.stopPropagation()}>
                           <button
                             onClick={() => handleToggleFavorite(call.id, call.isFavorite)}
-                            style={{
-                              background: 'none',
-                              border: 'none',
-                              cursor: 'pointer',
-                              color: call.isFavorite ? 'var(--warning)' : 'var(--text-muted)',
-                              padding: 0,
-                              display: 'flex'
-                            }}
+                            className={`calls-btn-favorite-star ${call.isFavorite ? 'calls-btn-favorite-star-active' : ''}`}
+                            title={call.isFavorite ? "Unstar recording" : "Star recording"}
                           >
-                            <span className="material-symbols-outlined" style={{ fontSize: '20px', fontVariationSettings: call.isFavorite ? "'FILL' 1" : undefined }}>
+                            <span className={`material-symbols-outlined calls-favorite-star-icon ${call.isFavorite ? 'calls-favorite-star-icon-filled' : ''}`}>
                               star
                             </span>
                           </button>
                         </td>
 
                         {/* Client name */}
-                        <td style={{ padding: 'var(--space-4) var(--space-6)', fontWeight: 600, color: 'var(--text-primary)', fontSize: '13px' }} onClick={() => router.push(`/calls/${call.id}`)}>
+                        <td className="calls-td-client" onClick={() => router.push(`/calls/${call.id}`)}>
                           {call.clientName}
                         </td>
 
                         {/* Call title */}
-                        <td style={{ padding: 'var(--space-4) var(--space-6)' }} onClick={() => router.push(`/calls/${call.id}`)}>
-                          <div style={{ color: 'var(--text-primary)', fontWeight: 500, fontSize: '13px' }}>{call.title}</div>
+                        <td className="calls-td" onClick={() => router.push(`/calls/${call.id}`)}>
+                          <div className="calls-cell-title">{call.title}</div>
                           {call.salesRep && (
-                            <div style={{ color: 'var(--text-muted)', fontSize: '11px' }}>Rep: {call.salesRep.name}</div>
+                            <div className="calls-cell-rep">Rep: {call.salesRep.name}</div>
                           )}
                         </td>
 
                         {/* Date */}
-                        <td style={{ padding: 'var(--space-4) var(--space-6)', color: 'var(--text-secondary)', fontSize: '13px' }} onClick={() => router.push(`/calls/${call.id}`)}>
+                        <td className="calls-td-secondary" onClick={() => router.push(`/calls/${call.id}`)}>
                           {formatDate(call.date)}
                         </td>
 
                         {/* Duration */}
-                        <td style={{ padding: 'var(--space-4) var(--space-6)', color: 'var(--text-secondary)', fontSize: '13px' }} onClick={() => router.push(`/calls/${call.id}`)}>
+                        <td className="calls-td-secondary" onClick={() => router.push(`/calls/${call.id}`)}>
                           {formatDuration(call.duration)}
                         </td>
 
                         {/* Sentiment */}
-                        <td style={{ padding: 'var(--space-4) var(--space-6)' }} onClick={() => router.push(`/calls/${call.id}`)}>
+                        <td className="calls-td" onClick={() => router.push(`/calls/${call.id}`)}>
                           <SentimentBadge sentiment={call.overallSentiment} />
                         </td>
 
                         {/* Average score */}
-                        <td style={{ padding: 'var(--space-4) var(--space-6)' }} onClick={() => router.push(`/calls/${call.id}`)}>
-                          <span style={{
-                            color: call.averageScore >= 4 ? 'var(--success)' : call.averageScore <= 2.5 ? 'var(--error)' : 'var(--warning)',
-                            fontWeight: 700,
-                            fontSize: '13px'
-                          }}>
+                        <td className="calls-td" onClick={() => router.push(`/calls/${call.id}`)}>
+                          <span className={`calls-score-badge ${
+                            call.averageScore >= 4 ? 'calls-score-high' : call.averageScore <= 2.5 ? 'calls-score-low' : 'calls-score-medium'
+                          }`}>
                             {call.averageScore.toFixed(1)}/5
                           </span>
                         </td>
 
                         {/* Actions */}
-                        <td style={{ padding: 'var(--space-4) var(--space-6)', textAlign: 'right' }} onClick={(e) => e.stopPropagation()}>
-                          <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
-                            <Link href={`/calls/${call.id}`} style={{ textDecoration: 'none' }}>
-                              <button className="btn btn-ghost" style={{ padding: '4px 8px', fontSize: '12px' }}>
+                        <td className="calls-td-actions" onClick={(e) => e.stopPropagation()}>
+                          <div className="calls-actions-flex">
+                            <Link href={`/calls/${call.id}`} className="calls-link">
+                              <button className="btn btn-ghost calls-btn-details">
                                 Details
                               </button>
                             </Link>
                             <button
                               onClick={() => handleDeleteCall(call.id, call.title)}
-                              className="icon-btn"
-                              style={{ color: 'var(--error)', padding: '4px' }}
+                              className="icon-btn calls-btn-delete"
                               title="Delete recording"
                             >
-                              <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>delete</span>
+                              <span className="material-symbols-outlined calls-icon-18">delete</span>
                             </button>
                           </div>
                         </td>
@@ -394,10 +349,10 @@ export default function CallHistoryPage() {
                   ) : (
                     // Empty State
                     <tr>
-                      <td colSpan={8} style={{ padding: 'var(--space-12) var(--space-6)', textAlign: 'center', color: 'var(--text-muted)' }}>
-                        <span className="material-symbols-outlined" style={{ fontSize: '48px', opacity: 0.3, display: 'block', marginBottom: '8px' }}>history_toggle_off</span>
-                        <p style={{ fontWeight: 500, margin: 0, fontSize: '14px', color: 'var(--text-primary)' }}>No call records found</p>
-                        <p className="text-caption" style={{ marginTop: '4px' }}>Try adjusting your search queries or active filters</p>
+                      <td colSpan={8} className="calls-empty-cell">
+                        <span className="material-symbols-outlined calls-empty-icon">history_toggle_off</span>
+                        <p className="calls-empty-title">No call records found</p>
+                        <p className="text-caption calls-empty-subtitle">Try adjusting your search queries or active filters</p>
                       </td>
                     </tr>
                   )}
@@ -407,24 +362,22 @@ export default function CallHistoryPage() {
 
             {/* Pagination Controls */}
             {totalPages > 1 && (
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--space-4) var(--space-6)', borderTop: '1px solid var(--border-default)', background: 'var(--bg-elevated)', flexWrap: 'wrap', gap: '12px' }}>
-                <span className="text-caption" style={{ fontSize: '12px' }}>
+              <div className="calls-pagination">
+                <span className="text-caption calls-pagination-label">
                   Showing page {page} of {totalPages} ({totalCount} total calls)
                 </span>
-                <div style={{ display: 'flex', gap: '8px' }}>
+                <div className="calls-pagination-buttons">
                   <button
                     onClick={() => setPage(p => Math.max(p - 1, 1))}
                     disabled={page === 1}
-                    className="btn btn-secondary"
-                    style={{ padding: '4px 12px', fontSize: '12px' }}
+                    className="btn btn-secondary calls-btn-pagination"
                   >
                     Previous
                   </button>
                   <button
                     onClick={() => setPage(p => Math.min(p + 1, totalPages))}
                     disabled={page === totalPages}
-                    className="btn btn-secondary"
-                    style={{ padding: '4px 12px', fontSize: '12px' }}
+                    className="btn btn-secondary calls-btn-pagination"
                   >
                     Next
                   </button>

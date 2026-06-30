@@ -113,22 +113,22 @@ Best regards,`;
       // Static fallback when live but no signals yet
       if (dynamicSteps.length === 0) {
         return (
-          <div style={{ textAlign: 'center', padding: 'var(--space-4) 0', color: 'var(--text-muted)' }}>
-            <p className="text-body" style={{ margin: 0 }}>Waiting for conversation signals to generate recommendations...</p>
+          <div className="next-steps-empty">
+            <p className="text-body m-0">Waiting for conversation signals to generate recommendations...</p>
           </div>
         );
       }
 
       return (
-        <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
+        <ul className="next-steps-list-gap-5">
           {dynamicSteps.map((step, i) => (
-            <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-3)' }}>
-              <div className="task-checkbox" style={{ background: 'var(--accent-muted)', cursor: 'default' }}>
-                <span className="material-symbols-outlined" style={{ fontSize: '14px', color: 'var(--accent)' }}>auto_awesome</span>
+            <li key={i} className="d-flex align-start gap-3">
+              <div className="task-checkbox cursor-default" style={{ background: 'var(--accent-muted)' }}>
+                <span className="material-symbols-outlined fs-14 color-accent">auto_awesome</span>
               </div>
               <div>
-                <p className="text-body" style={{ fontWeight: 600, color: 'var(--text-primary)', margin: 0, marginBottom: 'var(--space-1)' }}>{step.title}</p>
-                <p className="text-caption" style={{ margin: 0 }}>{step.description}</p>
+                <p className="text-body font-semibold color-primary m-0 mb-1">{step.title}</p>
+                <p className="text-caption m-0">{step.description}</p>
               </div>
             </li>
           ))}
@@ -139,47 +139,41 @@ Best regards,`;
     // Historical Review next-steps checklist
     if (nextSteps.length === 0) {
       return (
-        <div style={{ textAlign: 'center', padding: 'var(--space-4) 0', color: 'var(--text-muted)' }}>
-          <p className="text-body" style={{ margin: 0 }}>No tasks defined for this call yet.</p>
+        <div className="next-steps-empty">
+          <p className="text-body m-0">No tasks defined for this call yet.</p>
         </div>
       );
     }
 
     return (
-      <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+      <ul className="next-steps-list-gap-4">
         {nextSteps.map((step: any) => (
-          <li key={step.id} style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 'var(--space-3)' }}>
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-3)', flex: 1 }}>
+          <li key={step.id} className="d-flex align-start justify-between gap-3">
+            <div className="d-flex align-start gap-3 flex-1">
               <button
                 onClick={() => handleToggle(step.id, step.isCompleted)}
                 style={{
-                  background: 'none',
-                  border: 'none',
-                  padding: 0,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
                   color: step.isCompleted ? 'var(--success)' : 'var(--text-secondary)',
                 }}
+                className="task-toggle-btn"
               >
                 {step.isCompleted ? (
-                  <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>check_box</span>
+                  <span className="material-symbols-outlined fs-20">check_box</span>
                 ) : (
-                  <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>check_box_outline_blank</span>
+                  <span className="material-symbols-outlined fs-20">check_box_outline_blank</span>
                 )}
               </button>
               <div style={{ textDecoration: step.isCompleted ? 'line-through' : 'none', opacity: step.isCompleted ? 0.6 : 1, transition: 'all 0.2s ease' }}>
-                <p className="text-body" style={{ fontWeight: 600, color: 'var(--text-primary)', margin: 0, marginBottom: 'var(--space-1)' }}>{step.title}</p>
-                {step.description && <p className="text-caption" style={{ margin: 0 }}>{step.description}</p>}
+                <p className="text-body font-semibold color-primary m-0 mb-1">{step.title}</p>
+                {step.description && <p className="text-caption m-0">{step.description}</p>}
               </div>
             </div>
             <button
               onClick={() => handleDeleteTask(step.id)}
-              className="icon-btn"
-              style={{ color: 'var(--text-muted)', padding: '2px' }}
+              className="icon-btn color-muted p-2px"
               title="Delete task"
             >
-              <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>delete</span>
+              <span className="material-symbols-outlined fs-18">delete</span>
             </button>
           </li>
         ))}
@@ -188,22 +182,22 @@ Best regards,`;
   };
 
   return (
-    <section className="lg:col-span-5" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
+    <section className="lg:col-span-5 d-flex flex-col gap-5">
       {/* Task list card */}
-      <div className="card" style={{ flex: 1, position: 'relative' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-5)' }}>
-          <h2 className="text-section-heading" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', margin: 0 }}>
-            <span className="material-symbols-outlined" style={{ color: 'var(--accent)', fontSize: 20 }}>task_alt</span>
+      <div className="card flex-1 pos-relative">
+        <div className="d-flex justify-between align-center mb-5">
+          <h2 className="text-section-heading d-flex align-center gap-2 m-0">
+            <span className="material-symbols-outlined color-accent fs-20">task_alt</span>
             {isLive ? 'Live Coaching Steps' : 'Call Follow-Ups'}
           </h2>
           
           {!isLive && !isAdding && (
             <button
-              className="btn btn-ghost"
-              style={{ padding: '4px 8px', fontSize: '12px', color: 'var(--accent)' }}
+              className="btn btn-ghost fs-12 color-accent"
+              style={{ padding: '4px 8px' }}
               onClick={() => setIsAdding(true)}
             >
-              <span className="material-symbols-outlined" style={{ fontSize: '14px', marginRight: '4px' }}>add</span>
+              <span className="material-symbols-outlined fs-14 mr-4">add</span>
               Add Task
             </button>
           )}
@@ -211,38 +205,28 @@ Best regards,`;
 
         {/* Add Task Form inline */}
         {!isLive && isAdding && (
-          <form onSubmit={handleAddTask} style={{ marginBottom: 'var(--space-4)', padding: 'var(--space-3)', background: 'var(--bg-elevated)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-default)' }}>
+          <form onSubmit={handleAddTask} className="next-steps-form">
             <input
               type="text"
               placeholder="Task name (e.g. Follow up on proposal)"
               value={newTaskTitle}
               onChange={(e) => setNewTaskTitle(e.target.value)}
-              style={{
-                width: '100%',
-                background: 'var(--bg-root)',
-                border: '1px solid var(--border-default)',
-                color: 'var(--text-primary)',
-                padding: 'var(--space-2) var(--space-3)',
-                borderRadius: 'var(--radius-sm)',
-                fontSize: '13px',
-                outline: 'none',
-                marginBottom: 'var(--space-2)'
-              }}
+              className="next-steps-input"
               autoFocus
             />
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 'var(--space-2)' }}>
+            <div className="d-flex justify-end gap-2">
               <button
                 type="button"
-                className="btn btn-ghost"
-                style={{ padding: '4px 8px', fontSize: '12px' }}
+                className="btn btn-ghost fs-12"
+                style={{ padding: '4px 8px' }}
                 onClick={() => { setIsAdding(false); setNewTaskTitle(''); }}
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="btn btn-primary"
-                style={{ padding: '4px 10px', fontSize: '12px' }}
+                className="btn btn-primary fs-12"
+                style={{ padding: '4px 10px' }}
                 disabled={!newTaskTitle.trim()}
               >
                 Add
@@ -256,22 +240,22 @@ Best regards,`;
 
       {/* AI Follow-Up Draft */}
       <div className="ai-draft-card">
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginBottom: 'var(--space-3)' }}>
+        <div className="d-flex align-center gap-2 mb-3">
           <span
-            className="material-symbols-outlined"
-            style={{ color: 'var(--accent)', fontSize: 20, fontVariationSettings: "'FILL' 1" }}
+            className="material-symbols-outlined color-accent fs-20"
+            style={{ fontVariationSettings: "'FILL' 1" }}
           >
             mail
           </span>
-          <span className="text-overline" style={{ color: 'var(--accent)' }}>
+          <span className="text-overline color-accent">
             {isLive ? 'AI Live Summary' : 'AI Follow-Up Email'}
           </span>
         </div>
-        <p className="text-body" style={{ fontStyle: 'italic', marginBottom: 'var(--space-5)', whiteSpace: 'pre-line', fontSize: '13px', lineHeight: '1.5' }}>
+        <p className="text-body next-steps-email-body">
           {getFollowUpEmail()}
         </p>
-        <button onClick={handleCopyEmail} className="btn btn-primary" style={{ width: 'fit-content' }}>
-          <span className="material-symbols-outlined" style={{ fontSize: 16 }}>
+        <button onClick={handleCopyEmail} className="btn btn-primary w-fit">
+          <span className="material-symbols-outlined fs-16">
             {isCopying ? 'check' : 'content_copy'}
           </span>
           {isCopying ? 'Copied to Clipboard!' : 'Copy Email Template'}

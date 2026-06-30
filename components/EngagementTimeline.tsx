@@ -93,25 +93,25 @@ export default function EngagementTimeline() {
   const displayCards = signalCards.length > 0 ? signalCards : fallbackCards;
 
   return (
-    <section className="card lg:col-span-7" style={{ overflow: 'hidden' }}>
+    <section className="card lg:col-span-7 overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between" style={{ marginBottom: 'var(--space-6)' }}>
+      <div className="flex items-center justify-between mb-6">
         <h2 className="text-section-heading flex items-center gap-2">
-          <span className="material-symbols-outlined" style={{ color: 'var(--accent)', fontSize: 20 }}>insights</span>
+          <span className="material-symbols-outlined color-accent fs-20">insights</span>
           Engagement Timeline
         </h2>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <div style={{ width: 10, height: 10, borderRadius: '50%', background: 'var(--accent)' }} />
+            <div className="timeline-dot" />
             <span className="text-caption">Interest Score</span>
           </div>
           {hasData && (
-            <span className="text-caption" style={{ color: 'var(--accent)' }}>
+            <span className="text-caption color-accent">
               {records.length} segments
             </span>
           )}
           <button className="icon-btn">
-            <span className="material-symbols-outlined" style={{ fontSize: 18 }}>fullscreen</span>
+            <span className="material-symbols-outlined fs-18">fullscreen</span>
           </button>
         </div>
       </div>
@@ -119,19 +119,19 @@ export default function EngagementTimeline() {
       {/* Chart */}
       <div className="chart-container">
         {/* Chart Grid */}
-        <div style={{ position: 'absolute', inset: 0, display: 'grid', gridTemplateRows: 'repeat(4, 1fr)' }}>
-          <div style={{ borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'flex-end' }}>
-            <span className="text-caption" style={{ marginBottom: 4, fontSize: 10 }}>5 - High</span>
+        <div className="timeline-chart-grid">
+          <div className="border-b-subtle d-flex align-end">
+            <span className="text-caption mb-4 fs-10">5 - High</span>
           </div>
-          <div style={{ borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'flex-end' }}>
-            <span className="text-caption" style={{ marginBottom: 4, fontSize: 10 }}>3 - Neutral</span>
+          <div className="border-b-subtle d-flex align-end">
+            <span className="text-caption mb-4 fs-10">3 - Neutral</span>
           </div>
-          <div style={{ borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'flex-end' }}>
-            <span className="text-caption" style={{ marginBottom: 4, fontSize: 10 }}>1 - Low</span>
+          <div className="border-b-subtle d-flex align-end">
+            <span className="text-caption mb-4 fs-10">1 - Low</span>
           </div>
         </div>
         {/* SVG Chart — real data or placeholder */}
-        <svg preserveAspectRatio="none" viewBox="0 0 100 100" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'visible' }}>
+        <svg preserveAspectRatio="none" viewBox="0 0 100 100" className="pos-absolute-inset-0 w-full h-full overflow-visible">
           <defs>
             <linearGradient id="chartGradient" x1="0%" x2="0%" y1="0%" y2="100%">
               <stop offset="0%" stopColor="#7c6aef" stopOpacity={0.2} />
@@ -164,22 +164,22 @@ export default function EngagementTimeline() {
           )}
         </svg>
         {/* Timeline markers */}
-        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, display: 'flex', justifyContent: 'space-between', paddingTop: 'var(--space-2)' }}>
+        <div className="timeline-time-markers">
           {timeMarkers.map((t, i) => (
-            <span key={i} className="text-caption" style={{ fontSize: 10 }}>{t}</span>
+            <span key={i} className="text-caption fs-10">{t}</span>
           ))}
         </div>
       </div>
 
       {/* Signal Cards */}
-      <div className="signal-row custom-scrollbar" style={{ marginTop: 'var(--space-8)' }}>
+      <div className="signal-row custom-scrollbar mt-8">
         {displayCards.map((card, i) => (
-          <div key={i} className="signal-card" style={{ borderColor: card.borderColor, transition: 'all 0.3s ease' }}>
-            <div className="flex items-center gap-2" style={{ marginBottom: 'var(--space-2)' }}>
-              <span className="material-symbols-outlined" style={{ fontSize: 16, color: card.color, fontVariationSettings: card.type === 'Buying Signal' ? "'FILL' 1" : undefined }}>{card.icon}</span>
+          <div key={i} className="signal-card" style={{ borderColor: card.borderColor }}>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="material-symbols-outlined fs-16" style={{ color: card.color, fontVariationSettings: card.type === 'Buying Signal' ? "'FILL' 1" : undefined }}>{card.icon}</span>
               <span className="text-overline" style={{ color: card.color }}>{card.type}</span>
             </div>
-            <p className="text-caption" style={{ lineHeight: 1.5 }}>{card.text}</p>
+            <p className="text-caption lh-1-5">{card.text}</p>
           </div>
         ))}
       </div>

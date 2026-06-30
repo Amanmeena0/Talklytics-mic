@@ -22,26 +22,13 @@ function LiveCallContent() {
       <SessionHeader />
 
       {status === 'disconnected' && !hasData && (
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '40vh',
-          background: 'var(--bg-card)',
-          borderRadius: 'var(--radius-lg)',
-          border: '1px solid var(--border-default)',
-          padding: 'var(--space-6)',
-          textAlign: 'center',
-          marginBottom: 'var(--space-6)',
-          animation: 'fadeInUp 0.3s ease'
-        }}>
-          <span className="material-symbols-outlined" style={{ fontSize: '48px', color: 'var(--text-muted)', marginBottom: 'var(--space-3)' }}>sensors_off</span>
+        <div className="live-call-no-stream-card">
+          <span className="material-symbols-outlined fs-48 color-muted mb-3">sensors_off</span>
           <h3 className="text-section-heading">No active sales stream</h3>
-          <p className="text-body" style={{ color: 'var(--text-secondary)', maxWidth: '460px', margin: 'var(--space-1) 0 var(--space-4) 0' }}>
+          <p className="text-body live-call-no-stream-text">
             Ensure your FastAPI uvicorn backend server is running and your microphone is streaming audio. The dashboard will automatically connect and update when a stream starts.
           </p>
-          <div style={{ background: 'var(--bg-root)', padding: 'var(--space-3) var(--space-4)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)', fontFamily: 'var(--font-geist-mono)', fontSize: '11px', color: 'var(--text-primary)' }}>
+          <div className="live-call-cmd-box">
             uvicorn src.api.app:app --host 127.0.0.1 --port 8000 --reload
           </div>
         </div>
@@ -54,14 +41,14 @@ function LiveCallContent() {
       </div>
 
       {/* Row 2: BANT Analysis + Next Steps */}
-      <div className="grid-dashboard" style={{ marginTop: 'var(--space-5)' }}>
+      <div className="grid-dashboard mt-5">
         <BANTAnalysis />
         <NextSteps />
       </div>
 
       {/* Row 3: Transcript Log (full width) */}
-      <div className="grid-dashboard" style={{ marginTop: 'var(--space-5)' }}>
-        <div style={{ gridColumn: '1 / -1' }}>
+      <div className="grid-dashboard mt-5">
+        <div className="grid-col-all">
           <TranscriptLog />
         </div>
       </div>
