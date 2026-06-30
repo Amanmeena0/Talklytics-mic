@@ -47,7 +47,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
     }
 
     // Convert records' buyingSignals/hesitations/detectedIntents back to JSON objects (arrays)
-    const formattedRecords = call.records.map((r) => ({
+    const formattedRecords = call.records.map((r: any) => ({
       ...r,
       buying_signals: JSON.parse(r.buyingSignals),
       hesitations: JSON.parse(r.hesitations),

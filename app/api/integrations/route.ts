@@ -11,7 +11,7 @@ export async function GET() {
       orderBy: { name: 'asc' },
     });
 
-    const parsed = integrations.map((integration) => ({
+    const parsed = integrations.map((integration: any) => ({
       ...integration,
       config: JSON.parse(integration.config || '{}'),
     }));

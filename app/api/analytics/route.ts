@@ -29,19 +29,19 @@ export async function GET() {
     }
 
     const totalCalls = calls.length;
-    const totalDurationSeconds = calls.reduce((sum: number, c) => sum + c.duration, 0);
+    const totalDurationSeconds = calls.reduce((sum: number, c: any) => sum + c.duration, 0);
     const totalDurationMinutes = Math.round(totalDurationSeconds / 60);
 
     const averageScore = parseFloat(
-      (calls.reduce((sum: number, c) => sum + c.averageScore, 0) / totalCalls).toFixed(2)
+      (calls.reduce((sum: number, c: any) => sum + c.averageScore, 0) / totalCalls).toFixed(2)
     );
     const averageConversionProbability = Math.round(
-      calls.reduce((sum: number, c) => sum + c.conversionProbability, 0) / totalCalls
+      calls.reduce((sum: number, c: any) => sum + c.conversionProbability, 0) / totalCalls
     );
 
     // Sentiment distribution
     const sentimentSplit = { Positive: 0, Neutral: 0, Negative: 0 };
-    calls.forEach((c) => {
+    calls.forEach((c: any) => {
       const s = c.overallSentiment as keyof typeof sentimentSplit;
       if (s in sentimentSplit) {
         sentimentSplit[s] += 1;
@@ -49,7 +49,7 @@ export async function GET() {
     });
 
     // Score trend over time (grouped by date)
-    const scoreTrend = calls.map((c) => ({
+    const scoreTrend = calls.map((c: any) => ({
       id: c.id,
       title: c.title,
       date: c.date.toISOString().split('T')[0],
@@ -60,7 +60,7 @@ export async function GET() {
     // BANT coverage
     // Percentage of completed calls that have at least one BANT parameter verified (met)
     const callsWithBant = calls.filter(
-      (c) => c.bantBudgetMet || c.bantAuthorityMet || c.bantNeedMet || c.bantTimelineMet
+      (c: any) => c.bantBudgetMet || c.bantAuthorityMet || c.bantNeedMet || c.bantTimelineMet
     );
     const bantCompletionRate = Math.round((callsWithBant.length / totalCalls) * 100);
 
@@ -77,7 +77,7 @@ export async function GET() {
     let totalBuyingSignals = 0;
     let totalHesitations = 0;
 
-    allRecords.forEach((rec) => {
+    allRecords.forEach((rec: any) => {
       try {
         const intents = JSON.parse(rec.detectedIntents || '[]');
         intents.forEach((intent: string) => {
