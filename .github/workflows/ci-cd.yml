@@ -1,0 +1,44 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  ci:
+    name: Code Quality & Build Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js (22.x LTS)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Formatting Check
+        run: npm run format:check
+
+      - name: Run Linter
+        run: npm run lint
+
+      - name: Run TypeScript Type-Check
+        run: npm run type-check
+
+      - name: Run Unit Tests
+        run: npm run test
+
+      - name: Run Security Audit
+        run: npm audit --audit-level=high
+
+      - name: Build Next.js Application
+        run: npm run build

@@ -32,7 +32,10 @@ export default function Sidebar() {
       {/* Live Monitor Section */}
       <div className="sidebar-section">
         <Link href="/calls/live" style={{ textDecoration: 'none' }}>
-          <div className={`sidebar-item ${pathname === '/calls/live' ? 'active' : ''}`} style={{ gap: 'var(--space-3)', cursor: 'pointer' }}>
+          <div
+            className={`sidebar-item ${pathname === '/calls/live' ? 'active' : ''}`}
+            style={{ gap: 'var(--space-3)', cursor: 'pointer' }}
+          >
             <span
               className="pulse-dot"
               style={{
@@ -41,7 +44,9 @@ export default function Sidebar() {
               }}
             />
             <div>
-              <div style={{ color: 'var(--text-primary)', fontSize: '13px', fontWeight: 600 }}>Live Monitor</div>
+              <div style={{ color: 'var(--text-primary)', fontSize: '13px', fontWeight: 600 }}>
+                Live Monitor
+              </div>
               <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
                 {liveCallAvailable ? 'Uvicorn Server Active' : 'No Active Stream'}
               </div>
@@ -55,18 +60,37 @@ export default function Sidebar() {
       {/* Main Navigation */}
       <div className="sidebar-section">
         <div className="sidebar-section-title">Navigation</div>
-        
-        <Link href="/calls/live" className={`sidebar-item ${pathname === '/calls/live' ? 'active' : ''}`}>
+
+        <Link
+          href="/calls/live"
+          className={`sidebar-item ${pathname === '/calls/live' ? 'active' : ''}`}
+        >
           <span className="material-symbols-outlined">monitoring</span>
           <span>Live Insights</span>
         </Link>
-        
-        <Link href="/calls" className={`sidebar-item ${pathname.startsWith('/calls') && pathname !== '/calls/live' ? 'active' : ''}`}>
-          <span className="material-symbols-outlined" style={{ fontVariationSettings: pathname.startsWith('/calls') && pathname !== '/calls/live' ? "'FILL' 1" : undefined }}>history</span>
+
+        <Link
+          href="/calls"
+          className={`sidebar-item ${pathname.startsWith('/calls') && pathname !== '/calls/live' ? 'active' : ''}`}
+        >
+          <span
+            className="material-symbols-outlined"
+            style={{
+              fontVariationSettings:
+                pathname.startsWith('/calls') && pathname !== '/calls/live'
+                  ? "'FILL' 1"
+                  : undefined,
+            }}
+          >
+            history
+          </span>
           <span>Call History</span>
         </Link>
-        
-        <Link href="/analytics" className={`sidebar-item ${pathname === '/analytics' ? 'active' : ''}`}>
+
+        <Link
+          href="/analytics"
+          className={`sidebar-item ${pathname === '/analytics' ? 'active' : ''}`}
+        >
           <span className="material-symbols-outlined">groups</span>
           <span>Team Analytics</span>
         </Link>
@@ -75,13 +99,19 @@ export default function Sidebar() {
       {/* Settings & Config */}
       <div className="sidebar-section">
         <div className="sidebar-section-title">Configuration</div>
-        
-        <Link href="/settings?tab=integrations" className={`sidebar-item ${pathname === '/settings' && pathname.includes('integrations') ? 'active' : ''}`}>
+
+        <Link
+          href="/settings?tab=integrations"
+          className={`sidebar-item ${pathname === '/settings' && pathname.includes('integrations') ? 'active' : ''}`}
+        >
           <span className="material-symbols-outlined">extension</span>
           <span>Integrations</span>
         </Link>
-        
-        <Link href="/settings" className={`sidebar-item ${pathname === '/settings' && !pathname.includes('integrations') ? 'active' : ''}`}>
+
+        <Link
+          href="/settings"
+          className={`sidebar-item ${pathname === '/settings' && !pathname.includes('integrations') ? 'active' : ''}`}
+        >
           <span className="material-symbols-outlined">settings</span>
           <span>User Settings</span>
         </Link>

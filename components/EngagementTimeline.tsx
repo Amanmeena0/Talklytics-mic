@@ -17,13 +17,17 @@ export default function EngagementTimeline() {
   const hasData = records.length > 0;
 
   // Build SVG path from score data points
-  const buildChartPath = (): { linePath: string; areaPath: string; points: { x: number; y: number; score: number; hasBuyingSignal: boolean }[] } => {
+  const buildChartPath = (): {
+    linePath: string;
+    areaPath: string;
+    points: { x: number; y: number; score: number; hasBuyingSignal: boolean }[];
+  } => {
     if (records.length < 2) {
       return { linePath: '', areaPath: '', points: [] };
     }
 
-    const maxTimestamp = Math.max(...records.map(r => r.timestamp), 1);
-    const points = records.map(r => ({
+    const maxTimestamp = Math.max(...records.map((r) => r.timestamp), 1);
+    const points = records.map((r) => ({
       x: (r.timestamp / maxTimestamp) * 100,
       // Score is 1-5, map to SVG y (0=top=score5, 100=bottom=score1)
       y: 100 - ((r.score - 1) / 4) * 100,
@@ -51,7 +55,13 @@ export default function EngagementTimeline() {
     : ['0:00', '5:00', '10:00', '15:00', '20:00', '24:12'];
 
   // Build signal cards from live data
-  const signalCards: { type: string; icon: string; color: string; borderColor: string; text: string }[] = [];
+  const signalCards: {
+    type: string;
+    icon: string;
+    color: string;
+    borderColor: string;
+    text: string;
+  }[] = [];
 
   if (allBuyingSignals.length > 0) {
     signalCards.push({
@@ -69,7 +79,7 @@ export default function EngagementTimeline() {
       icon: 'warning',
       color: 'var(--error)',
       borderColor: 'var(--error-muted)',
-      text: `Detected intents: ${allIntents.filter(i => i === 'OBJECTION' || i === 'COMPARISON').join(', ')}`,
+      text: `Detected intents: ${allIntents.filter((i) => i === 'OBJECTION' || i === 'COMPARISON').join(', ')}`,
     });
   }
 
@@ -79,15 +89,33 @@ export default function EngagementTimeline() {
       icon: 'bolt',
       color: 'var(--accent)',
       borderColor: 'var(--accent-border)',
-      text: `Active intents: ${allIntents.filter(i => i === 'PRICING' || i === 'COMMITMENT').join(', ')}`,
+      text: `Active intents: ${allIntents.filter((i) => i === 'PRICING' || i === 'COMMITMENT').join(', ')}`,
     });
   }
 
   // Fallback signal cards when no data
   const fallbackCards = [
-    { type: 'Buying Signal', icon: 'stars', color: 'var(--success)', borderColor: 'var(--success-muted)', text: 'Waiting for buying signals...' },
-    { type: 'Objection', icon: 'warning', color: 'var(--error)', borderColor: 'var(--error-muted)', text: 'Waiting for objections...' },
-    { type: 'Value Prop', icon: 'bolt', color: 'var(--accent)', borderColor: 'var(--accent-border)', text: 'Waiting for value props...' },
+    {
+      type: 'Buying Signal',
+      icon: 'stars',
+      color: 'var(--success)',
+      borderColor: 'var(--success-muted)',
+      text: 'Waiting for buying signals...',
+    },
+    {
+      type: 'Objection',
+      icon: 'warning',
+      color: 'var(--error)',
+      borderColor: 'var(--error-muted)',
+      text: 'Waiting for objections...',
+    },
+    {
+      type: 'Value Prop',
+      icon: 'bolt',
+      color: 'var(--accent)',
+      borderColor: 'var(--accent-border)',
+      text: 'Waiting for value props...',
+    },
   ];
 
   const displayCards = signalCards.length > 0 ? signalCards : fallbackCards;
@@ -105,11 +133,7 @@ export default function EngagementTimeline() {
             <div className="timeline-dot" />
             <span className="text-caption">Interest Score</span>
           </div>
-          {hasData && (
-            <span className="text-caption color-accent">
-              {records.length} segments
-            </span>
-          )}
+          {hasData && <span className="text-caption color-accent">{records.length} segments</span>}
           <button className="icon-btn">
             <span className="material-symbols-outlined fs-18">fullscreen</span>
           </button>
@@ -131,7 +155,11 @@ export default function EngagementTimeline() {
           </div>
         </div>
         {/* SVG Chart — real data or placeholder */}
-        <svg preserveAspectRatio="none" viewBox="0 0 100 100" className="pos-absolute-inset-0 w-full h-full overflow-visible">
+        <svg
+          preserveAspectRatio="none"
+          viewBox="0 0 100 100"
+          className="pos-absolute-inset-0 w-full h-full overflow-visible"
+        >
           <defs>
             <linearGradient id="chartGradient" x1="0%" x2="0%" y1="0%" y2="100%">
               <stop offset="0%" stopColor="#7c6aef" stopOpacity={0.2} />
@@ -144,20 +172,53 @@ export default function EngagementTimeline() {
                 <animate attributeName="opacity" from="0" to="1" dur="0.6s" fill="freeze" />
               </path>
               <path d={linePath} fill="none" stroke="#7c6aef" strokeWidth="2">
-                <animate attributeName="stroke-dasharray" from="0,1000" to="1000,0" dur="1s" fill="freeze" />
+                <animate
+                  attributeName="stroke-dasharray"
+                  from="0,1000"
+                  to="1000,0"
+                  dur="1s"
+                  fill="freeze"
+                />
               </path>
               {/* Buying signal dots */}
-              {points.filter(p => p.hasBuyingSignal).map((p, i) => (
-                <circle key={i} className="animate-pulse" cx={p.x} cy={p.y} fill="var(--success)" r="4">
-                  <title>Buying Signal (Score: {p.score})</title>
-                </circle>
-              ))}
+              {points
+                .filter((p) => p.hasBuyingSignal)
+                .map((p, i) => (
+                  <circle
+                    key={i}
+                    className="animate-pulse"
+                    cx={p.x}
+                    cy={p.y}
+                    fill="var(--success)"
+                    r="4"
+                  >
+                    <title>Buying Signal (Score: {p.score})</title>
+                  </circle>
+                ))}
             </>
           ) : (
             <>
-              <path d="M0,60 Q10,55 20,40 T40,45 T60,20 T80,30 T100,25 L100,100 L0,100 Z" fill="url(#chartGradient)" opacity="0.3" />
-              <path d="M0,60 Q10,55 20,40 T40,45 T60,20 T80,30 T100,25" fill="none" stroke="#7c6aef" strokeWidth="2" opacity="0.3" strokeDasharray="4 4" />
-              <text x="50" y="50" textAnchor="middle" fill="var(--text-muted)" fontSize="6" fontFamily="inherit">
+              <path
+                d="M0,60 Q10,55 20,40 T40,45 T60,20 T80,30 T100,25 L100,100 L0,100 Z"
+                fill="url(#chartGradient)"
+                opacity="0.3"
+              />
+              <path
+                d="M0,60 Q10,55 20,40 T40,45 T60,20 T80,30 T100,25"
+                fill="none"
+                stroke="#7c6aef"
+                strokeWidth="2"
+                opacity="0.3"
+                strokeDasharray="4 4"
+              />
+              <text
+                x="50"
+                y="50"
+                textAnchor="middle"
+                fill="var(--text-muted)"
+                fontSize="6"
+                fontFamily="inherit"
+              >
                 {status === 'connecting' ? 'Connecting to backend...' : 'Awaiting live data'}
               </text>
             </>
@@ -166,7 +227,9 @@ export default function EngagementTimeline() {
         {/* Timeline markers */}
         <div className="timeline-time-markers">
           {timeMarkers.map((t, i) => (
-            <span key={i} className="text-caption fs-10">{t}</span>
+            <span key={i} className="text-caption fs-10">
+              {t}
+            </span>
           ))}
         </div>
       </div>
@@ -176,8 +239,18 @@ export default function EngagementTimeline() {
         {displayCards.map((card, i) => (
           <div key={i} className="signal-card" style={{ borderColor: card.borderColor }}>
             <div className="flex items-center gap-2 mb-2">
-              <span className="material-symbols-outlined fs-16" style={{ color: card.color, fontVariationSettings: card.type === 'Buying Signal' ? "'FILL' 1" : undefined }}>{card.icon}</span>
-              <span className="text-overline" style={{ color: card.color }}>{card.type}</span>
+              <span
+                className="material-symbols-outlined fs-16"
+                style={{
+                  color: card.color,
+                  fontVariationSettings: card.type === 'Buying Signal' ? "'FILL' 1" : undefined,
+                }}
+              >
+                {card.icon}
+              </span>
+              <span className="text-overline" style={{ color: card.color }}>
+                {card.type}
+              </span>
             </div>
             <p className="text-caption lh-1-5">{card.text}</p>
           </div>

@@ -5,10 +5,7 @@ import prisma from '@/libs/db';
  * GET /api/calls/[id]/next-steps
  * Fetches all next steps (tasks) for a call.
  */
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const nextSteps = await prisma.nextStep.findMany({
@@ -18,7 +15,10 @@ export async function GET(
 
     return NextResponse.json(nextSteps);
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || 'Failed to fetch next steps' }, { status: 500 });
+    return NextResponse.json(
+      { error: error.message || 'Failed to fetch next steps' },
+      { status: 500 }
+    );
   }
 }
 
@@ -26,10 +26,7 @@ export async function GET(
  * POST /api/calls/[id]/next-steps
  * Creates a new next step task.
  */
-export async function POST(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const { title, description, dueDate } = await request.json();
@@ -49,7 +46,10 @@ export async function POST(
 
     return NextResponse.json(nextStep, { status: 201 });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || 'Failed to create next step' }, { status: 500 });
+    return NextResponse.json(
+      { error: error.message || 'Failed to create next step' },
+      { status: 500 }
+    );
   }
 }
 
@@ -57,10 +57,7 @@ export async function POST(
  * PATCH /api/calls/[id]/next-steps
  * Updates next steps (e.g. toggles completion or deletes).
  */
-export async function PATCH(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const body = await request.json();
     const { stepId, isCompleted, title, description, isDelete } = body;
@@ -88,6 +85,9 @@ export async function PATCH(
 
     return NextResponse.json(updated);
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || 'Failed to update next step' }, { status: 500 });
+    return NextResponse.json(
+      { error: error.message || 'Failed to update next step' },
+      { status: 500 }
+    );
   }
 }

@@ -7,7 +7,7 @@ import { useRouter, usePathname } from 'next/navigation';
 export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
-  
+
   // State
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -84,9 +84,7 @@ export default function Header() {
         body: JSON.stringify({ id, read }),
       });
       if (res.ok) {
-        setNotifications(prev =>
-          prev.map(n => (n.id === id ? { ...n, read } : n))
-        );
+        setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read } : n)));
       }
     } catch (err) {
       console.error(err);
@@ -117,7 +115,7 @@ export default function Header() {
     }
   };
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const unreadCount = notifications.filter((n) => !n.read).length;
 
   return (
     <header className="app-header pos-relative z-100">
@@ -129,10 +127,24 @@ export default function Header() {
           </span>
         </Link>
         <nav className="d-flex align-center gap-6">
-          <Link href="/" className={`nav-link ${pathname === '/' ? 'active' : ''}`}>Dashboard</Link>
-          <Link href="/calls" className={`nav-link ${pathname.startsWith('/calls') && !pathname.includes('live') ? 'active' : ''}`}>Recordings</Link>
-          <Link href="/analytics" className={`nav-link ${pathname === '/analytics' ? 'active' : ''}`}>Analytics</Link>
-          <Link href="/settings" className={`nav-link ${pathname === '/settings' ? 'active' : ''}`}>Settings</Link>
+          <Link href="/" className={`nav-link ${pathname === '/' ? 'active' : ''}`}>
+            Dashboard
+          </Link>
+          <Link
+            href="/calls"
+            className={`nav-link ${pathname.startsWith('/calls') && !pathname.includes('live') ? 'active' : ''}`}
+          >
+            Recordings
+          </Link>
+          <Link
+            href="/analytics"
+            className={`nav-link ${pathname === '/analytics' ? 'active' : ''}`}
+          >
+            Analytics
+          </Link>
+          <Link href="/settings" className={`nav-link ${pathname === '/settings' ? 'active' : ''}`}>
+            Settings
+          </Link>
         </nav>
       </div>
 
@@ -156,9 +168,7 @@ export default function Header() {
             aria-label="Notifications"
           >
             <span className="material-symbols-outlined">notifications</span>
-            {unreadCount > 0 && (
-              <span className="header-notif-badge" />
-            )}
+            {unreadCount > 0 && <span className="header-notif-badge" />}
           </button>
 
           {showNotifications && (
@@ -166,10 +176,7 @@ export default function Header() {
               <div className="header-dropdown-notifications-header">
                 <span className="header-dropdown-notifications-title">Notifications</span>
                 {notifications.length > 0 && (
-                  <button
-                    onClick={handleClearAllNotifs}
-                    className="header-notif-clear-btn"
-                  >
+                  <button onClick={handleClearAllNotifs} className="header-notif-clear-btn">
                     Clear All
                   </button>
                 )}
@@ -177,7 +184,7 @@ export default function Header() {
 
               {notifications.length > 0 ? (
                 <div className="d-flex flex-col gap-3">
-                  {notifications.map(n => (
+                  {notifications.map((n) => (
                     <div
                       key={n.id}
                       onClick={() => handleMarkNotifRead(n.id, !n.read)}
@@ -193,9 +200,7 @@ export default function Header() {
                     >
                       <div className="d-flex justify-between align-start">
                         <span className="fs-12 font-semibold color-primary">{n.title}</span>
-                        {!n.read && (
-                          <span className="header-notif-unread-dot" />
-                        )}
+                        {!n.read && <span className="header-notif-unread-dot" />}
                       </div>
                       <p className="header-notif-description">{n.description}</p>
                     </div>
@@ -203,7 +208,9 @@ export default function Header() {
                 </div>
               ) : (
                 <div className="header-notif-empty">
-                  <span className="material-symbols-outlined header-notif-empty-icon">notifications_off</span>
+                  <span className="material-symbols-outlined header-notif-empty-icon">
+                    notifications_off
+                  </span>
                   <span className="header-notif-empty-text">No notifications</span>
                 </div>
               )}
@@ -221,14 +228,14 @@ export default function Header() {
 
         {/* User Menu / Switcher */}
         <div className="pos-relative" ref={userMenuRef}>
-          <button
-            onClick={() => setShowUserMenu(!showUserMenu)}
-            className="header-user-btn"
-          >
+          <button onClick={() => setShowUserMenu(!showUserMenu)} className="header-user-btn">
             <div className="header-user-avatar-container">
               <img
                 className="header-user-avatar-img"
-                src={currentUser?.avatarUrl || "https://lh3.googleusercontent.com/aida-public/AB6AXuBydN9a-URkUyb3EbMEXrxRRb35zw61rKWQ7f3QcdwXBQrIa8blJRm9flK0WbBbOjWAQyw6yBXqeiOPw9A7a3ngJ3S7Le2X-QXAZIgnd88et1q7etjADf0KLje2R6eHsXAW4haDHneZxCRUONnAlkjdludfTwpAg3RfFcasH2NH1G4jLMJqS5j6LIEUiye1zcL4in7zFU-AIteWTeAFKq5NlUek2mHAEpjs5RGuL8QpW8WsRlPEHwswXnL4oYjStpG4CWyyowvqog"}
+                src={
+                  currentUser?.avatarUrl ||
+                  'https://lh3.googleusercontent.com/aida-public/AB6AXuBydN9a-URkUyb3EbMEXrxRRb35zw61rKWQ7f3QcdwXBQrIa8blJRm9flK0WbBbOjWAQyw6yBXqeiOPw9A7a3ngJ3S7Le2X-QXAZIgnd88et1q7etjADf0KLje2R6eHsXAW4haDHneZxCRUONnAlkjdludfTwpAg3RfFcasH2NH1G4jLMJqS5j6LIEUiye1zcL4in7zFU-AIteWTeAFKq5NlUek2mHAEpjs5RGuL8QpW8WsRlPEHwswXnL4oYjStpG4CWyyowvqog'
+                }
                 alt="User avatar"
               />
             </div>
@@ -239,9 +246,7 @@ export default function Header() {
               <div className="header-user-info-section">
                 <span className="header-user-name">{currentUser?.name}</span>
                 <span className="header-user-email">{currentUser?.email}</span>
-                <span className="header-user-role-badge">
-                  {currentUser?.role}
-                </span>
+                <span className="header-user-role-badge">{currentUser?.role}</span>
               </div>
 
               <div className="d-flex flex-col gap-1">
@@ -249,7 +254,8 @@ export default function Header() {
                 <button
                   onClick={() => handleSwitchUser('jane.smith@convincesense.com')}
                   style={{
-                    background: currentUser?.role === 'SALES_REP' ? 'var(--bg-card)' : 'transparent',
+                    background:
+                      currentUser?.role === 'SALES_REP' ? 'var(--bg-card)' : 'transparent',
                   }}
                   className="header-user-demo-btn"
                 >
@@ -279,7 +285,11 @@ export default function Header() {
               </div>
 
               <div className="border-t-subtle mt-2 pt-2">
-                <Link href="/settings" className="no-underline" onClick={() => setShowUserMenu(false)}>
+                <Link
+                  href="/settings"
+                  className="no-underline"
+                  onClick={() => setShowUserMenu(false)}
+                >
                   <span className="header-user-settings-link">
                     <span className="material-symbols-outlined fs-16">settings</span>
                     Account Settings

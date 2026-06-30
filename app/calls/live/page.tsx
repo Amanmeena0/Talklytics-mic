@@ -26,7 +26,8 @@ function LiveCallContent() {
           <span className="material-symbols-outlined fs-48 color-muted mb-3">sensors_off</span>
           <h3 className="text-section-heading">No active sales stream</h3>
           <p className="text-body live-call-no-stream-text">
-            Ensure your FastAPI uvicorn backend server is running and your microphone is streaming audio. The dashboard will automatically connect and update when a stream starts.
+            Ensure your FastAPI uvicorn backend server is running and your microphone is streaming
+            audio. The dashboard will automatically connect and update when a stream starts.
           </p>
           <div className="live-call-cmd-box">
             uvicorn src.api.app:app --host 127.0.0.1 --port 8000 --reload

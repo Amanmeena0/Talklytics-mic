@@ -18,7 +18,10 @@ export async function GET() {
 
     return NextResponse.json(parsed);
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || 'Failed to fetch integrations' }, { status: 500 });
+    return NextResponse.json(
+      { error: error.message || 'Failed to fetch integrations' },
+      { status: 500 }
+    );
   }
 }
 
@@ -50,7 +53,8 @@ export async function PUT(request: Request) {
     // Write audit log
     const { cookies } = require('next/headers');
     const cookieStore = await cookies();
-    const activeUserEmail = cookieStore.get('active_user_email')?.value || 'jane.smith@convincesense.com';
+    const activeUserEmail =
+      cookieStore.get('active_user_email')?.value || 'jane.smith@convincesense.com';
     const user = await prisma.user.findUnique({ where: { email: activeUserEmail } });
 
     await prisma.auditLog.create({
@@ -66,6 +70,9 @@ export async function PUT(request: Request) {
       config: JSON.parse(integration.config || '{}'),
     });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || 'Failed to update integration' }, { status: 500 });
+    return NextResponse.json(
+      { error: error.message || 'Failed to update integration' },
+      { status: 500 }
+    );
   }
 }

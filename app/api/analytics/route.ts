@@ -29,11 +29,15 @@ export async function GET() {
     }
 
     const totalCalls = calls.length;
-    const totalDurationSeconds = calls.reduce((sum, c) => sum + c.duration, 0);
+    const totalDurationSeconds = calls.reduce((sum: number, c) => sum + c.duration, 0);
     const totalDurationMinutes = Math.round(totalDurationSeconds / 60);
 
-    const averageScore = parseFloat((calls.reduce((sum, c) => sum + c.averageScore, 0) / totalCalls).toFixed(2));
-    const averageConversionProbability = Math.round(calls.reduce((sum, c) => sum + c.conversionProbability, 0) / totalCalls);
+    const averageScore = parseFloat(
+      (calls.reduce((sum: number, c) => sum + c.averageScore, 0) / totalCalls).toFixed(2)
+    );
+    const averageConversionProbability = Math.round(
+      calls.reduce((sum: number, c) => sum + c.conversionProbability, 0) / totalCalls
+    );
 
     // Sentiment distribution
     const sentimentSplit = { Positive: 0, Neutral: 0, Negative: 0 };
@@ -55,7 +59,9 @@ export async function GET() {
 
     // BANT coverage
     // Percentage of completed calls that have at least one BANT parameter verified (met)
-    const callsWithBant = calls.filter((c) => c.bantBudgetMet || c.bantAuthorityMet || c.bantNeedMet || c.bantTimelineMet);
+    const callsWithBant = calls.filter(
+      (c) => c.bantBudgetMet || c.bantAuthorityMet || c.bantNeedMet || c.bantTimelineMet
+    );
     const bantCompletionRate = Math.round((callsWithBant.length / totalCalls) * 100);
 
     // Let's count some intents and speech statistics from all engagement records in the system
@@ -67,7 +73,7 @@ export async function GET() {
       COMMITMENT: 0,
       INFORMATION: 0,
     };
-    
+
     let totalBuyingSignals = 0;
     let totalHesitations = 0;
 
@@ -103,6 +109,9 @@ export async function GET() {
       totalHesitations,
     });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || 'Failed to compute analytics' }, { status: 500 });
+    return NextResponse.json(
+      { error: error.message || 'Failed to compute analytics' },
+      { status: 500 }
+    );
   }
 }

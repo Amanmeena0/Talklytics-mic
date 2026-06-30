@@ -3,7 +3,14 @@
 import { useLiveData } from '@/shared/hooks/LiveDataContext';
 
 export default function ExecutiveSummary() {
-  const { records, averageScore, dominantSentiment, averageConfidence, latestRecommendation, status } = useLiveData();
+  const {
+    records,
+    averageScore,
+    dominantSentiment,
+    averageConfidence,
+    latestRecommendation,
+    status,
+  } = useLiveData();
 
   const hasData = records.length > 0;
 
@@ -55,7 +62,10 @@ export default function ExecutiveSummary() {
           <p className="text-overline mb-1">Overall Sentiment</p>
           <div className="flex items-center gap-2">
             <div className="connection-indicator-dot" style={{ background: sentimentColor }} />
-            <span className="font-bold fs-14" style={{ color: sentimentColor, transition: 'color 0.3s ease' }}>
+            <span
+              className="font-bold fs-14"
+              style={{ color: sentimentColor, transition: 'color 0.3s ease' }}
+            >
               {hasData ? sentimentLabel : '—'}
             </span>
           </div>

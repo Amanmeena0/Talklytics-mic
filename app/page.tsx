@@ -57,8 +57,8 @@ export default function Home() {
 
   // Toggle favorite on list
   const handleToggleFavorite = async (id: string, currentStatus: boolean) => {
-    setRecentCalls(prev =>
-      prev.map(c => (c.id === id ? { ...c, isFavorite: !currentStatus } : c))
+    setRecentCalls((prev) =>
+      prev.map((c) => (c.id === id ? { ...c, isFavorite: !currentStatus } : c))
     );
 
     try {
@@ -110,7 +110,6 @@ export default function Home() {
     <Layout>
       <main className="main-content">
         <div className="content-container">
-          
           {/* Header */}
           <header className="d-flex justify-between align-start mb-8">
             <div>
@@ -120,7 +119,7 @@ export default function Home() {
                 Here is your AI conversation intelligence activity for today.
               </p>
             </div>
-            
+
             <div className="d-flex gap-3">
               <Link href="/calls/live" className="no-underline">
                 <button className="btn btn-primary">
@@ -136,24 +135,32 @@ export default function Home() {
             <div className="card">
               <p className="text-overline color-secondary">TOTAL CALLS</p>
               <h3 className="fs-28 font-bold mt-2 mb-1 color-primary">{stats?.totalCalls || 0}</h3>
-              <p className="mt-1 fs-11 color-secondary">{stats?.totalDurationMinutes || 0} minutes total</p>
+              <p className="mt-1 fs-11 color-secondary">
+                {stats?.totalDurationMinutes || 0} minutes total
+              </p>
             </div>
 
             <div className="card">
               <p className="text-overline color-secondary">AVG INTEREST SCORE</p>
-              <h3 className="fs-28 font-bold mt-2 mb-1 color-accent">{(stats?.averageScore || 0).toFixed(1)}/5</h3>
+              <h3 className="fs-28 font-bold mt-2 mb-1 color-accent">
+                {(stats?.averageScore || 0).toFixed(1)}/5
+              </h3>
               <p className="mt-1 fs-11 color-success">🟢 High Engagement Avg</p>
             </div>
 
             <div className="card">
               <p className="text-overline color-secondary">CONVERSION CHANCE</p>
-              <h3 className="fs-28 font-bold mt-2 mb-1 color-success">{stats?.averageConversionProbability || 0}%</h3>
+              <h3 className="fs-28 font-bold mt-2 mb-1 color-success">
+                {stats?.averageConversionProbability || 0}%
+              </h3>
               <p className="mt-1 fs-11 color-secondary">Aggregated Win Chance</p>
             </div>
 
             <div className="card">
               <p className="text-overline color-secondary">BANT COMPLETION</p>
-              <h3 className="fs-28 font-bold mt-2 mb-1 color-info">{stats?.bantCompletionRate || 0}%</h3>
+              <h3 className="fs-28 font-bold mt-2 mb-1 color-info">
+                {stats?.bantCompletionRate || 0}%
+              </h3>
               <p className="mt-1 fs-11 color-secondary">Compliance qualification</p>
             </div>
           </div>
@@ -161,7 +168,15 @@ export default function Home() {
           <div className="grid-dashboard">
             {/* Recent Calls */}
             <div className="card-flush lg:col-span-8">
-              <div className="d-flex justify-between align-center p-4 gap-4" style={{ borderBottom: '1px solid var(--border-default)', background: 'var(--bg-elevated)', paddingLeft: 'var(--space-6)', paddingRight: 'var(--space-6)' }}>
+              <div
+                className="d-flex justify-between align-center p-4 gap-4"
+                style={{
+                  borderBottom: '1px solid var(--border-default)',
+                  background: 'var(--bg-elevated)',
+                  paddingLeft: 'var(--space-6)',
+                  paddingRight: 'var(--space-6)',
+                }}
+              >
                 <h2 className="text-section-heading m-0 d-flex align-center gap-8px">
                   <span className="material-symbols-outlined fs-20 color-accent">history</span>
                   Recent Conversation Records
@@ -185,7 +200,7 @@ export default function Home() {
                   </thead>
                   <tbody>
                     {recentCalls.length > 0 ? (
-                      recentCalls.map(call => (
+                      recentCalls.map((call) => (
                         <tr
                           key={call.id}
                           className="dashboard-table-row hover:bg-[rgba(255,255,255,0.01)]"
@@ -193,34 +208,63 @@ export default function Home() {
                           <td className="dashboard-table-td" onClick={(e) => e.stopPropagation()}>
                             <button
                               onClick={() => handleToggleFavorite(call.id, call.isFavorite)}
-                              style={{ color: call.isFavorite ? 'var(--warning)' : 'var(--text-muted)' }}
+                              style={{
+                                color: call.isFavorite ? 'var(--warning)' : 'var(--text-muted)',
+                              }}
                               className="dashboard-star-btn"
                             >
-                              <span className="material-symbols-outlined fs-18" style={{ fontVariationSettings: call.isFavorite ? "'FILL' 1" : undefined }}>star</span>
+                              <span
+                                className="material-symbols-outlined fs-18"
+                                style={{
+                                  fontVariationSettings: call.isFavorite ? "'FILL' 1" : undefined,
+                                }}
+                              >
+                                star
+                              </span>
                             </button>
                           </td>
-                          <td className="dashboard-table-td font-semibold fs-13" onClick={() => router.push(`/calls/${call.id}`)}>
+                          <td
+                            className="dashboard-table-td font-semibold fs-13"
+                            onClick={() => router.push(`/calls/${call.id}`)}
+                          >
                             {call.clientName}
                           </td>
-                          <td className="dashboard-table-td fs-13" onClick={() => router.push(`/calls/${call.id}`)}>
+                          <td
+                            className="dashboard-table-td fs-13"
+                            onClick={() => router.push(`/calls/${call.id}`)}
+                          >
                             <div>{call.title}</div>
                             <span className="fs-10 color-muted">{formatDate(call.date)}</span>
                           </td>
-                          <td className="dashboard-table-td color-secondary fs-13" onClick={() => router.push(`/calls/${call.id}`)}>
+                          <td
+                            className="dashboard-table-td color-secondary fs-13"
+                            onClick={() => router.push(`/calls/${call.id}`)}
+                          >
                             {formatDuration(call.duration)}
                           </td>
-                          <td className="dashboard-table-td" onClick={() => router.push(`/calls/${call.id}`)}>
+                          <td
+                            className="dashboard-table-td"
+                            onClick={() => router.push(`/calls/${call.id}`)}
+                          >
                             <SentimentBadge sentiment={call.overallSentiment} />
                           </td>
-                          <td className="dashboard-table-td text-right font-bold fs-13 color-accent" onClick={() => router.push(`/calls/${call.id}`)}>
+                          <td
+                            className="dashboard-table-td text-right font-bold fs-13 color-accent"
+                            onClick={() => router.push(`/calls/${call.id}`)}
+                          >
                             {call.averageScore.toFixed(1)}/5
                           </td>
                         </tr>
                       ))
                     ) : (
                       <tr>
-                        <td colSpan={6} className="dashboard-table-td text-center color-muted" style={{ paddingTop: 'var(--space-8)', paddingBottom: 'var(--space-8)' }}>
-                          No call recordings available. Connect to the WebSocket stream to capture logs.
+                        <td
+                          colSpan={6}
+                          className="dashboard-table-td text-center color-muted"
+                          style={{ paddingTop: 'var(--space-8)', paddingBottom: 'var(--space-8)' }}
+                        >
+                          No call recordings available. Connect to the WebSocket stream to capture
+                          logs.
                         </td>
                       </tr>
                     )}
@@ -235,15 +279,29 @@ export default function Home() {
                 <h2 className="text-section-heading mb-6">Workspace Notifications</h2>
                 <div className="d-flex flex-col gap-4">
                   {notifications.length > 0 ? (
-                    notifications.map(n => (
+                    notifications.map((n) => (
                       <div key={n.id} className="dashboard-notif-item">
-                        <span className="material-symbols-outlined fs-20" style={{
-                          color: n.type === 'SUCCESS' ? 'var(--success)' : n.type === 'WARNING' ? 'var(--warning)' : 'var(--accent)'
-                        }}>
-                          {n.type === 'SUCCESS' ? 'check_circle' : n.type === 'WARNING' ? 'warning' : 'info'}
+                        <span
+                          className="material-symbols-outlined fs-20"
+                          style={{
+                            color:
+                              n.type === 'SUCCESS'
+                                ? 'var(--success)'
+                                : n.type === 'WARNING'
+                                  ? 'var(--warning)'
+                                  : 'var(--accent)',
+                          }}
+                        >
+                          {n.type === 'SUCCESS'
+                            ? 'check_circle'
+                            : n.type === 'WARNING'
+                              ? 'warning'
+                              : 'info'}
                         </span>
                         <div>
-                          <span className="fs-12 font-semibold d-block color-primary">{n.title}</span>
+                          <span className="fs-12 font-semibold d-block color-primary">
+                            {n.title}
+                          </span>
                           <span className="fs-11 color-secondary">{n.description}</span>
                         </div>
                       </div>

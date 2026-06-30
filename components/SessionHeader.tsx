@@ -48,8 +48,11 @@ export default function SessionHeader({ id }: SessionHeaderProps) {
 
   const handleDeleteClick = async () => {
     if (!id || isDeleting) return;
-    if (!confirm('Are you sure you want to delete this call recording? This action cannot be undone.')) return;
-    
+    if (
+      !confirm('Are you sure you want to delete this call recording? This action cannot be undone.')
+    )
+      return;
+
     setIsDeleting(true);
     try {
       const res = await fetch(`/api/calls/${id}`, {
@@ -69,7 +72,7 @@ export default function SessionHeader({ id }: SessionHeaderProps) {
   };
 
   // Format date nicely
-  const formattedDate = date 
+  const formattedDate = date
     ? new Date(date).toLocaleDateString('en-US', {
         month: 'short',
         day: 'numeric',
@@ -80,29 +83,59 @@ export default function SessionHeader({ id }: SessionHeaderProps) {
     : '';
 
   return (
-    <header style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-start', gap: 'var(--space-4)', marginBottom: 'var(--space-8)' }}>
+    <header
+      style={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        gap: 'var(--space-4)',
+        marginBottom: 'var(--space-8)',
+      }}
+    >
       <div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginBottom: 'var(--space-2)', flexWrap: 'wrap' }}>
-          <span className="badge badge-accent">
-            {isLive ? 'Live Session' : 'Recorded Call'}
-          </span>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--space-2)',
+            marginBottom: 'var(--space-2)',
+            flexWrap: 'wrap',
+          }}
+        >
+          <span className="badge badge-accent">{isLive ? 'Live Session' : 'Recorded Call'}</span>
           {isLive ? (
             <ConnectionIndicator />
           ) : (
-            <span className="badge" style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', color: 'var(--text-secondary)' }}>
+            <span
+              className="badge"
+              style={{
+                background: 'var(--bg-elevated)',
+                border: '1px solid var(--border-default)',
+                color: 'var(--text-secondary)',
+              }}
+            >
               ID: {id?.substring(0, 8)}...
             </span>
           )}
           {hasData && (
-            <span className="text-caption" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-              <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>schedule</span>
+            <span
+              className="text-caption"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>
+                schedule
+              </span>
               {records.length} segments • {formatDuration(sessionDuration)}
             </span>
           )}
         </div>
-        
-        <h1 className="text-page-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          {isLive ? 'Live Call Monitor' : (title || 'Call Report')}
+
+        <h1
+          className="text-page-title"
+          style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+        >
+          {isLive ? 'Live Call Monitor' : title || 'Call Report'}
           {!isLive && (
             <button
               onClick={handleFavoriteClick}
@@ -116,18 +149,27 @@ export default function SessionHeader({ id }: SessionHeaderProps) {
                 display: 'flex',
                 alignItems: 'center',
                 transition: 'color 0.2s ease',
-                outline: 'none'
+                outline: 'none',
               }}
               title={isFavorite ? 'Remove from favorites' : 'Mark as favorite'}
             >
-              <span className="material-symbols-outlined" style={{ fontSize: '24px', fontVariationSettings: isFavorite ? "'FILL' 1" : undefined }}>
+              <span
+                className="material-symbols-outlined"
+                style={{
+                  fontSize: '24px',
+                  fontVariationSettings: isFavorite ? "'FILL' 1" : undefined,
+                }}
+              >
                 star
               </span>
             </button>
           )}
         </h1>
-        
-        <p className="text-body" style={{ marginTop: 'var(--space-1)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+
+        <p
+          className="text-body"
+          style={{ marginTop: 'var(--space-1)', display: 'flex', alignItems: 'center', gap: '8px' }}
+        >
           {isLive ? (
             'Real-time AI-powered conversation coaching'
           ) : (
@@ -138,7 +180,7 @@ export default function SessionHeader({ id }: SessionHeaderProps) {
           )}
         </p>
       </div>
-      
+
       <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
         {!isLive && (
           <button
@@ -147,16 +189,20 @@ export default function SessionHeader({ id }: SessionHeaderProps) {
             style={{ borderColor: 'var(--error-muted)', color: 'var(--error)' }}
             disabled={isDeleting}
           >
-            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>delete</span>
+            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
+              delete
+            </span>
             Delete Call
           </button>
         )}
         <button
           onClick={() => {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(records, null, 2));
+            const dataStr =
+              'data:text/json;charset=utf-8,' +
+              encodeURIComponent(JSON.stringify(records, null, 2));
             const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `${isLive ? 'live' : id}-transcript.json`);
+            downloadAnchor.setAttribute('href', dataStr);
+            downloadAnchor.setAttribute('download', `${isLive ? 'live' : id}-transcript.json`);
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             downloadAnchor.remove();

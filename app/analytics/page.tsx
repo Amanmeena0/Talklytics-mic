@@ -30,13 +30,11 @@ export default function AnalyticsPage() {
   // Helper to draw average trend line
   const renderTrendSVG = () => {
     if (!data?.scoreTrend || data.scoreTrend.length === 0) return null;
-    
+
     const trends = data.scoreTrend;
     if (trends.length < 2) {
       return (
-        <div className="analytics-no-data">
-          Need at least 2 call records to render trend chart.
-        </div>
+        <div className="analytics-no-data">Need at least 2 call records to render trend chart.</div>
       );
     }
 
@@ -77,7 +75,9 @@ export default function AnalyticsPage() {
             strokeWidth="1.5"
             className="cursor-pointer"
           >
-            <title>{p.title}: {p.score.toFixed(1)}/5</title>
+            <title>
+              {p.title}: {p.score.toFixed(1)}/5
+            </title>
           </circle>
         ))}
       </svg>
@@ -87,9 +87,12 @@ export default function AnalyticsPage() {
   const handleExportCSV = () => {
     if (!data?.scoreTrend) return;
     const headers = 'Call ID,Title,Date,Average Score,Conversion Probability\n';
-    const rows = data.scoreTrend.map((t: any) => 
-      `"${t.id}","${t.title.replace(/"/g, '""')}","${t.date}",${t.score},${t.probability}`
-    ).join('\n');
+    const rows = data.scoreTrend
+      .map(
+        (t: any) =>
+          `"${t.id}","${t.title.replace(/"/g, '""')}","${t.date}",${t.score},${t.probability}`
+      )
+      .join('\n');
 
     const blob = new Blob([headers + rows], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
@@ -157,10 +160,11 @@ export default function AnalyticsPage() {
             <div>
               <h1 className="text-page-title">Team Performance &amp; Conversation Analytics</h1>
               <p className="text-body mt-1">
-                Aggregated sales KPIs, sentiment analytics, objection trends, and compliance tracking.
+                Aggregated sales KPIs, sentiment analytics, objection trends, and compliance
+                tracking.
               </p>
             </div>
-            
+
             <button onClick={handleExportCSV} className="btn btn-secondary">
               <span className="material-symbols-outlined fs-18 mr-6">download</span>
               Export Metrics CSV
@@ -178,13 +182,17 @@ export default function AnalyticsPage() {
             <div className="card">
               <p className="text-overline color-secondary">TOTAL MINUTES ANALYZED</p>
               <h3 className="fs-28 font-bold mt-2 mb-1 color-primary">{totalDurationMinutes}m</h3>
-              <p className="mt-1 fs-11 color-secondary">{Math.round(totalDurationMinutes / 60)}h Total Talk Time</p>
+              <p className="mt-1 fs-11 color-secondary">
+                {Math.round(totalDurationMinutes / 60)}h Total Talk Time
+              </p>
             </div>
 
             <div className="card">
               <p className="text-overline color-secondary">AVG ENGAGEMENT SCORE</p>
               <h3 className="fs-28 font-bold mt-2 mb-1 color-accent">{averageScore}/5</h3>
-              <p className={`mt-1 fs-11 ${averageScore >= 3.5 ? 'color-success' : 'color-warning'}`}>
+              <p
+                className={`mt-1 fs-11 ${averageScore >= 3.5 ? 'color-success' : 'color-warning'}`}
+              >
                 {averageScore >= 3.5 ? 'Good Customer Interest' : 'Needs Team Coaching'}
               </p>
             </div>
@@ -200,9 +208,7 @@ export default function AnalyticsPage() {
             {/* Trend Chart */}
             <div className="card lg:col-span-8">
               <h2 className="text-section-heading mb-6">Engagement Score Trend</h2>
-              <div className="analytics-trend-chart-container">
-                {renderTrendSVG()}
-              </div>
+              <div className="analytics-trend-chart-container">{renderTrendSVG()}</div>
               <div className="d-flex justify-between color-muted fs-11">
                 <span>Past call sessions (ascending order)</span>
                 <span>Latest call</span>
@@ -221,7 +227,10 @@ export default function AnalyticsPage() {
                       <span className="font-semibold color-success">{sentimentSplit.Positive}</span>
                     </div>
                     <div className="analytics-progress-bg">
-                      <div className="analytics-progress-fill analytics-progress-fill-success" style={{ width: `${(sentimentSplit.Positive / totalCalls) * 100}%` }} />
+                      <div
+                        className="analytics-progress-fill analytics-progress-fill-success"
+                        style={{ width: `${(sentimentSplit.Positive / totalCalls) * 100}%` }}
+                      />
                     </div>
                   </div>
 
@@ -229,10 +238,15 @@ export default function AnalyticsPage() {
                   <div>
                     <div className="analytics-split-item-row">
                       <span>Neutral Conversations</span>
-                      <span className="font-semibold color-secondary">{sentimentSplit.Neutral}</span>
+                      <span className="font-semibold color-secondary">
+                        {sentimentSplit.Neutral}
+                      </span>
                     </div>
                     <div className="analytics-progress-bg">
-                      <div className="analytics-progress-fill analytics-progress-fill-neutral" style={{ width: `${(sentimentSplit.Neutral / totalCalls) * 100}%` }} />
+                      <div
+                        className="analytics-progress-fill analytics-progress-fill-neutral"
+                        style={{ width: `${(sentimentSplit.Neutral / totalCalls) * 100}%` }}
+                      />
                     </div>
                   </div>
 
@@ -243,7 +257,10 @@ export default function AnalyticsPage() {
                       <span className="font-semibold color-error">{sentimentSplit.Negative}</span>
                     </div>
                     <div className="analytics-progress-bg">
-                      <div className="analytics-progress-fill analytics-progress-fill-error" style={{ width: `${(sentimentSplit.Negative / totalCalls) * 100}%` }} />
+                      <div
+                        className="analytics-progress-fill analytics-progress-fill-error"
+                        style={{ width: `${(sentimentSplit.Negative / totalCalls) * 100}%` }}
+                      />
                     </div>
                   </div>
                 </div>
@@ -262,7 +279,11 @@ export default function AnalyticsPage() {
               <h2 className="text-section-heading mb-6">Intent Distribution</h2>
               <div className="d-flex flex-col gap-4">
                 {(() => {
-                  const totalIntentsSum = Object.values(intentCounts).reduce((a: any, b: any) => Number(a) + Number(b), 0) as number || 1;
+                  const totalIntentsSum =
+                    (Object.values(intentCounts).reduce(
+                      (a: any, b: any) => Number(a) + Number(b),
+                      0
+                    ) as number) || 1;
                   return Object.entries(intentCounts).map(([intent, count]: [string, any]) => (
                     <div key={intent}>
                       <div className="analytics-split-item-row">
@@ -270,7 +291,10 @@ export default function AnalyticsPage() {
                         <span className="font-semibold">{count} occurrences</span>
                       </div>
                       <div className="analytics-objection-progress-bg">
-                        <div className="analytics-objection-progress-fill" style={{ width: `${(count / totalIntentsSum) * 100}%` }} />
+                        <div
+                          className="analytics-objection-progress-fill"
+                          style={{ width: `${(count / totalIntentsSum) * 100}%` }}
+                        />
                       </div>
                     </div>
                   ));
@@ -283,12 +307,22 @@ export default function AnalyticsPage() {
                 <h2 className="text-section-heading mb-4">AI Coaching Playbook Alerts</h2>
                 <div className="d-flex flex-col gap-12px">
                   <div className="analytics-playbook-alert-red">
-                    <div className="color-error font-semibold mb-2px">Competition Warnings Active</div>
-                    <span className="color-secondary">Objections for pricing/competitors are higher this week. Ensure sales playbook version 2.4 is deployed.</span>
+                    <div className="color-error font-semibold mb-2px">
+                      Competition Warnings Active
+                    </div>
+                    <span className="color-secondary">
+                      Objections for pricing/competitors are higher this week. Ensure sales playbook
+                      version 2.4 is deployed.
+                    </span>
                   </div>
                   <div className="analytics-playbook-alert-green">
-                    <div className="color-success font-semibold mb-2px">Excellent BANT Qualification</div>
-                    <span className="color-secondary">Budget qualification questions have increased by 14% month-over-month. Keep prompting budget details.</span>
+                    <div className="color-success font-semibold mb-2px">
+                      Excellent BANT Qualification
+                    </div>
+                    <span className="color-secondary">
+                      Budget qualification questions have increased by 14% month-over-month. Keep
+                      prompting budget details.
+                    </span>
                   </div>
                 </div>
               </div>

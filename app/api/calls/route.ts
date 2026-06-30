@@ -19,7 +19,9 @@ export async function GET(request: Request) {
 
     // Filters
     const sentiment = searchParams.get('sentiment'); // 'Positive' | 'Neutral' | 'Negative'
-    const minScore = searchParams.get('minScore') ? parseFloat(searchParams.get('minScore')!) : null;
+    const minScore = searchParams.get('minScore')
+      ? parseFloat(searchParams.get('minScore')!)
+      : null;
     const isFavorite = searchParams.get('isFavorite') === 'true' ? true : undefined;
     const clientName = searchParams.get('clientName');
 
@@ -154,7 +156,8 @@ export async function POST(request: Request) {
     // Get active user from cookie or default to first sales_rep
     const { cookies } = require('next/headers');
     const cookieStore = await cookies();
-    const activeUserEmail = cookieStore.get('active_user_email')?.value || 'jane.smith@convincesense.com';
+    const activeUserEmail =
+      cookieStore.get('active_user_email')?.value || 'jane.smith@convincesense.com';
 
     let user = await prisma.user.findUnique({
       where: { email: activeUserEmail },

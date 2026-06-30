@@ -10,7 +10,8 @@ export async function GET() {
   try {
     const { cookies } = require('next/headers');
     const cookieStore = await cookies();
-    const activeUserEmail = cookieStore.get('active_user_email')?.value || 'jane.smith@convincesense.com';
+    const activeUserEmail =
+      cookieStore.get('active_user_email')?.value || 'jane.smith@convincesense.com';
 
     const user = await prisma.user.findUnique({
       where: { email: activeUserEmail },
@@ -27,7 +28,10 @@ export async function GET() {
 
     return NextResponse.json(apiKeys);
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || 'Failed to fetch API keys' }, { status: 500 });
+    return NextResponse.json(
+      { error: error.message || 'Failed to fetch API keys' },
+      { status: 500 }
+    );
   }
 }
 
@@ -44,7 +48,8 @@ export async function POST(request: Request) {
 
     const { cookies } = require('next/headers');
     const cookieStore = await cookies();
-    const activeUserEmail = cookieStore.get('active_user_email')?.value || 'jane.smith@convincesense.com';
+    const activeUserEmail =
+      cookieStore.get('active_user_email')?.value || 'jane.smith@convincesense.com';
 
     const user = await prisma.user.findUnique({
       where: { email: activeUserEmail },
@@ -76,7 +81,10 @@ export async function POST(request: Request) {
 
     return NextResponse.json(apiKey, { status: 201 });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || 'Failed to generate API key' }, { status: 500 });
+    return NextResponse.json(
+      { error: error.message || 'Failed to generate API key' },
+      { status: 500 }
+    );
   }
 }
 
@@ -93,7 +101,8 @@ export async function DELETE(request: Request) {
 
     const { cookies } = require('next/headers');
     const cookieStore = await cookies();
-    const activeUserEmail = cookieStore.get('active_user_email')?.value || 'jane.smith@convincesense.com';
+    const activeUserEmail =
+      cookieStore.get('active_user_email')?.value || 'jane.smith@convincesense.com';
 
     const user = await prisma.user.findUnique({
       where: { email: activeUserEmail },
@@ -126,6 +135,9 @@ export async function DELETE(request: Request) {
 
     return NextResponse.json({ success: true, message: 'API key successfully revoked' });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || 'Failed to revoke API key' }, { status: 500 });
+    return NextResponse.json(
+      { error: error.message || 'Failed to revoke API key' },
+      { status: 500 }
+    );
   }
 }

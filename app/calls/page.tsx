@@ -69,9 +69,7 @@ export default function CallHistoryPage() {
   // Toggle favorite
   const handleToggleFavorite = async (id: string, currentStatus: boolean) => {
     // Optimistic UI update
-    setCalls(prev =>
-      prev.map(c => (c.id === id ? { ...c, isFavorite: !currentStatus } : c))
-    );
+    setCalls((prev) => prev.map((c) => (c.id === id ? { ...c, isFavorite: !currentStatus } : c)));
 
     try {
       const res = await fetch(`/api/calls/${id}`, {
@@ -85,9 +83,7 @@ export default function CallHistoryPage() {
     } catch (e) {
       console.error(e);
       // Revert if error
-      setCalls(prev =>
-        prev.map(c => (c.id === id ? { ...c, isFavorite: currentStatus } : c))
-      );
+      setCalls((prev) => prev.map((c) => (c.id === id ? { ...c, isFavorite: currentStatus } : c)));
     }
   };
 
@@ -96,8 +92,8 @@ export default function CallHistoryPage() {
     if (!confirm(`Are you sure you want to delete "${title}"?`)) return;
 
     // Optimistic delete
-    setCalls(prev => prev.filter(c => c.id !== id));
-    setTotalCount(prev => prev - 1);
+    setCalls((prev) => prev.filter((c) => c.id !== id));
+    setTotalCount((prev) => prev - 1);
 
     try {
       const res = await fetch(`/api/calls/${id}`, {
@@ -137,10 +133,11 @@ export default function CallHistoryPage() {
             <div>
               <h1 className="text-page-title">Call History &amp; Recording Database</h1>
               <p className="text-body calls-header-sub">
-                Browse, search, and analyze all completed sales conversation summaries ({totalCount} total)
+                Browse, search, and analyze all completed sales conversation summaries ({totalCount}{' '}
+                total)
               </p>
             </div>
-            
+
             <Link href="/calls/live" className="calls-link">
               <button className="btn btn-primary">
                 <span className="material-symbols-outlined calls-header-icon">sensors</span>
@@ -159,7 +156,10 @@ export default function CallHistoryPage() {
                   placeholder="Search client, title, transcript keywords..."
                   type="text"
                   value={query}
-                  onChange={(e) => { setQuery(e.target.value); setPage(1); }}
+                  onChange={(e) => {
+                    setQuery(e.target.value);
+                    setPage(1);
+                  }}
                 />
               </div>
 
@@ -168,7 +168,10 @@ export default function CallHistoryPage() {
                 <span className="calls-filter-label">Sentiment:</span>
                 <select
                   value={sentiment}
-                  onChange={(e) => { setSentiment(e.target.value); setPage(1); }}
+                  onChange={(e) => {
+                    setSentiment(e.target.value);
+                    setPage(1);
+                  }}
                   className="calls-select"
                   title="Filter by sentiment"
                 >
@@ -184,7 +187,10 @@ export default function CallHistoryPage() {
                 <span className="calls-filter-label">Min Score:</span>
                 <select
                   value={minScore}
-                  onChange={(e) => { setMinScore(e.target.value); setPage(1); }}
+                  onChange={(e) => {
+                    setMinScore(e.target.value);
+                    setPage(1);
+                  }}
                   className="calls-select"
                   title="Filter by minimum score"
                 >
@@ -197,10 +203,17 @@ export default function CallHistoryPage() {
 
               {/* Favorite toggle */}
               <button
-                onClick={() => { setIsFavoriteOnly(!isFavoriteOnly); setPage(1); }}
+                onClick={() => {
+                  setIsFavoriteOnly(!isFavoriteOnly);
+                  setPage(1);
+                }}
                 className={`btn btn-secondary calls-btn-star ${isFavoriteOnly ? 'calls-btn-star-active' : ''}`}
               >
-                <span className={`material-symbols-outlined calls-btn-star-icon ${isFavoriteOnly ? 'calls-btn-star-icon-filled' : ''}`}>star</span>
+                <span
+                  className={`material-symbols-outlined calls-btn-star-icon ${isFavoriteOnly ? 'calls-btn-star-icon-filled' : ''}`}
+                >
+                  star
+                </span>
                 Starred Only
               </button>
 
@@ -209,7 +222,10 @@ export default function CallHistoryPage() {
                 <span className="calls-filter-label">Sort By:</span>
                 <select
                   value={sortBy}
-                  onChange={(e) => { setSortBy(e.target.value); setPage(1); }}
+                  onChange={(e) => {
+                    setSortBy(e.target.value);
+                    setPage(1);
+                  }}
                   className="calls-select"
                   title="Sort calls by"
                 >
@@ -220,7 +236,10 @@ export default function CallHistoryPage() {
                 </select>
 
                 <button
-                  onClick={() => { setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc'); setPage(1); }}
+                  onClick={() => {
+                    setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+                    setPage(1);
+                  }}
                   className="icon-btn calls-btn-sort-order"
                   title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
                 >
@@ -262,36 +281,50 @@ export default function CallHistoryPage() {
                     Array.from({ length: 5 }).map((_, i) => (
                       <tr key={i} className="calls-tr-skeleton">
                         <td className="calls-td" />
-                        <td className="calls-td"><div className="calls-skeleton-client animate-pulse" /></td>
-                        <td className="calls-td"><div className="calls-skeleton-title animate-pulse" /></td>
-                        <td className="calls-td"><div className="calls-skeleton-date animate-pulse" /></td>
-                        <td className="calls-td"><div className="calls-skeleton-duration animate-pulse" /></td>
-                        <td className="calls-td"><div className="calls-skeleton-sentiment animate-pulse" /></td>
-                        <td className="calls-td"><div className="calls-skeleton-score animate-pulse" /></td>
+                        <td className="calls-td">
+                          <div className="calls-skeleton-client animate-pulse" />
+                        </td>
+                        <td className="calls-td">
+                          <div className="calls-skeleton-title animate-pulse" />
+                        </td>
+                        <td className="calls-td">
+                          <div className="calls-skeleton-date animate-pulse" />
+                        </td>
+                        <td className="calls-td">
+                          <div className="calls-skeleton-duration animate-pulse" />
+                        </td>
+                        <td className="calls-td">
+                          <div className="calls-skeleton-sentiment animate-pulse" />
+                        </td>
+                        <td className="calls-td">
+                          <div className="calls-skeleton-score animate-pulse" />
+                        </td>
                         <td className="calls-td" />
                       </tr>
                     ))
                   ) : calls.length > 0 ? (
                     calls.map((call) => (
-                      <tr
-                        key={call.id}
-                        className="calls-tr hover:bg-[rgba(255,255,255,0.01)]"
-                      >
+                      <tr key={call.id} className="calls-tr hover:bg-[rgba(255,255,255,0.01)]">
                         {/* Star / Favorite toggle */}
                         <td className="calls-td" onClick={(e) => e.stopPropagation()}>
                           <button
                             onClick={() => handleToggleFavorite(call.id, call.isFavorite)}
                             className={`calls-btn-favorite-star ${call.isFavorite ? 'calls-btn-favorite-star-active' : ''}`}
-                            title={call.isFavorite ? "Unstar recording" : "Star recording"}
+                            title={call.isFavorite ? 'Unstar recording' : 'Star recording'}
                           >
-                            <span className={`material-symbols-outlined calls-favorite-star-icon ${call.isFavorite ? 'calls-favorite-star-icon-filled' : ''}`}>
+                            <span
+                              className={`material-symbols-outlined calls-favorite-star-icon ${call.isFavorite ? 'calls-favorite-star-icon-filled' : ''}`}
+                            >
                               star
                             </span>
                           </button>
                         </td>
 
                         {/* Client name */}
-                        <td className="calls-td-client" onClick={() => router.push(`/calls/${call.id}`)}>
+                        <td
+                          className="calls-td-client"
+                          onClick={() => router.push(`/calls/${call.id}`)}
+                        >
                           {call.clientName}
                         </td>
 
@@ -304,12 +337,18 @@ export default function CallHistoryPage() {
                         </td>
 
                         {/* Date */}
-                        <td className="calls-td-secondary" onClick={() => router.push(`/calls/${call.id}`)}>
+                        <td
+                          className="calls-td-secondary"
+                          onClick={() => router.push(`/calls/${call.id}`)}
+                        >
                           {formatDate(call.date)}
                         </td>
 
                         {/* Duration */}
-                        <td className="calls-td-secondary" onClick={() => router.push(`/calls/${call.id}`)}>
+                        <td
+                          className="calls-td-secondary"
+                          onClick={() => router.push(`/calls/${call.id}`)}
+                        >
                           {formatDuration(call.duration)}
                         </td>
 
@@ -320,9 +359,15 @@ export default function CallHistoryPage() {
 
                         {/* Average score */}
                         <td className="calls-td" onClick={() => router.push(`/calls/${call.id}`)}>
-                          <span className={`calls-score-badge ${
-                            call.averageScore >= 4 ? 'calls-score-high' : call.averageScore <= 2.5 ? 'calls-score-low' : 'calls-score-medium'
-                          }`}>
+                          <span
+                            className={`calls-score-badge ${
+                              call.averageScore >= 4
+                                ? 'calls-score-high'
+                                : call.averageScore <= 2.5
+                                  ? 'calls-score-low'
+                                  : 'calls-score-medium'
+                            }`}
+                          >
                             {call.averageScore.toFixed(1)}/5
                           </span>
                         </td>
@@ -331,16 +376,16 @@ export default function CallHistoryPage() {
                         <td className="calls-td-actions" onClick={(e) => e.stopPropagation()}>
                           <div className="calls-actions-flex">
                             <Link href={`/calls/${call.id}`} className="calls-link">
-                              <button className="btn btn-ghost calls-btn-details">
-                                Details
-                              </button>
+                              <button className="btn btn-ghost calls-btn-details">Details</button>
                             </Link>
                             <button
                               onClick={() => handleDeleteCall(call.id, call.title)}
                               className="icon-btn calls-btn-delete"
                               title="Delete recording"
                             >
-                              <span className="material-symbols-outlined calls-icon-18">delete</span>
+                              <span className="material-symbols-outlined calls-icon-18">
+                                delete
+                              </span>
                             </button>
                           </div>
                         </td>
@@ -350,9 +395,13 @@ export default function CallHistoryPage() {
                     // Empty State
                     <tr>
                       <td colSpan={8} className="calls-empty-cell">
-                        <span className="material-symbols-outlined calls-empty-icon">history_toggle_off</span>
+                        <span className="material-symbols-outlined calls-empty-icon">
+                          history_toggle_off
+                        </span>
                         <p className="calls-empty-title">No call records found</p>
-                        <p className="text-caption calls-empty-subtitle">Try adjusting your search queries or active filters</p>
+                        <p className="text-caption calls-empty-subtitle">
+                          Try adjusting your search queries or active filters
+                        </p>
                       </td>
                     </tr>
                   )}
@@ -368,14 +417,14 @@ export default function CallHistoryPage() {
                 </span>
                 <div className="calls-pagination-buttons">
                   <button
-                    onClick={() => setPage(p => Math.max(p - 1, 1))}
+                    onClick={() => setPage((p) => Math.max(p - 1, 1))}
                     disabled={page === 1}
                     className="btn btn-secondary calls-btn-pagination"
                   >
                     Previous
                   </button>
                   <button
-                    onClick={() => setPage(p => Math.min(p + 1, totalPages))}
+                    onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
                     disabled={page === totalPages}
                     className="btn btn-secondary calls-btn-pagination"
                   >

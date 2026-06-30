@@ -10,7 +10,8 @@ export async function GET(request: Request) {
   try {
     const { cookies } = require('next/headers');
     const cookieStore = await cookies();
-    const activeUserEmail = cookieStore.get('active_user_email')?.value || 'jane.smith@convincesense.com';
+    const activeUserEmail =
+      cookieStore.get('active_user_email')?.value || 'jane.smith@convincesense.com';
 
     let user = await prisma.user.findUnique({
       where: { email: activeUserEmail },
@@ -22,7 +23,10 @@ export async function GET(request: Request) {
     }
 
     if (!user) {
-      return NextResponse.json({ error: 'No users found in database. Seed the database first.' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'No users found in database. Seed the database first.' },
+        { status: 404 }
+      );
     }
 
     return NextResponse.json(user);
@@ -51,7 +55,7 @@ export async function POST(request: Request) {
     }
 
     const response = NextResponse.json({ success: true, user });
-    
+
     // Set cookie to persist active user
     response.cookies.set('active_user_email', email, {
       path: '/',

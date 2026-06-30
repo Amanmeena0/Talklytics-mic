@@ -5,10 +5,7 @@ import prisma from '@/libs/db';
  * GET /api/calls/[id]
  * Fetches a single call with its records, comments, next steps, and sales rep details.
  */
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const call = await prisma.call.findUnique({
@@ -64,7 +61,10 @@ export async function GET(
 
     return NextResponse.json(formattedCall);
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || 'Failed to fetch call details' }, { status: 500 });
+    return NextResponse.json(
+      { error: error.message || 'Failed to fetch call details' },
+      { status: 500 }
+    );
   }
 }
 
@@ -72,10 +72,7 @@ export async function GET(
  * PUT/PATCH /api/calls/[id]
  * Updates call properties (isFavorite, title, clientName, summary, BANT fields).
  */
-export async function PATCH(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const body = await request.json();
@@ -110,9 +107,10 @@ export async function PATCH(
     // Write audit log
     const { cookies } = require('next/headers');
     const cookieStore = await cookies();
-    const activeUserEmail = cookieStore.get('active_user_email')?.value || 'jane.smith@convincesense.com';
+    const activeUserEmail =
+      cookieStore.get('active_user_email')?.value || 'jane.smith@convincesense.com';
     const user = await prisma.user.findUnique({ where: { email: activeUserEmail } });
-    
+
     await prisma.auditLog.create({
       data: {
         userId: user?.id || null,
@@ -131,10 +129,7 @@ export async function PATCH(
  * DELETE /api/calls/[id]
  * Performs a soft-delete on a call.
  */
-export async function DELETE(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
 
@@ -147,7 +142,8 @@ export async function DELETE(
     // Write audit log
     const { cookies } = require('next/headers');
     const cookieStore = await cookies();
-    const activeUserEmail = cookieStore.get('active_user_email')?.value || 'jane.smith@convincesense.com';
+    const activeUserEmail =
+      cookieStore.get('active_user_email')?.value || 'jane.smith@convincesense.com';
     const user = await prisma.user.findUnique({ where: { email: activeUserEmail } });
 
     await prisma.auditLog.create({

@@ -55,7 +55,7 @@ export default function LiveDashboardProvider({ children, id, wsUrl }: LiveDashb
     // Optimistic update for historical view
     const currentFavorite = callData ? callData.isFavorite : false;
     if (callData) {
-      setCallData((prev: any) => prev ? { ...prev, isFavorite: !prev.isFavorite } : null);
+      setCallData((prev: any) => (prev ? { ...prev, isFavorite: !prev.isFavorite } : null));
     }
 
     try {
@@ -70,142 +70,178 @@ export default function LiveDashboardProvider({ children, id, wsUrl }: LiveDashb
       const updated = await res.json();
       // Ensure we align with server state
       if (callData) {
-        setCallData((prev: any) => prev ? { ...prev, isFavorite: updated.isFavorite } : null);
+        setCallData((prev: any) => (prev ? { ...prev, isFavorite: updated.isFavorite } : null));
       }
     } catch (err) {
       // Revert on error
       if (callData) {
-        setCallData((prev: any) => prev ? { ...prev, isFavorite: currentFavorite } : null);
+        setCallData((prev: any) => (prev ? { ...prev, isFavorite: currentFavorite } : null));
       }
       console.error(err);
     }
   }, [id, callData]);
 
   // Add review comment
-  const addComment = useCallback(async (content: string, timestamp?: number) => {
-    const activeId = id || callData?.id;
-    if (!activeId) return;
+  const addComment = useCallback(
+    async (content: string, timestamp?: number) => {
+      const activeId = id || callData?.id;
+      if (!activeId) return;
 
-    try {
-      const res = await fetch(`/api/calls/${activeId}/comments`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content, timestamp }),
-      });
-      if (!res.ok) throw new Error('Failed to add comment');
-      const newComment = await res.json();
-      
-      // Update comments list locally
-      if (callData) {
-        setCallData((prev: any) => prev ? {
-          ...prev,
-          comments: [...(prev.comments || []), newComment],
-        } : null);
+      try {
+        const res = await fetch(`/api/calls/${activeId}/comments`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content, timestamp }),
+        });
+        if (!res.ok) throw new Error('Failed to add comment');
+        const newComment = await res.json();
+
+        // Update comments list locally
+        if (callData) {
+          setCallData((prev: any) =>
+            prev
+              ? {
+                  ...prev,
+                  comments: [...(prev.comments || []), newComment],
+                }
+              : null
+          );
+        }
+      } catch (err) {
+        console.error(err);
+        throw err;
       }
-    } catch (err) {
-      console.error(err);
-      throw err;
-    }
-  }, [id, callData]);
+    },
+    [id, callData]
+  );
 
   // Toggle next step completion status
-  const updateNextStep = useCallback(async (stepId: string, isCompleted: boolean) => {
-    const activeId = id || callData?.id;
-    if (!activeId) return;
+  const updateNextStep = useCallback(
+    async (stepId: string, isCompleted: boolean) => {
+      const activeId = id || callData?.id;
+      if (!activeId) return;
 
-    // Optimistic update
-    if (callData) {
-      setCallData((prev: any) => prev ? {
-        ...prev,
-        nextSteps: prev.nextSteps.map((step: any) =>
-          step.id === stepId ? { ...step, isCompleted } : step
-        ),
-      } : null);
-    }
-
-    try {
-      const res = await fetch(`/api/calls/${activeId}/next-steps`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ stepId, isCompleted }),
-      });
-      if (!res.ok) throw new Error('Failed to update next step');
-      const updatedStep = await res.json();
-
+      // Optimistic update
       if (callData) {
-        setCallData((prev: any) => prev ? {
-          ...prev,
-          nextSteps: prev.nextSteps.map((step: any) =>
-            step.id === stepId ? updatedStep : step
-          ),
-        } : null);
+        setCallData((prev: any) =>
+          prev
+            ? {
+                ...prev,
+                nextSteps: prev.nextSteps.map((step: any) =>
+                  step.id === stepId ? { ...step, isCompleted } : step
+                ),
+              }
+            : null
+        );
       }
-    } catch (err) {
-      // Revert on error
-      if (callData) {
-        setCallData((prev: any) => prev ? {
-          ...prev,
-          nextSteps: prev.nextSteps.map((step: any) =>
-            step.id === stepId ? { ...step, isCompleted: !isCompleted } : step
-          ),
-        } : null);
+
+      try {
+        const res = await fetch(`/api/calls/${activeId}/next-steps`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ stepId, isCompleted }),
+        });
+        if (!res.ok) throw new Error('Failed to update next step');
+        const updatedStep = await res.json();
+
+        if (callData) {
+          setCallData((prev: any) =>
+            prev
+              ? {
+                  ...prev,
+                  nextSteps: prev.nextSteps.map((step: any) =>
+                    step.id === stepId ? updatedStep : step
+                  ),
+                }
+              : null
+          );
+        }
+      } catch (err) {
+        // Revert on error
+        if (callData) {
+          setCallData((prev: any) =>
+            prev
+              ? {
+                  ...prev,
+                  nextSteps: prev.nextSteps.map((step: any) =>
+                    step.id === stepId ? { ...step, isCompleted: !isCompleted } : step
+                  ),
+                }
+              : null
+          );
+        }
+        console.error(err);
       }
-      console.error(err);
-    }
-  }, [id, callData]);
+    },
+    [id, callData]
+  );
 
   // Create new next step task
-  const addNextStep = useCallback(async (title: string, description?: string) => {
-    const activeId = id || callData?.id;
-    if (!activeId) return;
+  const addNextStep = useCallback(
+    async (title: string, description?: string) => {
+      const activeId = id || callData?.id;
+      if (!activeId) return;
 
-    try {
-      const res = await fetch(`/api/calls/${activeId}/next-steps`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, description }),
-      });
-      if (!res.ok) throw new Error('Failed to create next step');
-      const newStep = await res.json();
+      try {
+        const res = await fetch(`/api/calls/${activeId}/next-steps`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, description }),
+        });
+        if (!res.ok) throw new Error('Failed to create next step');
+        const newStep = await res.json();
 
-      if (callData) {
-        setCallData((prev: any) => prev ? {
-          ...prev,
-          nextSteps: [newStep, ...(prev.nextSteps || [])],
-        } : null);
+        if (callData) {
+          setCallData((prev: any) =>
+            prev
+              ? {
+                  ...prev,
+                  nextSteps: [newStep, ...(prev.nextSteps || [])],
+                }
+              : null
+          );
+        }
+      } catch (err) {
+        console.error(err);
+        throw err;
       }
-    } catch (err) {
-      console.error(err);
-      throw err;
-    }
-  }, [id, callData]);
+    },
+    [id, callData]
+  );
 
   // Delete next step task
-  const deleteNextStep = useCallback(async (stepId: string) => {
-    const activeId = id || callData?.id;
-    if (!activeId) return;
+  const deleteNextStep = useCallback(
+    async (stepId: string) => {
+      const activeId = id || callData?.id;
+      if (!activeId) return;
 
-    // Optimistic delete
-    if (callData) {
-      setCallData((prev: any) => prev ? {
-        ...prev,
-        nextSteps: prev.nextSteps.filter((step: any) => step.id !== stepId),
-      } : null);
-    }
+      // Optimistic delete
+      if (callData) {
+        setCallData((prev: any) =>
+          prev
+            ? {
+                ...prev,
+                nextSteps: prev.nextSteps.filter((step: any) => step.id !== stepId),
+              }
+            : null
+        );
+      }
 
-    try {
-      const res = await fetch(`/api/calls/${activeId}/next-steps`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ stepId, isDelete: true }),
-      });
-      if (!res.ok) throw new Error('Failed to delete next step');
-    } catch (err) {
-      // Re-fetch to align
-      fetchCallDetails();
-      console.error(err);
-    }
-  }, [id, callData, fetchCallDetails]);
+      try {
+        const res = await fetch(`/api/calls/${activeId}/next-steps`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ stepId, isDelete: true }),
+        });
+        if (!res.ok) throw new Error('Failed to delete next step');
+      } catch (err) {
+        // Re-fetch to align
+        fetchCallDetails();
+        console.error(err);
+      }
+    },
+    [id, callData, fetchCallDetails]
+  );
 
   // ── Construct Context Value ──
   const contextValue = useMemo<LiveDataContextType>(() => {
@@ -237,12 +273,18 @@ export default function LiveDashboardProvider({ children, id, wsUrl }: LiveDashb
 
     // Historical call values
     const records = callData?.records || [];
-    
+
     // Aggregates for historical
-    const allBuyingSignals = Array.from(new Set(records.flatMap((r: any) => r.buying_signals || []))) as string[];
-    const allHesitations = Array.from(new Set(records.flatMap((r: any) => r.hesitations || []))) as string[];
-    const allIntents = Array.from(new Set(records.flatMap((r: any) => r.detected_intents || []))) as string[];
-    
+    const allBuyingSignals = Array.from(
+      new Set(records.flatMap((r: any) => r.buying_signals || []))
+    ) as string[];
+    const allHesitations = Array.from(
+      new Set(records.flatMap((r: any) => r.hesitations || []))
+    ) as string[];
+    const allIntents = Array.from(
+      new Set(records.flatMap((r: any) => r.detected_intents || []))
+    ) as string[];
+
     return {
       status: 'disconnected',
       isLive: false,
@@ -297,9 +339,5 @@ export default function LiveDashboardProvider({ children, id, wsUrl }: LiveDashb
     fetchCallDetails,
   ]);
 
-  return (
-    <LiveDataContext.Provider value={contextValue}>
-      {children}
-    </LiveDataContext.Provider>
-  );
+  return <LiveDataContext.Provider value={contextValue}>{children}</LiveDataContext.Provider>;
 }

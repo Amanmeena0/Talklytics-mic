@@ -24,7 +24,8 @@ async function main() {
       email: 'admin@convincesense.com',
       name: 'Alex Rivera',
       role: 'ADMIN',
-      avatarUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBydN9a-URkUyb3EbMEXrxRRb35zw61rKWQ7f3QcdwXBQrIa8blJRm9flK0WbBbOjWAQyw6yBXqeiOPw9A7a3ngJ3S7Le2X-QXAZIgnd88et1q7etjADf0KLje2R6eHsXAW4haDHneZxCRUONnAlkjdludfTwpAg3RfFcasH2NH1G4jLMJqS5j6LIEUiye1zcL4in7zFU-AIteWTeAFKq5NlUek2mHAEpjs5RGuL8QpW8WsRlPEHwswXnL4oYjStpG4CWyyowvqog',
+      avatarUrl:
+        'https://lh3.googleusercontent.com/aida-public/AB6AXuBydN9a-URkUyb3EbMEXrxRRb35zw61rKWQ7f3QcdwXBQrIa8blJRm9flK0WbBbOjWAQyw6yBXqeiOPw9A7a3ngJ3S7Le2X-QXAZIgnd88et1q7etjADf0KLje2R6eHsXAW4haDHneZxCRUONnAlkjdludfTwpAg3RfFcasH2NH1G4jLMJqS5j6LIEUiye1zcL4in7zFU-AIteWTeAFKq5NlUek2mHAEpjs5RGuL8QpW8WsRlPEHwswXnL4oYjStpG4CWyyowvqog',
     },
   });
 
@@ -57,7 +58,7 @@ async function main() {
         config: JSON.stringify({
           instanceUrl: 'https://acme.my.salesforce.com',
           syncFrequency: 'realtime',
-          mappedFields: { CallScore: 'Engagement_Score__c', Transcript: 'Call_Transcript__c' }
+          mappedFields: { CallScore: 'Engagement_Score__c', Transcript: 'Call_Transcript__c' },
         }),
       },
       {
@@ -66,7 +67,7 @@ async function main() {
         config: JSON.stringify({
           channel: '#sales-alerts',
           notifyOnBuyingSignals: true,
-          notifyOnObjections: true
+          notifyOnObjections: true,
         }),
       },
       {
@@ -74,7 +75,7 @@ async function main() {
         connected: false,
         config: JSON.stringify({
           syncDeals: true,
-          syncNotes: true
+          syncNotes: true,
         }),
       },
     ],
@@ -98,7 +99,8 @@ async function main() {
       averageConfidence: 0.88,
       conversionProbability: 82,
       isFavorite: true,
-      summary: 'The call was primarily a discovery and scoping session for the upcoming Q4 renewal. Jane successfully navigated the initial skepticism regarding the seat-based pricing model by highlighting the new AI-driven integration capabilities. Key stakeholder Mike showed significant interest in the automated reporting feature but remains cautious about the implementation timeline.',
+      summary:
+        'The call was primarily a discovery and scoping session for the upcoming Q4 renewal. Jane successfully navigated the initial skepticism regarding the seat-based pricing model by highlighting the new AI-driven integration capabilities. Key stakeholder Mike showed significant interest in the automated reporting feature but remains cautious about the implementation timeline.',
       bantBudget: '$120k - $150k Annual',
       bantBudgetMet: true,
       bantAuthority: 'Decision Maker Present (Mike Johnson, VP of Sales)',
@@ -117,7 +119,8 @@ async function main() {
         callId: call1.id,
         timestamp: 10.5,
         score: 3,
-        transcript: 'Good morning Mike, great to see you again. I wanted to dive straight into the integration roadmap we discussed briefly over email last week. How has the team been handling the new compliance guidelines?',
+        transcript:
+          'Good morning Mike, great to see you again. I wanted to dive straight into the integration roadmap we discussed briefly over email last week. How has the team been handling the new compliance guidelines?',
         sentiment: 'Neutral',
         buyingSignals: JSON.stringify([]),
         hesitations: JSON.stringify([]),
@@ -125,20 +128,22 @@ async function main() {
         intentConfidence: 0.85,
         recommendation: 'Establish rapport and outline the agenda clearly.',
         energy: 0.35,
-        confidence: 0.90,
+        confidence: 0.9,
         speaker: 'Jane Smith',
       },
       {
         callId: call1.id,
         timestamp: 45.2,
         score: 4,
-        transcript: "Hi Jane. Honestly, it's been a bit of a headache. The manual auditing process is taking our managers nearly 10 hours a week each. We need a way to automate this, but we're worried about the learning curve for the newer reps.",
+        transcript:
+          "Hi Jane. Honestly, it's been a bit of a headache. The manual auditing process is taking our managers nearly 10 hours a week each. We need a way to automate this, but we're worried about the learning curve for the newer reps.",
         sentiment: 'Negative',
         buyingSignals: JSON.stringify(['need a way to automate this']),
         hesitations: JSON.stringify(['honestly', 'a bit of']),
         detectedIntents: JSON.stringify(['OBJECTION']),
         intentConfidence: 0.92,
-        recommendation: 'Acknowledge the pain point (manual auditing taking 10 hours/week) and reassure them about the ease of onboarding.',
+        recommendation:
+          'Acknowledge the pain point (manual auditing taking 10 hours/week) and reassure them about the ease of onboarding.',
         energy: 0.31,
         confidence: 0.87,
         speaker: 'Mike Johnson',
@@ -147,13 +152,15 @@ async function main() {
         callId: call1.id,
         timestamp: 132.4,
         score: 5,
-        transcript: 'Yes, we are definitely interested, but what does the pricing scale look like for 50 seats? We would need it integrated with our Salesforce by mid-December.',
+        transcript:
+          'Yes, we are definitely interested, but what does the pricing scale look like for 50 seats? We would need it integrated with our Salesforce by mid-December.',
         sentiment: 'Positive',
         buyingSignals: JSON.stringify(['definitely interested', 'pricing scale']),
         hesitations: JSON.stringify(['but']),
         detectedIntents: JSON.stringify(['PRICING', 'COMMITMENT']),
         intentConfidence: 0.94,
-        recommendation: '💡 Discuss pricing breakdown clearly — be transparent and highlight multi-year discounts.',
+        recommendation:
+          '💡 Discuss pricing breakdown clearly — be transparent and highlight multi-year discounts.',
         energy: 0.38,
         confidence: 0.89,
         speaker: 'Mike Johnson',
@@ -162,13 +169,19 @@ async function main() {
         callId: call1.id,
         timestamp: 215.1,
         score: 4,
-        transcript: "Our pricing structure for 50 seats includes our tier-1 support and full Salesforce integration. If we sign a multi-year renewal, I can secure a 15% discount, bringing the annual cost down. We also have dedicated implementation support to meet that December 15th go-live date.",
+        transcript:
+          'Our pricing structure for 50 seats includes our tier-1 support and full Salesforce integration. If we sign a multi-year renewal, I can secure a 15% discount, bringing the annual cost down. We also have dedicated implementation support to meet that December 15th go-live date.',
         sentiment: 'Positive',
-        buyingSignals: JSON.stringify(['Salesforce integration', '15% discount', 'implementation support']),
+        buyingSignals: JSON.stringify([
+          'Salesforce integration',
+          '15% discount',
+          'implementation support',
+        ]),
         hesitations: JSON.stringify([]),
         detectedIntents: JSON.stringify(['PRICING']),
         intentConfidence: 0.96,
-        recommendation: 'Emphasize the dedicated team resources to lower their implementation anxiety.',
+        recommendation:
+          'Emphasize the dedicated team resources to lower their implementation anxiety.',
         energy: 0.45,
         confidence: 0.92,
         speaker: 'Jane Smith',
@@ -177,7 +190,8 @@ async function main() {
         callId: call1.id,
         timestamp: 310.8,
         score: 4.5,
-        transcript: "That sounds very reasonable. If you can send over the security whitepaper for our technical lead, Sarah, to review, and draft the agreement with the multi-year terms, we can review it in our next sync.",
+        transcript:
+          'That sounds very reasonable. If you can send over the security whitepaper for our technical lead, Sarah, to review, and draft the agreement with the multi-year terms, we can review it in our next sync.',
         sentiment: 'Positive',
         buyingSignals: JSON.stringify(['review agreement', 'multi-year terms']),
         hesitations: JSON.stringify([]),
@@ -187,7 +201,7 @@ async function main() {
         energy: 0.41,
         confidence: 0.91,
         speaker: 'Mike Johnson',
-      }
+      },
     ],
   });
 
@@ -233,7 +247,8 @@ async function main() {
       averageConfidence: 0.81,
       conversionProbability: 60,
       isFavorite: false,
-      summary: 'Jane presented the main ConvinceSense dashboard features to Globex executives. The team responded very positively to the real-time recommendations but asked about CRM data latency.',
+      summary:
+        'Jane presented the main ConvinceSense dashboard features to Globex executives. The team responded very positively to the real-time recommendations but asked about CRM data latency.',
       bantBudget: 'Under review. Initial budget estimate around $80k.',
       bantBudgetMet: false,
       bantAuthority: 'Evaluation committee led by David G.',
@@ -251,12 +266,13 @@ async function main() {
         callId: call2.id,
         timestamp: 12.0,
         score: 3.5,
-        transcript: 'Welcome David, let me show you how our system tracks real-time engagement and provides live advice during calls.',
+        transcript:
+          'Welcome David, let me show you how our system tracks real-time engagement and provides live advice during calls.',
         sentiment: 'Positive',
         buyingSignals: JSON.stringify([]),
         hesitations: JSON.stringify([]),
         detectedIntents: JSON.stringify(['INFORMATION']),
-        intentConfidence: 0.90,
+        intentConfidence: 0.9,
         recommendation: 'Highlight dashboard simplicity.',
         energy: 0.38,
         confidence: 0.85,
@@ -266,7 +282,8 @@ async function main() {
         callId: call2.id,
         timestamp: 85.0,
         score: 4.2,
-        transcript: 'Wow, the timeline chart updating dynamically is exactly what our managers need to evaluate sales performance. Can we export this data to our CRM database?',
+        transcript:
+          'Wow, the timeline chart updating dynamically is exactly what our managers need to evaluate sales performance. Can we export this data to our CRM database?',
         sentiment: 'Positive',
         buyingSignals: JSON.stringify(['exactly what we need', 'export data to CRM']),
         hesitations: JSON.stringify([]),
@@ -276,8 +293,8 @@ async function main() {
         energy: 0.44,
         confidence: 0.89,
         speaker: 'David G.',
-      }
-    ]
+      },
+    ],
   });
 
   // 6. Seed Call 3: Initech Pilot Discussion (Negative/Struggling call)
@@ -292,10 +309,11 @@ async function main() {
       overallSentiment: 'Negative',
       averageScore: 2.2,
       averageEnergy: 0.25,
-      averageConfidence: 0.70,
+      averageConfidence: 0.7,
       conversionProbability: 25,
       isFavorite: false,
-      summary: 'A difficult call with Initech where the prospect raised strong objections to the overall cost and questioned the value compared to standard transcription tools.',
+      summary:
+        'A difficult call with Initech where the prospect raised strong objections to the overall cost and questioned the value compared to standard transcription tools.',
       bantBudget: '$40k budget limit (Firm)',
       bantBudgetMet: false,
       bantAuthority: 'Bill Lumbergh has final veto.',
@@ -313,18 +331,20 @@ async function main() {
         callId: call3.id,
         timestamp: 10.0,
         score: 2.0,
-        transcript: "To be honest, we already use basic call recording, and I don't see why we should pay five times more for real-time analysis.",
+        transcript:
+          "To be honest, we already use basic call recording, and I don't see why we should pay five times more for real-time analysis.",
         sentiment: 'Negative',
         buyingSignals: JSON.stringify([]),
         hesitations: JSON.stringify(['to be honest']),
         detectedIntents: JSON.stringify(['OBJECTION']),
         intentConfidence: 0.95,
-        recommendation: 'Contrast transcription tools with dynamic coaching that actually closes deals.',
+        recommendation:
+          'Contrast transcription tools with dynamic coaching that actually closes deals.',
         energy: 0.22,
         confidence: 0.78,
         speaker: 'Bill Lumbergh',
-      }
-    ]
+      },
+    ],
   });
 
   // 7. Seed Call 4: Stark Industries Kickoff (Completed Call)
@@ -342,7 +362,8 @@ async function main() {
       averageConfidence: 0.93,
       conversionProbability: 95,
       isFavorite: true,
-      summary: 'Stark Industries is ready to roll out ConvinceSense to their 200-person international sales division. Focus is on data privacy and custom AI prompts.',
+      summary:
+        'Stark Industries is ready to roll out ConvinceSense to their 200-person international sales division. Focus is on data privacy and custom AI prompts.',
       bantBudget: '$400k+ enterprise budget allocated.',
       bantBudgetMet: true,
       bantAuthority: 'Pepper Potts approved authorization.',
@@ -355,7 +376,13 @@ async function main() {
   });
 
   // 8. Seed 5 more dummy completed calls for sorting, filtering, and pagination
-  const dummyClients = ['Umbrella Corp', 'Hooli', 'Wayne Enterprises', 'Cyberdyne Systems', 'Tyrell Corp'];
+  const dummyClients = [
+    'Umbrella Corp',
+    'Hooli',
+    'Wayne Enterprises',
+    'Cyberdyne Systems',
+    'Tyrell Corp',
+  ];
   for (let i = 0; i < dummyClients.length; i++) {
     const sentiment = i % 3 === 0 ? 'Positive' : i % 3 === 1 ? 'Neutral' : 'Negative';
     const score = i % 3 === 0 ? 4.5 : i % 3 === 1 ? 3.2 : 1.8;
@@ -371,8 +398,8 @@ async function main() {
         status: 'COMPLETED',
         overallSentiment: sentiment,
         averageScore: score,
-        averageEnergy: 0.3 + (i * 0.05),
-        averageConfidence: 0.65 + (i * 0.05),
+        averageEnergy: 0.3 + i * 0.05,
+        averageConfidence: 0.65 + i * 0.05,
         conversionProbability: probability,
         isFavorite: false,
         summary: `Discovery call with ${dummyClients[i]} team regarding AI-powered coaching tools. Scoped initial requirements and timelines.`,
@@ -384,7 +411,7 @@ async function main() {
         bantNeedMet: true,
         bantTimeline: 'Target within 3 months',
         bantTimelineMet: false,
-      }
+      },
     });
   }
 
@@ -394,16 +421,18 @@ async function main() {
       {
         callId: call1.id,
         authorId: manager.id,
-        content: "Excellent handling of the CRM integration timeline objection here. This really convinced Mike.",
+        content:
+          'Excellent handling of the CRM integration timeline objection here. This really convinced Mike.',
         timestamp: 132.4,
       },
       {
         callId: call1.id,
         authorId: salesRep.id,
-        content: "Thanks, Sarah! Having the live recommendation flash up helped me steer the discussion to the dedicated support resources.",
+        content:
+          'Thanks, Sarah! Having the live recommendation flash up helped me steer the discussion to the dedicated support resources.',
         timestamp: 215.1,
-      }
-    ]
+      },
+    ],
   });
 
   // 10. Seed Notifications
@@ -429,8 +458,8 @@ async function main() {
         description: 'Successfully posted call metrics for Globex Corp Demo to #sales-alerts.',
         type: 'INFO',
         read: true,
-      }
-    ]
+      },
+    ],
   });
 
   // 11. Seed Audit Logs
@@ -450,8 +479,8 @@ async function main() {
         userId: salesRep.id,
         action: 'CALL_FAVORITE',
         details: 'Favorited Acme Corp Q4 Renewal call',
-      }
-    ]
+      },
+    ],
   });
 
   console.log('Database seeded successfully!');

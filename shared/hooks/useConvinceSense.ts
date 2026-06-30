@@ -35,9 +35,7 @@ export interface UseConvinceSenseReturn {
  *
  * @param wsUrl - WebSocket endpoint (default: `ws://localhost:8000/ws/records`)
  */
-export function useConvinceSense(
-  wsUrl: string = DEFAULT_WS_URL,
-): UseConvinceSenseReturn {
+export function useConvinceSense(wsUrl: string = DEFAULT_WS_URL): UseConvinceSenseReturn {
   // ── State ──────────────────────────────────────────────────────────────
   const [status, setStatus] = useState<ConnectionStatus>('disconnected');
   const [latestRecord, setLatestRecord] = useState<EngagementRecord | null>(null);
@@ -121,17 +119,17 @@ export function useConvinceSense(
   // ── Derived aggregates ─────────────────────────────────────────────────
   const averageScore = useMemo(() => {
     if (records.length === 0) return 0;
-    return records.reduce((sum, r) => sum + r.score, 0) / records.length;
+    return records.reduce((sum: number, r) => sum + r.score, 0) / records.length;
   }, [records]);
 
   const averageEnergy = useMemo(() => {
     if (records.length === 0) return 0;
-    return records.reduce((sum, r) => sum + r.energy, 0) / records.length;
+    return records.reduce((sum: number, r) => sum + r.energy, 0) / records.length;
   }, [records]);
 
   const averageConfidence = useMemo(() => {
     if (records.length === 0) return 0;
-    return records.reduce((sum, r) => sum + r.confidence, 0) / records.length;
+    return records.reduce((sum: number, r) => sum + r.confidence, 0) / records.length;
   }, [records]);
 
   const dominantSentiment = useMemo(() => {

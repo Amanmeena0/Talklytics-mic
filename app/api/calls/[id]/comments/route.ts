@@ -5,10 +5,7 @@ import prisma from '@/libs/db';
  * GET /api/calls/[id]/comments
  * Fetches comments for a call.
  */
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const comments = await prisma.callComment.findMany({
@@ -28,7 +25,10 @@ export async function GET(
 
     return NextResponse.json(comments);
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || 'Failed to fetch comments' }, { status: 500 });
+    return NextResponse.json(
+      { error: error.message || 'Failed to fetch comments' },
+      { status: 500 }
+    );
   }
 }
 
@@ -36,10 +36,7 @@ export async function GET(
  * POST /api/calls/[id]/comments
  * Posts a comment on a call.
  */
-export async function POST(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const { content, timestamp } = await request.json();
@@ -51,7 +48,8 @@ export async function POST(
     // Get active user
     const { cookies } = require('next/headers');
     const cookieStore = await cookies();
-    const activeUserEmail = cookieStore.get('active_user_email')?.value || 'jane.smith@convincesense.com';
+    const activeUserEmail =
+      cookieStore.get('active_user_email')?.value || 'jane.smith@convincesense.com';
 
     let user = await prisma.user.findUnique({
       where: { email: activeUserEmail },

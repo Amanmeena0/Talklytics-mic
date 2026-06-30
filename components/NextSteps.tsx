@@ -57,8 +57,13 @@ export default function NextSteps() {
       return `Hi, great connecting today. I've attached the security brief requested. Looking forward to our sync on the 15th...`;
     }
 
-    const recText = latestRecommendation ? `\n- We will make sure to address: ${latestRecommendation.replace(/^💡\s*/, '')}` : '';
-    const signalText = allBuyingSignals.length > 0 ? `\n- I've noted your interest in: ${allBuyingSignals.slice(0, 2).join(' and ')}.` : '';
+    const recText = latestRecommendation
+      ? `\n- We will make sure to address: ${latestRecommendation.replace(/^💡\s*/, '')}`
+      : '';
+    const signalText =
+      allBuyingSignals.length > 0
+        ? `\n- I've noted your interest in: ${allBuyingSignals.slice(0, 2).join(' and ')}.`
+        : '';
 
     return `Hi,
 
@@ -114,7 +119,9 @@ Best regards,`;
       if (dynamicSteps.length === 0) {
         return (
           <div className="next-steps-empty">
-            <p className="text-body m-0">Waiting for conversation signals to generate recommendations...</p>
+            <p className="text-body m-0">
+              Waiting for conversation signals to generate recommendations...
+            </p>
           </div>
         );
       }
@@ -123,7 +130,10 @@ Best regards,`;
         <ul className="next-steps-list-gap-5">
           {dynamicSteps.map((step, i) => (
             <li key={i} className="d-flex align-start gap-3">
-              <div className="task-checkbox cursor-default" style={{ background: 'var(--accent-muted)' }}>
+              <div
+                className="task-checkbox cursor-default"
+                style={{ background: 'var(--accent-muted)' }}
+              >
                 <span className="material-symbols-outlined fs-14 color-accent">auto_awesome</span>
               </div>
               <div>
@@ -163,7 +173,13 @@ Best regards,`;
                   <span className="material-symbols-outlined fs-20">check_box_outline_blank</span>
                 )}
               </button>
-              <div style={{ textDecoration: step.isCompleted ? 'line-through' : 'none', opacity: step.isCompleted ? 0.6 : 1, transition: 'all 0.2s ease' }}>
+              <div
+                style={{
+                  textDecoration: step.isCompleted ? 'line-through' : 'none',
+                  opacity: step.isCompleted ? 0.6 : 1,
+                  transition: 'all 0.2s ease',
+                }}
+              >
                 <p className="text-body font-semibold color-primary m-0 mb-1">{step.title}</p>
                 {step.description && <p className="text-caption m-0">{step.description}</p>}
               </div>
@@ -190,7 +206,7 @@ Best regards,`;
             <span className="material-symbols-outlined color-accent fs-20">task_alt</span>
             {isLive ? 'Live Coaching Steps' : 'Call Follow-Ups'}
           </h2>
-          
+
           {!isLive && !isAdding && (
             <button
               className="btn btn-ghost fs-12 color-accent"
@@ -219,7 +235,10 @@ Best regards,`;
                 type="button"
                 className="btn btn-ghost fs-12"
                 style={{ padding: '4px 8px' }}
-                onClick={() => { setIsAdding(false); setNewTaskTitle(''); }}
+                onClick={() => {
+                  setIsAdding(false);
+                  setNewTaskTitle('');
+                }}
               >
                 Cancel
               </button>
@@ -251,9 +270,7 @@ Best regards,`;
             {isLive ? 'AI Live Summary' : 'AI Follow-Up Email'}
           </span>
         </div>
-        <p className="text-body next-steps-email-body">
-          {getFollowUpEmail()}
-        </p>
+        <p className="text-body next-steps-email-body">{getFollowUpEmail()}</p>
         <button onClick={handleCopyEmail} className="btn btn-primary w-fit">
           <span className="material-symbols-outlined fs-16">
             {isCopying ? 'check' : 'content_copy'}

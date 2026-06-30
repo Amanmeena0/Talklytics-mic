@@ -9,7 +9,8 @@ export async function GET() {
   try {
     const { cookies } = require('next/headers');
     const cookieStore = await cookies();
-    const activeUserEmail = cookieStore.get('active_user_email')?.value || 'jane.smith@convincesense.com';
+    const activeUserEmail =
+      cookieStore.get('active_user_email')?.value || 'jane.smith@convincesense.com';
 
     const user = await prisma.user.findUnique({
       where: { email: activeUserEmail },
@@ -26,7 +27,10 @@ export async function GET() {
 
     return NextResponse.json(notifications);
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || 'Failed to fetch notifications' }, { status: 500 });
+    return NextResponse.json(
+      { error: error.message || 'Failed to fetch notifications' },
+      { status: 500 }
+    );
   }
 }
 
@@ -39,7 +43,8 @@ export async function PATCH(request: Request) {
     const { id, read, all, clearAll } = await request.json();
     const { cookies } = require('next/headers');
     const cookieStore = await cookies();
-    const activeUserEmail = cookieStore.get('active_user_email')?.value || 'jane.smith@convincesense.com';
+    const activeUserEmail =
+      cookieStore.get('active_user_email')?.value || 'jane.smith@convincesense.com';
 
     const user = await prisma.user.findUnique({
       where: { email: activeUserEmail },
@@ -75,6 +80,9 @@ export async function PATCH(request: Request) {
 
     return NextResponse.json(notification);
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || 'Failed to update notification' }, { status: 500 });
+    return NextResponse.json(
+      { error: error.message || 'Failed to update notification' },
+      { status: 500 }
+    );
   }
 }
