@@ -223,14 +223,7 @@ function SettingsContent() {
           {/* Banner notification */}
           {notification && (
             <div
-              className="p-3 rounded-md mb-6 d-flex align-center gap-2 fs-13"
-              style={{
-                background:
-                  notification.type === 'success' ? 'var(--success-muted)' : 'var(--error-muted)',
-                color: notification.type === 'success' ? 'var(--success)' : 'var(--error)',
-                border: `1px solid ${notification.type === 'success' ? 'var(--success)' : 'var(--error)'}`,
-                animation: 'fadeInUp 0.2s ease',
-              }}
+              className={`p-3 rounded-md mb-6 d-flex align-center gap-2 fs-13 settings-banner ${notification.type === 'success' ? 'settings-banner--success' : 'settings-banner--error'}`}
             >
               <span className="material-symbols-outlined">
                 {notification.type === 'success' ? 'check_circle' : 'error'}
@@ -287,10 +280,7 @@ function SettingsContent() {
                     <div>
                       <h4 className="m-0 fs-16 font-semibold">{user?.name}</h4>
                       <p className="text-caption mt-1 mb-2">{user?.email}</p>
-                      <span
-                        className="badge badge-accent fs-10"
-                        style={{ textTransform: 'uppercase' }}
-                      >
+                        <span className="badge badge-accent fs-10 settings-role-badge">
                         {user?.role}
                       </span>
                     </div>
@@ -349,10 +339,7 @@ function SettingsContent() {
                           <div className="d-flex justify-between align-center mb-3">
                             <div className="d-flex align-center gap-12px">
                               <span
-                                className="material-symbols-outlined fs-32"
-                                style={{
-                                  color: int.connected ? 'var(--accent)' : 'var(--text-muted)',
-                                }}
+                                className={`material-symbols-outlined fs-32 ${int.connected ? 'color-accent' : 'color-muted'}`}
                               >
                                 {isSlack ? 'chat' : isSF ? 'cloud_done' : 'hub'}
                               </span>
@@ -368,14 +355,7 @@ function SettingsContent() {
 
                             <button
                               onClick={() => handleToggleIntegration(int.name, int.connected)}
-                              className="btn btn-secondary"
-                              style={{
-                                background: int.connected ? 'transparent' : 'var(--accent)',
-                                color: int.connected ? 'var(--text-primary)' : 'white',
-                                borderColor: int.connected
-                                  ? 'var(--border-default)'
-                                  : 'var(--accent)',
-                              }}
+                              className={`btn btn-secondary ${int.connected ? 'settings-integration-btn--connected' : 'settings-integration-btn--disconnected'}`}
                             >
                               {int.connected ? 'Disconnect' : 'Connect'}
                             </button>
@@ -460,10 +440,7 @@ function SettingsContent() {
                         COPY THIS KEY NOW. It will not be shown again.
                       </span>
                       <div className="d-flex justify-between align-center">
-                        <code
-                          className="word-break-all fs-13"
-                          style={{ fontFamily: 'var(--font-geist-mono)' }}
-                        >
+                        <code className="word-break-all fs-13 settings-mono-text">
                           {generatedKey}
                         </code>
                         <button
@@ -472,7 +449,7 @@ function SettingsContent() {
                             showBanner('Key copied to clipboard!');
                           }}
                           className="btn btn-ghost"
-                          style={{ padding: '4px 8px', fontSize: '12px' }}
+                          
                         >
                           Copy
                         </button>
@@ -488,10 +465,7 @@ function SettingsContent() {
                         <div key={k.id} className="settings-key-row">
                           <div>
                             <span className="font-semibold fs-13 d-block">{k.name}</span>
-                            <span
-                              className="fs-11 color-muted"
-                              style={{ fontFamily: 'var(--font-geist-mono)' }}
-                            >
+                            <span className="fs-11 color-muted settings-mono-text">
                               CS-key-...{k.key.substring(k.key.length - 8)}
                             </span>
                           </div>
@@ -526,7 +500,7 @@ export default function SettingsPage() {
           <main className="main-content">
             <div className="content-container">
               <h1 className="text-page-title">Settings &amp; Integrations</h1>
-              <p className="text-body" style={{ color: 'var(--text-secondary)' }}>
+              <p className="text-body color-secondary">
                 Loading configurations...
               </p>
             </div>
