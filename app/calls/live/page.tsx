@@ -128,7 +128,8 @@ function LiveCallContent() {
                     Generate LLM summary and save records to database automatically.
                   </span>
                 </div>
-                <label className="switch">
+                  <label className="switch">
+                    <span className="sr-only">Auto-Summarize on Stop</span>
                   <input
                     type="checkbox"
                     checked={autoSum}
