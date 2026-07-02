@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Layout from '@/components/Layout';
-import Footer from '@/components/Footer';
-import SentimentBadge from '@/shared/Components/SentimentBadge';
+import Layout from '@/shared/components/Layout/Layout';
+import Footer from '@/shared/components/Layout/Footer';
+import SentimentBadge from '@/shared/components/SentimentBadge';
 import { useRouter } from 'next/navigation';
 
 export default function DashboardHome() {

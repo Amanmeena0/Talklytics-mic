@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Layout from '@/components/Layout';
-import Footer from '@/components/Footer';
+import Layout from '@/shared/components/Layout/Layout';
+import Footer from '@/shared/components/Layout/Footer';
 
 function SettingsContent() {
   const router = useRouter();

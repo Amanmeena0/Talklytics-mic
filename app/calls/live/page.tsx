@@ -1,15 +1,15 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Layout from '@/components/Layout';
-import LiveDashboardProvider from '@/components/LiveDashboardProvider';
-import SessionHeader from '@/components/SessionHeader';
-import ExecutiveSummary from '@/components/ExecutiveSummary';
-import EngagementTimeline from '@/components/EngagementTimeline';
-import BANTAnalysis from '@/components/BANTAnalysis';
-import NextSteps from '@/components/NextSteps';
-import TranscriptLog from '@/components/TranscriptLog';
-import Footer from '@/components/Footer';
+import Layout from '@/shared/components/Layout/Layout';
+import LiveDashboardProvider from '@/features/live-session/components/LiveDashboardProvider';
+import SessionHeader from '@/features/calls/components/SessionHeader';
+import ExecutiveSummary from '@/features/executive-summary/components/ExecutiveSummary';
+import EngagementTimeline from '@/features/analytics/components/EngagementTimeline';
+import BANTAnalysis from '@/features/bant/components/BANTAnalysis';
+import NextSteps from '@/features/next-steps/components/NextSteps';
+import TranscriptLog from '@/features/transcript/components/TranscriptLog';
+import Footer from '@/shared/components/Layout/Footer';
 import { useLiveData } from '@/shared/hooks/LiveDataContext';
 import useHealthCheck from '@/shared/hooks/useHealthCheck';
 

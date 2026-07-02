@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Layout from '@/components/Layout';
-import Footer from '@/components/Footer';
+import Layout from '@/shared/components/Layout/Layout';
+import Footer from '@/shared/components/Layout/Footer';
 
 export default function AnalyticsPage() {
   const [data, setData] = useState<any>(null);
