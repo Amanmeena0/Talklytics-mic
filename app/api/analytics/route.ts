@@ -1,20 +1,24 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/libs/db';
 
-/**
- * GET /api/analytics
- * Computes aggregated SaaS analytics from call records in the database.
- */
 export async function GET() {
   try {
-    // 1. Fetch all completed calls
-    const calls = await prisma.call.findMany({
-      where: {
-        isSoftDeleted: false,
-        status: 'COMPLETED',
+    // Fetch calls from FastAPI backend.
+    const backendUrl = new URL(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/calls`);
+    backendUrl.searchParams.set('limit', '100000');
+    backendUrl.searchParams.set('skip', '0');
+
+    const res = await fetch(backendUrl.toString(), {
+      headers: {
+        'x-api-key': process.env.CONVINCESENSE_API_KEY || '',
       },
-      orderBy: { date: 'asc' },
+      next: { revalidate: 0 }
     });
+
+    if (!res.ok) {
+      throw new Error(`Backend returned status ${res.status}`);
+    }
+
+    const calls = await res.json();
 
     if (calls.length === 0) {
       return NextResponse.json({
@@ -29,43 +33,11 @@ export async function GET() {
     }
 
     const totalCalls = calls.length;
-    const totalDurationSeconds = calls.reduce((sum: number, c: any) => sum + c.duration, 0);
-    const totalDurationMinutes = Math.round(totalDurationSeconds / 60);
+    let totalDurationSeconds = 0;
+    let totalScoreSum = 0;
+    let totalRecordsCount = 0;
 
-    const averageScore = parseFloat(
-      (calls.reduce((sum: number, c: any) => sum + c.averageScore, 0) / totalCalls).toFixed(2)
-    );
-    const averageConversionProbability = Math.round(
-      calls.reduce((sum: number, c: any) => sum + c.conversionProbability, 0) / totalCalls
-    );
-
-    // Sentiment distribution
     const sentimentSplit = { Positive: 0, Neutral: 0, Negative: 0 };
-    calls.forEach((c: any) => {
-      const s = c.overallSentiment as keyof typeof sentimentSplit;
-      if (s in sentimentSplit) {
-        sentimentSplit[s] += 1;
-      }
-    });
-
-    // Score trend over time (grouped by date)
-    const scoreTrend = calls.map((c: any) => ({
-      id: c.id,
-      title: c.title,
-      date: c.date.toISOString().split('T')[0],
-      score: c.averageScore,
-      probability: c.conversionProbability,
-    }));
-
-    // BANT coverage
-    // Percentage of completed calls that have at least one BANT parameter verified (met)
-    const callsWithBant = calls.filter(
-      (c: any) => c.bantBudgetMet || c.bantAuthorityMet || c.bantNeedMet || c.bantTimelineMet
-    );
-    const bantCompletionRate = Math.round((callsWithBant.length / totalCalls) * 100);
-
-    // Let's count some intents and speech statistics from all engagement records in the system
-    const allRecords = await prisma.engagementRecord.findMany({});
     const intentCounts: Record<string, number> = {
       PRICING: 0,
       COMPARISON: 0,
@@ -73,28 +45,87 @@ export async function GET() {
       COMMITMENT: 0,
       INFORMATION: 0,
     };
-
     let totalBuyingSignals = 0;
     let totalHesitations = 0;
+    let callsWithBantCount = 0;
 
-    allRecords.forEach((rec: any) => {
-      try {
-        const intents = JSON.parse(rec.detectedIntents || '[]');
-        intents.forEach((intent: string) => {
+    const scoreTrend = calls.map((c: any) => {
+      const records = c.records || [];
+      const duration = records.length > 0 ? Math.max(...records.map((r: any) => r.timestamp)) : 0;
+      totalDurationSeconds += duration;
+
+      const callScoreSum = records.reduce((sum: number, r: any) => sum + r.score, 0);
+      const callAvgScore = records.length > 0 ? callScoreSum / records.length : 0;
+      
+      totalScoreSum += callScoreSum;
+      totalRecordsCount += records.length;
+
+      let overallSentiment: keyof typeof sentimentSplit = 'Neutral';
+      if (records.length > 0) {
+        const freq: Record<string, number> = {};
+        records.forEach((r: any) => {
+          const s = r.sentiment;
+          const key = s.charAt(0).toUpperCase() + s.slice(1).toLowerCase(); // Normalize case (e.g. positive -> Positive)
+          freq[key] = (freq[key] || 0) + 1;
+        });
+        let max = 0;
+        Object.entries(freq).forEach(([k, v]) => {
+          if (v > max) {
+            max = v;
+            overallSentiment = k as any;
+          }
+        });
+      }
+      
+      if (overallSentiment in sentimentSplit) {
+        sentimentSplit[overallSentiment] += 1;
+      }
+
+      // Check BANT
+      let isBant = false;
+      records.forEach((r: any) => {
+        const txt = r.transcript.toLowerCase();
+        const intentsList = (r.detected_intents || []).map((i: string) => i.toUpperCase());
+        if (intentsList.includes('PRICING') || txt.includes('price') || txt.includes('budget')) isBant = true;
+        if (txt.includes('decision') || txt.includes('approve') || txt.includes('authority')) isBant = true;
+        if (intentsList.includes('INFORMATION') || txt.includes('need') || txt.includes('want')) isBant = true;
+        if (intentsList.includes('COMMITMENT') || txt.includes('timeline') || txt.includes('schedule')) isBant = true;
+
+        // Count intents
+        intentsList.forEach((intent: string) => {
           if (intent in intentCounts) {
             intentCounts[intent] += 1;
           }
         });
 
-        const signals = JSON.parse(rec.buyingSignals || '[]');
-        totalBuyingSignals += signals.length;
+        // Count signals & hesitations
+        totalBuyingSignals += (r.buying_signals || []).length;
+        totalHesitations += (r.hesitations || []).length;
+      });
 
-        const hes = JSON.parse(rec.hesitations || '[]');
-        totalHesitations += hes.length;
-      } catch (e) {
-        // ignore JSON parse errors
+      if (isBant) {
+        callsWithBantCount += 1;
       }
+
+      const averageScore = records.length > 0 ? parseFloat(callAvgScore.toFixed(2)) : 0;
+
+      return {
+        id: String(c.id),
+        title: c.title,
+        date: c.created_at ? c.created_at.split('T')[0] : new Date().toISOString().split('T')[0],
+        score: averageScore,
+        probability: Math.min(100, Math.max(0, Math.round(averageScore * 20))),
+      };
     });
+
+    const totalDurationMinutes = Math.round(totalDurationSeconds / 60);
+    const averageScore = totalRecordsCount > 0 
+      ? parseFloat((totalScoreSum / totalRecordsCount).toFixed(2))
+      : 0;
+    const averageConversionProbability = Math.round(
+      scoreTrend.reduce((sum: number, s: any) => sum + s.probability, 0) / totalCalls
+    );
+    const bantCompletionRate = Math.round((callsWithBantCount / totalCalls) * 100);
 
     return NextResponse.json({
       totalCalls,
@@ -102,16 +133,13 @@ export async function GET() {
       averageScore,
       averageConversionProbability,
       sentimentSplit,
-      scoreTrend,
+      scoreTrend: scoreTrend.reverse(), // chronologically ascending
       bantCompletionRate,
       intentCounts,
       totalBuyingSignals,
       totalHesitations,
     });
   } catch (error: any) {
-    return NextResponse.json(
-      { error: error.message || 'Failed to compute analytics' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message || 'Failed to compute analytics' }, { status: 500 });
   }
 }

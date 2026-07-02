@@ -26,6 +26,7 @@ export interface UseConvinceSenseReturn {
   allIntents: string[];
   latestRecommendation: string;
   sessionDuration: number;
+  callId: number | null;
 }
 
 /**
@@ -40,6 +41,7 @@ export function useConvinceSense(wsUrl: string | null = null): UseConvinceSenseR
   const [status, setStatus] = useState<ConnectionStatus>('disconnected');
   const [latestRecord, setLatestRecord] = useState<EngagementRecord | null>(null);
   const [records, setRecords] = useState<EngagementRecord[]>([]);
+  const [callId, setCallId] = useState<number | null>(null);
 
   // ── Refs ────────────────────────────────────────────────────────────────
   const wsRef = useRef<WebSocket | null>(null);
@@ -62,6 +64,7 @@ export function useConvinceSense(wsUrl: string | null = null): UseConvinceSenseR
     setStatus('connecting');
     setRecords([]);
     setLatestRecord(null);
+    setCallId(null);
 
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
@@ -74,7 +77,12 @@ export function useConvinceSense(wsUrl: string | null = null): UseConvinceSenseR
 
     ws.onmessage = (event: MessageEvent) => {
       try {
-        const record: EngagementRecord = JSON.parse(event.data as string);
+        const data = JSON.parse(event.data as string);
+        if (data.type === 'session_info') {
+          setCallId(data.call_id);
+          return;
+        }
+        const record: EngagementRecord = data;
         setLatestRecord(record);
         setRecords((prev) => [...prev, record]);
       } catch {
@@ -212,6 +220,7 @@ export function useConvinceSense(wsUrl: string | null = null): UseConvinceSenseR
     allIntents,
     latestRecommendation,
     sessionDuration,
+    callId,
   };
 }
 

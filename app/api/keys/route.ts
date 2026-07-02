@@ -1,44 +1,16 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
-import prisma from '@/libs/db';
+import { readStore, writeStore } from '@/libs/localStore';
 
-/**
- * GET /api/keys
- * Fetches API keys for the current active user.
- */
 export async function GET() {
   try {
-    const { cookies } = require('next/headers');
-    const cookieStore = await cookies();
-    const activeUserEmail =
-      cookieStore.get('active_user_email')?.value || 'jane.smith@convincesense.com';
-
-    const user = await prisma.user.findUnique({
-      where: { email: activeUserEmail },
-    });
-
-    if (!user) {
-      return NextResponse.json([]);
-    }
-
-    const apiKeys = await prisma.apiKey.findMany({
-      where: { userId: user.id },
-      orderBy: { createdAt: 'desc' },
-    });
-
-    return NextResponse.json(apiKeys);
+    const store = await readStore();
+    return NextResponse.json(store.apiKeys);
   } catch (error: any) {
-    return NextResponse.json(
-      { error: error.message || 'Failed to fetch API keys' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message || 'Failed to fetch API keys' }, { status: 500 });
   }
 }
 
-/**
- * POST /api/keys
- * Generates a new API key for the active user.
- */
 export async function POST(request: Request) {
   try {
     const { name } = await request.json();
@@ -46,52 +18,27 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Name is required' }, { status: 400 });
     }
 
-    const { cookies } = require('next/headers');
-    const cookieStore = await cookies();
-    const activeUserEmail =
-      cookieStore.get('active_user_email')?.value || 'jane.smith@convincesense.com';
-
-    const user = await prisma.user.findUnique({
-      where: { email: activeUserEmail },
-    });
-
-    if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
-    }
+    const store = await readStore();
 
     // Generate a secure API key
     const rawKey = `CS-key-${crypto.randomBytes(24).toString('hex')}`;
+    const newKey = {
+      id: crypto.randomUUID(),
+      userId: '1',
+      name,
+      key: rawKey,
+      createdAt: new Date().toISOString()
+    };
 
-    const apiKey = await prisma.apiKey.create({
-      data: {
-        userId: user.id,
-        name,
-        key: rawKey,
-      },
-    });
+    store.apiKeys.push(newKey);
+    await writeStore(store);
 
-    // Write audit log
-    await prisma.auditLog.create({
-      data: {
-        userId: user.id,
-        action: 'API_KEY_GENERATE',
-        details: `Generated API key named "${name}"`,
-      },
-    });
-
-    return NextResponse.json(apiKey, { status: 201 });
+    return NextResponse.json(newKey, { status: 201 });
   } catch (error: any) {
-    return NextResponse.json(
-      { error: error.message || 'Failed to generate API key' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message || 'Failed to generate API key' }, { status: 500 });
   }
 }
 
-/**
- * DELETE /api/keys
- * Revokes/deletes an API key.
- */
 export async function DELETE(request: Request) {
   try {
     const { id } = await request.json();
@@ -99,45 +46,18 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: 'Key ID is required' }, { status: 400 });
     }
 
-    const { cookies } = require('next/headers');
-    const cookieStore = await cookies();
-    const activeUserEmail =
-      cookieStore.get('active_user_email')?.value || 'jane.smith@convincesense.com';
+    const store = await readStore();
+    const keyIndex = store.apiKeys.findIndex((k: any) => k.id === id);
 
-    const user = await prisma.user.findUnique({
-      where: { email: activeUserEmail },
-    });
-
-    if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
-    }
-
-    const key = await prisma.apiKey.findUnique({
-      where: { id },
-    });
-
-    if (!key || key.userId !== user.id) {
+    if (keyIndex === -1) {
       return NextResponse.json({ error: 'API key not found' }, { status: 404 });
     }
 
-    await prisma.apiKey.delete({
-      where: { id },
-    });
-
-    // Write audit log
-    await prisma.auditLog.create({
-      data: {
-        userId: user.id,
-        action: 'API_KEY_REVOKE',
-        details: `Revoked API key named "${key.name}"`,
-      },
-    });
+    store.apiKeys.splice(keyIndex, 1);
+    await writeStore(store);
 
     return NextResponse.json({ success: true, message: 'API key successfully revoked' });
   } catch (error: any) {
-    return NextResponse.json(
-      { error: error.message || 'Failed to revoke API key' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message || 'Failed to revoke API key' }, { status: 500 });
   }
 }

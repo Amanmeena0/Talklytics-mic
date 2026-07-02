@@ -21,8 +21,15 @@ export default function LiveDashboardProvider({ children, id, wsUrl }: LiveDashb
   const [sessionTitle, setSessionTitle] = useState<string>('');
   const [sessionClientName, setSessionClientName] = useState<string>('');
 
+  const dynamicWsUrl = useMemo(() => {
+    if (!isLive || !isRecording) return null;
+    const titleParam = sessionTitle ? `${sessionTitle} - ${sessionClientName}` : 'Live Session';
+    const base = wsUrl || 'ws://localhost:8000/ws/records';
+    return `${base}?save_to_db=${autoSummarize ? 'true' : 'false'}&user_id=1&title=${encodeURIComponent(titleParam)}`;
+  }, [isLive, isRecording, sessionTitle, sessionClientName, autoSummarize, wsUrl]);
+
   // ── Live Stream State (Active when isLive === true and isRecording === true) ──
-  const liveData = useConvinceSense(isLive && isRecording ? (wsUrl || 'ws://localhost:8000/ws/records') : null);
+  const liveData = useConvinceSense(dynamicWsUrl);
 
   // ── Historical State (Active when isLive === false) ──
   const [callData, setCallData] = useState<any>(null);
@@ -258,77 +265,21 @@ export default function LiveDashboardProvider({ children, id, wsUrl }: LiveDashb
     setIsRecording(true);
   }, []);
 
-  // Stop recording session, fetch summary if needed, and save to DB
+  // Stop recording session, disconnect WebSocket, and redirect to the saved Call page on backend
   const stopSession = useCallback(async () => {
     setIsRecording(false);
     setIsSaving(true);
 
-    try {
-      let summary = '';
-      if (autoSummarize) {
-        try {
-          const res = await fetch('http://localhost:8000/session/summary');
-          if (res.ok) {
-            const data = await res.json();
-            summary = data.summary || '';
-          }
-        } catch (err) {
-          console.error('Failed to fetch summary from backend:', err);
-        }
-      }
+    // Wait 2.5 seconds to let the backend finish generating the summary
+    await new Promise((resolve) => setTimeout(resolve, 2500));
 
-      // Compile BANT fields from liveData intents
-      const intents = liveData.allIntents || [];
-      const budgetMet = intents.includes('PRICING');
-      const authorityMet = intents.includes('COMMITMENT');
-      const needMet = intents.includes('INFORMATION') || intents.includes('COMPARISON');
-      const timelineMet = intents.includes('COMMITMENT') || intents.includes('PRICING');
-
-      // Post the new session call details to Next.js API
-      const res = await fetch('/api/calls', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: sessionTitle || 'Live Call',
-          clientName: sessionClientName || 'Unknown Client',
-          status: 'COMPLETED',
-          duration: liveData.sessionDuration || 0,
-          overallSentiment: liveData.dominantSentiment || 'Neutral',
-          averageScore: liveData.averageScore || 0,
-          averageEnergy: liveData.averageEnergy || 0,
-          averageConfidence: liveData.averageConfidence || 0,
-          conversionProbability: Math.min(100, Math.max(0, Math.round((liveData.averageScore || 0) * 20))), // Derived conversion probability
-          summary,
-          bantBudget: budgetMet ? 'Pricing Discussion Detected' : 'No Budget Details',
-          bantBudgetMet: budgetMet,
-          bantAuthority: authorityMet ? 'Commitment Signals Found' : 'Authority Unverified',
-          bantAuthorityMet: authorityMet,
-          bantNeed: needMet ? 'Active Inquiry Detected' : 'No Clear Need',
-          bantNeedMet: needMet,
-          bantTimeline: timelineMet ? 'Urgency Indicators Present' : 'No Timeline Discussed',
-          bantTimelineMet: timelineMet,
-          records: liveData.records,
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error('Failed to save call session');
-      }
-
-      const savedCall = await res.json();
-      // Redirect to the newly created call page
-      window.location.href = `/calls/${savedCall.id}`;
-    } catch (err) {
-      console.error('Error saving session:', err);
-      alert('Error saving live session. Details: ' + (err instanceof Error ? err.message : 'Unknown error'));
-      setIsSaving(false);
+    setIsSaving(false);
+    if (liveData.callId) {
+      window.location.href = `/calls/${liveData.callId}`;
+    } else {
+      window.location.href = '/calls';
     }
-  }, [
-    autoSummarize,
-    liveData,
-    sessionTitle,
-    sessionClientName,
-  ]);
+  }, [liveData.callId]);
 
   // ── Construct Context Value ──
   const contextValue = useMemo<LiveDataContextType>(() => {

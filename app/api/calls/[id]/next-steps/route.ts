@@ -1,93 +1,137 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/libs/db';
 
-/**
- * GET /api/calls/[id]/next-steps
- * Fetches all next steps (tasks) for a call.
- */
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const nextSteps = await prisma.nextStep.findMany({
-      where: { callId: id },
-      orderBy: { createdAt: 'desc' },
+    const callId = parseInt(id, 10);
+    
+    const backendUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/calls/${callId}`;
+    const res = await fetch(backendUrl, {
+      headers: {
+        'x-api-key': process.env.CONVINCESENSE_API_KEY || '',
+      },
+      next: { revalidate: 0 }
     });
+
+    if (!res.ok) {
+      throw new Error(`Backend returned status ${res.status}`);
+    }
+
+    const call = await res.json();
+    const nextSteps = (call.next_steps || []).map((n: any) => ({
+      id: String(n.id),
+      callId: String(n.call_id),
+      title: n.content,
+      description: '',
+      isCompleted: n.completed,
+      dueDate: n.due_date,
+      createdAt: n.created_at,
+    }));
 
     return NextResponse.json(nextSteps);
   } catch (error: any) {
-    return NextResponse.json(
-      { error: error.message || 'Failed to fetch next steps' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message || 'Failed to fetch next steps' }, { status: 500 });
   }
 }
 
-/**
- * POST /api/calls/[id]/next-steps
- * Creates a new next step task.
- */
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const { title, description, dueDate } = await request.json();
+    const callId = parseInt(id, 10);
+    const body = await request.json();
 
-    if (!title) {
-      return NextResponse.json({ error: 'Title is required' }, { status: 400 });
-    }
-
-    const nextStep = await prisma.nextStep.create({
-      data: {
-        callId: id,
-        title,
-        description: description || '',
-        dueDate: dueDate ? new Date(dueDate) : null,
+    const backendUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/calls/${callId}/next-steps`;
+    const res = await fetch(backendUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.CONVINCESENSE_API_KEY || '',
       },
+      body: JSON.stringify({
+        content: body.title,
+        completed: false,
+        due_date: body.dueDate || null,
+      }),
     });
 
-    return NextResponse.json(nextStep, { status: 201 });
+    if (!res.ok) {
+      throw new Error(`Backend returned status ${res.status}`);
+    }
+
+    const nextStep = await res.json();
+    return NextResponse.json({
+      id: String(nextStep.id),
+      callId: String(nextStep.call_id),
+      title: nextStep.content,
+      description: '',
+      isCompleted: nextStep.completed,
+      dueDate: nextStep.due_date,
+      createdAt: nextStep.created_at,
+    }, { status: 201 });
   } catch (error: any) {
-    return NextResponse.json(
-      { error: error.message || 'Failed to create next step' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message || 'Failed to create next step' }, { status: 500 });
   }
 }
 
-/**
- * PATCH /api/calls/[id]/next-steps
- * Updates next steps (e.g. toggles completion or deletes).
- */
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
+    const callId = parseInt(id, 10);
     const body = await request.json();
-    const { stepId, isCompleted, title, description, isDelete } = body;
+    const { stepId, isCompleted, title, isDelete } = body;
 
     if (!stepId) {
       return NextResponse.json({ error: 'Step ID is required' }, { status: 400 });
     }
 
+    const nextStepId = parseInt(stepId, 10);
+
     if (isDelete) {
-      await prisma.nextStep.delete({
-        where: { id: stepId },
+      const backendUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/calls/${callId}/next-steps/${nextStepId}`;
+      const res = await fetch(backendUrl, {
+        method: 'DELETE',
+        headers: {
+          'x-api-key': process.env.CONVINCESENSE_API_KEY || '',
+        },
       });
-      return NextResponse.json({ success: true, message: 'Next step deleted' });
+
+      if (!res.ok) {
+        throw new Error(`Backend returned status ${res.status}`);
+      }
+
+      return NextResponse.json({ success: true, message: 'Next step deleted successfully' });
     }
 
-    const updateData: any = {};
-    if (isCompleted !== undefined) updateData.isCompleted = isCompleted;
-    if (title !== undefined) updateData.title = title;
-    if (description !== undefined) updateData.description = description;
+    // Otherwise perform patch
+    const backendUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/calls/${callId}/next-steps`;
+    const patchPayload: any = { id: nextStepId };
+    if (isCompleted !== undefined) patchPayload.completed = isCompleted;
+    if (title !== undefined) patchPayload.content = title;
 
-    const updated = await prisma.nextStep.update({
-      where: { id: stepId },
-      data: updateData,
+    const res = await fetch(backendUrl, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.CONVINCESENSE_API_KEY || '',
+      },
+      body: JSON.stringify(patchPayload),
     });
 
-    return NextResponse.json(updated);
+    if (!res.ok) {
+      throw new Error(`Backend returned status ${res.status}`);
+    }
+
+    const nextStep = await res.json();
+    return NextResponse.json({
+      id: String(nextStep.id),
+      callId: String(nextStep.call_id),
+      title: nextStep.content,
+      description: '',
+      isCompleted: nextStep.completed,
+      dueDate: nextStep.due_date,
+      createdAt: nextStep.created_at,
+    });
   } catch (error: any) {
-    return NextResponse.json(
-      { error: error.message || 'Failed to update next step' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message || 'Failed to update next step' }, { status: 500 });
   }
 }

@@ -1,11 +1,31 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/libs/db';
 
-/**
- * GET /api/users
- * Returns the current active user profile.
- * Supporting user-switching via cookie 'active_user_email' for simulation of roles/permissions.
- */
+const defaultUser = {
+  id: '1',
+  name: 'Jane Smith',
+  email: 'jane.smith@convincesense.com',
+  role: 'SALES_REP',
+  avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150',
+};
+
+const users = [
+  defaultUser,
+  {
+    id: '2',
+    name: 'Michael Scott',
+    email: 'michael.scott@convincesense.com',
+    role: 'MANAGER',
+    avatarUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
+  },
+  {
+    id: '3',
+    name: 'Admin User',
+    email: 'admin@convincesense.com',
+    role: 'ADMIN',
+    avatarUrl: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150',
+  }
+];
+
 export async function GET(request: Request) {
   try {
     const { cookies } = require('next/headers');
@@ -13,32 +33,13 @@ export async function GET(request: Request) {
     const activeUserEmail =
       cookieStore.get('active_user_email')?.value || 'jane.smith@convincesense.com';
 
-    let user = await prisma.user.findUnique({
-      where: { email: activeUserEmail },
-    });
-
-    // Fallback if user doesn't exist
-    if (!user) {
-      user = await prisma.user.findFirst();
-    }
-
-    if (!user) {
-      return NextResponse.json(
-        { error: 'No users found in database. Seed the database first.' },
-        { status: 404 }
-      );
-    }
-
+    const user = users.find((u) => u.email === activeUserEmail) || defaultUser;
     return NextResponse.json(user);
   } catch (error: any) {
     return NextResponse.json({ error: error.message || 'Failed to fetch user' }, { status: 500 });
   }
 }
 
-/**
- * POST /api/users/switch
- * Switch the active user (for SaaS demonstration).
- */
 export async function POST(request: Request) {
   try {
     const { email } = await request.json();
@@ -46,12 +47,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Email is required' }, { status: 400 });
     }
 
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
-
+    const user = users.find((u) => u.email === email);
     if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 44 });
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
     const response = NextResponse.json({ success: true, user });
