@@ -4,6 +4,7 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Layout from '@/shared/components/Layout/Layout';
 import Footer from '@/shared/components/Layout/Footer';
+import clientFetch from '@/shared/utils/clientFetch';
 
 function SettingsContent() {
   const router = useRouter();
@@ -40,9 +41,9 @@ function SettingsContent() {
     setIsLoading(true);
     try {
       const [userRes, integrationsRes, keysRes] = await Promise.all([
-        fetch('/api/users'),
-        fetch('/api/integrations'),
-        fetch('/api/notifications'), // wait, let's load API keys! Wait, did we write API keys endpoint?
+        clientFetch('/api/users'),
+        clientFetch('/api/integrations'),
+        clientFetch('/api/notifications'), 
       ]);
 
       if (userRes.ok) {
@@ -57,11 +58,7 @@ function SettingsContent() {
         setIntegrations(ints);
       }
 
-      // Load API keys (since we store it in ApiKey model we should fetch it. Let's write keys fetch or retrieve inline)
-      // Actually we will write a quick inline API key helper or add API routes for keys!
-      // Let's query API keys using a route we will write, or mock keys locally in state if needed. But wait, we want a real database application!
-      // Let's create an endpoint for API keys inside app/api/keys/route.ts!
-      const keysRes2 = await fetch('/api/keys');
+      const keysRes2 = await clientFetch('/api/keys');
       if (keysRes2.ok) {
         const keys = await keysRes2.json();
         setApiKeys(keys);
@@ -86,7 +83,7 @@ function SettingsContent() {
   // Switch Active User Role
   const handleSwitchUser = async (email: string) => {
     try {
-      const res = await fetch('/api/users/switch', {
+      const res = await clientFetch('/api/users/switch', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -112,7 +109,7 @@ function SettingsContent() {
     );
 
     try {
-      const res = await fetch('/api/integrations', {
+      const res = await clientFetch('/api/integrations', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -134,7 +131,7 @@ function SettingsContent() {
 
   const handleSaveIntegrationConfig = async (name: string, updatedConfig: any) => {
     try {
-      const res = await fetch('/api/integrations', {
+      const res = await clientFetch('/api/integrations', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -156,7 +153,7 @@ function SettingsContent() {
     e.preventDefault();
     if (!newKeyName.trim()) return;
     try {
-      const res = await fetch('/api/keys', {
+      const res = await clientFetch('/api/keys', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: newKeyName.trim() }),
@@ -178,7 +175,7 @@ function SettingsContent() {
   // Revoke API Key
   const handleRevokeKey = async (id: string) => {
     try {
-      const res = await fetch('/api/keys', {
+      const res = await clientFetch('/api/keys', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id }),

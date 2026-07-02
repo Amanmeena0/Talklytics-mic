@@ -6,10 +6,19 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
     const callId = parseInt(id, 10);
     
     const backendUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/calls/${callId}`;
+    const { cookies } = require('next/headers');
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get('access_token')?.value;
+
+    const headers: Record<string, string> = {
+      'x-api-key': process.env.CONVINCESENSE_API_KEY || '',
+    };
+    if (accessToken) {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
     const res = await fetch(backendUrl, {
-      headers: {
-        'x-api-key': process.env.CONVINCESENSE_API_KEY || '',
-      },
+      headers,
       next: { revalidate: 0 }
     });
 
@@ -41,12 +50,21 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     const body = await request.json();
 
     const backendUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/calls/${callId}/next-steps`;
+    const { cookies } = require('next/headers');
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get('access_token')?.value;
+
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      'x-api-key': process.env.CONVINCESENSE_API_KEY || '',
+    };
+    if (accessToken) {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
     const res = await fetch(backendUrl, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.CONVINCESENSE_API_KEY || '',
-      },
+      headers,
       body: JSON.stringify({
         content: body.title,
         completed: false,
@@ -88,11 +106,20 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
     if (isDelete) {
       const backendUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/calls/${callId}/next-steps/${nextStepId}`;
+      const { cookies } = require('next/headers');
+      const cookieStore = await cookies();
+      const accessToken = cookieStore.get('access_token')?.value;
+
+      const headers: Record<string, string> = {
+        'x-api-key': process.env.CONVINCESENSE_API_KEY || '',
+      };
+      if (accessToken) {
+        headers['Authorization'] = `Bearer ${accessToken}`;
+      }
+
       const res = await fetch(backendUrl, {
         method: 'DELETE',
-        headers: {
-          'x-api-key': process.env.CONVINCESENSE_API_KEY || '',
-        },
+        headers,
       });
 
       if (!res.ok) {
@@ -108,12 +135,21 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     if (isCompleted !== undefined) patchPayload.completed = isCompleted;
     if (title !== undefined) patchPayload.content = title;
 
+    const { cookies } = require('next/headers');
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get('access_token')?.value;
+
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      'x-api-key': process.env.CONVINCESENSE_API_KEY || '',
+    };
+    if (accessToken) {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
     const res = await fetch(backendUrl, {
       method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.CONVINCESENSE_API_KEY || '',
-      },
+      headers,
       body: JSON.stringify(patchPayload),
     });
 

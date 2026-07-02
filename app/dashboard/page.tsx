@@ -6,6 +6,7 @@ import Layout from '@/shared/components/Layout/Layout';
 import Footer from '@/shared/components/Layout/Footer';
 import SentimentBadge from '@/shared/components/SentimentBadge';
 import { useRouter } from 'next/navigation';
+import clientFetch from '@/shared/utils/clientFetch';
 
 export default function DashboardHome() {
   const router = useRouter();
@@ -21,10 +22,10 @@ export default function DashboardHome() {
     setError(null);
     try {
       const [analyticsRes, callsRes, userRes, notifRes] = await Promise.all([
-        fetch('/api/analytics'),
-        fetch('/api/calls?limit=5'), // Top 5 recent calls
-        fetch('/api/users'),
-        fetch('/api/notifications?limit=3'), // Top 3 notifications
+        clientFetch('/api/analytics'),
+        clientFetch('/api/calls?limit=5'), // Top 5 recent calls
+        clientFetch('/api/users'),
+        clientFetch('/api/notifications?limit=3'), // Top 3 notifications
       ]);
 
       if (analyticsRes.ok) {
@@ -61,7 +62,7 @@ export default function DashboardHome() {
     );
 
     try {
-      await fetch(`/api/calls/${id}`, {
+      await clientFetch(`/api/calls/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isFavorite: !currentStatus }),

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '@/shared/components/Layout/Layout';
 import Footer from '@/shared/components/Layout/Footer';
+import clientFetch from '@/shared/utils/clientFetch';
 
 export default function AnalyticsPage() {
   const [data, setData] = useState<any>(null);
@@ -14,7 +15,7 @@ export default function AnalyticsPage() {
       setIsLoading(true);
       setError(null);
       try {
-        const res = await fetch('/api/analytics');
+        const res = await clientFetch('/api/analytics');
         if (!res.ok) throw new Error('Failed to load analytics');
         const json = await res.json();
         setData(json);

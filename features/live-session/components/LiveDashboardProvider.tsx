@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { LiveDataContext, type LiveDataContextType } from '@/shared/hooks/LiveDataContext';
 import useConvinceSense from '@/shared/hooks/useConvinceSense';
 import type { EngagementRecord } from '@/shared/types';
+import clientFetch from '@/shared/utils/clientFetch';
 
 interface LiveDashboardProviderProps {
   children: React.ReactNode;
@@ -42,7 +43,7 @@ export default function LiveDashboardProvider({ children, id, wsUrl }: LiveDashb
     setIsLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/calls/${id}`);
+      const res = await clientFetch(`/api/calls/${id}`);
       if (!res.ok) {
         throw new Error(`Failed to fetch call details: ${res.statusText}`);
       }
@@ -73,7 +74,7 @@ export default function LiveDashboardProvider({ children, id, wsUrl }: LiveDashb
     }
 
     try {
-      const res = await fetch(`/api/calls/${activeId}`, {
+      const res = await clientFetch(`/api/calls/${activeId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isFavorite: !currentFavorite }),
@@ -102,7 +103,7 @@ export default function LiveDashboardProvider({ children, id, wsUrl }: LiveDashb
       if (!activeId) return;
 
       try {
-        const res = await fetch(`/api/calls/${activeId}/comments`, {
+        const res = await clientFetch(`/api/calls/${activeId}/comments`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ content, timestamp }),
@@ -150,7 +151,7 @@ export default function LiveDashboardProvider({ children, id, wsUrl }: LiveDashb
       }
 
       try {
-        const res = await fetch(`/api/calls/${activeId}/next-steps`, {
+        const res = await clientFetch(`/api/calls/${activeId}/next-steps`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ stepId, isCompleted }),
@@ -197,7 +198,7 @@ export default function LiveDashboardProvider({ children, id, wsUrl }: LiveDashb
       if (!activeId) return;
 
       try {
-        const res = await fetch(`/api/calls/${activeId}/next-steps`, {
+        const res = await clientFetch(`/api/calls/${activeId}/next-steps`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ title, description }),
@@ -242,7 +243,7 @@ export default function LiveDashboardProvider({ children, id, wsUrl }: LiveDashb
       }
 
       try {
-        const res = await fetch(`/api/calls/${activeId}/next-steps`, {
+        const res = await clientFetch(`/api/calls/${activeId}/next-steps`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ stepId, isDelete: true }),

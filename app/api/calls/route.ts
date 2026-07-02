@@ -30,10 +30,19 @@ export async function GET(request: Request) {
       backendUrl.searchParams.set('is_favorite', String(isFavorite));
     }
 
+    const { cookies } = require('next/headers');
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get('access_token')?.value;
+
+    const headers: Record<string, string> = {
+      'x-api-key': process.env.CONVINCESENSE_API_KEY || '',
+    };
+    if (accessToken) {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
     const res = await fetch(backendUrl.toString(), {
-      headers: {
-        'x-api-key': process.env.CONVINCESENSE_API_KEY || '',
-      },
+      headers,
       next: { revalidate: 0 } // disable cache
     });
 
@@ -148,12 +157,21 @@ export async function POST(request: Request) {
     
     const titleParam = clientName ? `${title} - ${clientName}` : title;
 
+    const { cookies } = require('next/headers');
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get('access_token')?.value;
+
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      'x-api-key': process.env.CONVINCESENSE_API_KEY || '',
+    };
+    if (accessToken) {
+      headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
     const res = await fetch(backendUrl, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.CONVINCESENSE_API_KEY || '',
-      },
+      headers,
       body: JSON.stringify({
         title: titleParam,
         user_id: 1, // default user

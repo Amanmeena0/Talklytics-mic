@@ -30,6 +30,36 @@ export async function GET(request: Request) {
   try {
     const { cookies } = require('next/headers');
     const cookieStore = await cookies();
+    const accessToken = cookieStore.get('access_token')?.value;
+
+    if (accessToken) {
+      // Fetch user profile from FastAPI backend
+      const backendUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/v1/users/me`;
+      try {
+        const res = await fetch(backendUrl, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+          },
+        });
+
+        if (res.ok) {
+          const backendUser = await res.json();
+          // Normalize backend user model to frontend schema if needed
+          return NextResponse.json({
+            id: String(backendUser.id || backendUser.uuid || '1'),
+            name: backendUser.name || backendUser.username || 'Jane Smith',
+            email: backendUser.email || 'jane.smith@talklytics.com',
+            role: backendUser.role || 'SALES_REP',
+            avatarUrl: backendUser.avatarUrl || defaultUser.avatarUrl,
+          });
+        }
+      } catch (err) {
+        console.warn('Could not fetch user from backend, falling back to mock user:', err);
+      }
+    }
+
+    // Fallback: Read switch user cookie for local demo compatibility
     const activeUserEmail =
       cookieStore.get('active_user_email')?.value || 'jane.smith@talklytics.com';
 
@@ -66,3 +96,4 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: error.message || 'Failed to switch user' }, { status: 500 });
   }
 }
+

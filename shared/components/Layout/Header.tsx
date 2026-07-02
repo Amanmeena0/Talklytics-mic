@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
+import clientFetch from '@/shared/utils/clientFetch';
 
 export default function Header() {
   const router = useRouter();
@@ -23,8 +24,8 @@ export default function Header() {
   const loadUserData = async () => {
     try {
       const [userRes, notifRes] = await Promise.all([
-        fetch('/api/users'),
-        fetch('/api/notifications'),
+        clientFetch('/api/users'),
+        clientFetch('/api/notifications'),
       ]);
       if (userRes.ok) {
         const user = await userRes.json();
@@ -36,6 +37,17 @@ export default function Header() {
       }
     } catch (err) {
       console.error('Failed to load header data:', err);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await clientFetch('/api/auth/logout', { method: 'POST' });
+      setShowUserMenu(false);
+      router.push('/login');
+    } catch (err) {
+      console.error('Logout failed:', err);
+      router.push('/login');
     }
   };
 
@@ -60,7 +72,7 @@ export default function Header() {
   // Switch user role (demo purpose)
   const handleSwitchUser = async (email: string) => {
     try {
-      const res = await fetch('/api/users/switch', {
+      const res = await clientFetch('/api/users/switch', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -78,7 +90,7 @@ export default function Header() {
   // Mark notification as read
   const handleMarkNotifRead = async (id: string, read: boolean) => {
     try {
-      const res = await fetch('/api/notifications', {
+      const res = await clientFetch('/api/notifications', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, read }),
@@ -94,7 +106,7 @@ export default function Header() {
   // Clear all notifications
   const handleClearAllNotifs = async () => {
     try {
-      const res = await fetch('/api/notifications', {
+      const res = await clientFetch('/api/notifications', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ clearAll: true }),
@@ -266,7 +278,7 @@ export default function Header() {
                 </button>
               </div>
 
-              <div className="border-t-subtle mt-2 pt-2">
+              <div className="border-t-subtle mt-2 pt-2 d-flex flex-col gap-1">
                 <Link
                   href="/settings"
                   className="no-underline"
@@ -277,6 +289,14 @@ export default function Header() {
                     Account Settings
                   </span>
                 </Link>
+                <button
+                  onClick={handleLogout}
+                  className="header-user-settings-link border-none bg-none cursor-pointer w-full text-left color-error hover:bg-surface-container-high"
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 12px', borderRadius: '8px' }}
+                >
+                  <span className="material-symbols-outlined fs-16">logout</span>
+                  Sign Out
+                </button>
               </div>
             </div>
           )}

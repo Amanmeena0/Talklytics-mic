@@ -8,6 +8,7 @@ import SentimentBadge from '@/shared/components/SentimentBadge';
 import './calls.css';
 
 import { useRouter } from 'next/navigation';
+import clientFetch from '@/shared/utils/clientFetch';
 
 export default function CallHistoryPage() {
   const router = useRouter();
@@ -47,7 +48,7 @@ export default function CallHistoryPage() {
       if (minScore !== 'All') params.append('minScore', minScore);
       if (isFavoriteOnly) params.append('isFavorite', 'true');
 
-      const res = await fetch(`/api/calls?${params.toString()}`);
+      const res = await clientFetch(`/api/calls?${params.toString()}`);
       if (!res.ok) {
         throw new Error(`Error: ${res.statusText}`);
       }
@@ -72,7 +73,7 @@ export default function CallHistoryPage() {
     setCalls((prev) => prev.map((c) => (c.id === id ? { ...c, isFavorite: !currentStatus } : c)));
 
     try {
-      const res = await fetch(`/api/calls/${id}`, {
+      const res = await clientFetch(`/api/calls/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isFavorite: !currentStatus }),
@@ -96,7 +97,7 @@ export default function CallHistoryPage() {
     setTotalCount((prev) => prev - 1);
 
     try {
-      const res = await fetch(`/api/calls/${id}`, {
+      const res = await clientFetch(`/api/calls/${id}`, {
         method: 'DELETE',
       });
       if (!res.ok) {
