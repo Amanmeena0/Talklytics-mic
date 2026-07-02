@@ -11,6 +11,13 @@ export interface LiveDataContextType {
   isLoading: boolean;
   error: string | null;
 
+  // Session Control States
+  isRecording?: boolean;
+  isSaving?: boolean;
+  autoSummarize?: boolean;
+  sessionTitle?: string;
+  sessionClientName?: string;
+
   // Metadata (for past calls or active session)
   id?: string;
   title?: string;
@@ -54,6 +61,11 @@ export interface LiveDataContextType {
   addNextStep?: (title: string, description?: string) => Promise<void>;
   deleteNextStep?: (stepId: string) => Promise<void>;
   refetch?: () => Promise<void>;
+
+  // Session control actions
+  startSession?: (title: string, clientName: string, autoSummarize: boolean) => void;
+  stopSession?: () => Promise<void>;
+  setAutoSummarize?: (val: boolean) => void;
 }
 
 const defaultValue: LiveDataContextType = {
@@ -61,6 +73,11 @@ const defaultValue: LiveDataContextType = {
   isLive: true,
   isLoading: false,
   error: null,
+  isRecording: false,
+  isSaving: false,
+  autoSummarize: true,
+  sessionTitle: '',
+  sessionClientName: '',
   latestRecord: null,
   records: [],
   averageScore: 0,

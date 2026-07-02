@@ -21,6 +21,10 @@ export default function SessionHeader({ id }: SessionHeaderProps) {
     date,
     isFavorite,
     toggleFavorite,
+    isRecording,
+    stopSession,
+    sessionTitle,
+    sessionClientName,
   } = useLiveData();
 
   const [isFavoriting, setIsFavoriting] = useState(false);
@@ -86,14 +90,27 @@ export default function SessionHeader({ id }: SessionHeaderProps) {
     <header className="session-header-root">
       <div>
         <div className="session-header-topline">
-          <span className="badge badge-accent">{isLive ? 'Live Session' : 'Recorded Call'}</span>
           {isLive ? (
-            <ConnectionIndicator />
+            isRecording ? (
+              <span className="badge badge-error badge-pulsing d-flex align-center gap-1">
+                <span className="pulse-dot-red" />
+                Live Recording
+              </span>
+            ) : (
+              <span className="badge badge-secondary">Live Monitor Idle</span>
+            )
+          ) : (
+            <span className="badge badge-accent">Recorded Call</span>
+          )}
+
+          {isLive ? (
+            isRecording && <ConnectionIndicator />
           ) : (
             <span className="badge session-header-id-badge">
               ID: {id?.substring(0, 8)}...
             </span>
           )}
+
           {hasData && (
             <span className="text-caption session-header-segments">
               <span className="material-symbols-outlined fs-14">
@@ -105,7 +122,7 @@ export default function SessionHeader({ id }: SessionHeaderProps) {
         </div>
 
         <h1 className="text-page-title session-header-title">
-          {isLive ? 'Live Call Monitor' : title || 'Call Report'}
+          {isLive ? (isRecording ? (sessionTitle || 'Live Session') : 'Live Call Monitor') : (title || 'Call Report')}
           {!isLive && (
             <button
               onClick={handleFavoriteClick}
@@ -124,7 +141,11 @@ export default function SessionHeader({ id }: SessionHeaderProps) {
 
         <p className="text-body session-header-subtitle">
           {isLive ? (
-            'Real-time AI-powered conversation coaching'
+            isRecording && sessionClientName ? (
+              <span>Active coaching session for: <strong>{sessionClientName}</strong></span>
+            ) : (
+              'Real-time AI-powered conversation coaching'
+            )
           ) : (
             <>
               <span className="session-header-client">{clientName}</span>
@@ -135,6 +156,20 @@ export default function SessionHeader({ id }: SessionHeaderProps) {
       </div>
 
       <div className="session-header-actions">
+        {isLive && isRecording && stopSession && (
+          <button
+            onClick={async () => {
+              if (confirm('Are you sure you want to stop this live coaching session and save it to history?')) {
+                await stopSession();
+              }
+            }}
+            className="btn btn-error"
+          >
+            <span className="material-symbols-outlined fs-18">stop</span>
+            Stop & Save Session
+          </button>
+        )}
+
         {!isLive && (
           <button
             onClick={handleDeleteClick}
@@ -147,23 +182,26 @@ export default function SessionHeader({ id }: SessionHeaderProps) {
             Delete Call
           </button>
         )}
-        <button
-          onClick={() => {
-            const dataStr =
-              'data:text/json;charset=utf-8,' +
-              encodeURIComponent(JSON.stringify(records, null, 2));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute('href', dataStr);
-            downloadAnchor.setAttribute('download', `${isLive ? 'live' : id}-transcript.json`);
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
-          }}
-          className="btn btn-secondary"
-        >
-          <span className="material-symbols-outlined">download</span>
-          Export JSON
-        </button>
+
+        {hasData && (
+          <button
+            onClick={() => {
+              const dataStr =
+                'data:text/json;charset=utf-8,' +
+                encodeURIComponent(JSON.stringify(records, null, 2));
+              const downloadAnchor = document.createElement('a');
+              downloadAnchor.setAttribute('href', dataStr);
+              downloadAnchor.setAttribute('download', `${isLive ? 'live' : id}-transcript.json`);
+              document.body.appendChild(downloadAnchor);
+              downloadAnchor.click();
+              downloadAnchor.remove();
+            }}
+            className="btn btn-secondary"
+          >
+            <span className="material-symbols-outlined">download</span>
+            Export JSON
+          </button>
+        )}
       </div>
     </header>
   );

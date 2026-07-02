@@ -35,7 +35,7 @@ export interface UseConvinceSenseReturn {
  *
  * @param wsUrl - WebSocket endpoint (default: `ws://localhost:8000/ws/records`)
  */
-export function useConvinceSense(wsUrl: string = DEFAULT_WS_URL): UseConvinceSenseReturn {
+export function useConvinceSense(wsUrl: string | null = null): UseConvinceSenseReturn {
   // ── State ──────────────────────────────────────────────────────────────
   const [status, setStatus] = useState<ConnectionStatus>('disconnected');
   const [latestRecord, setLatestRecord] = useState<EngagementRecord | null>(null);
@@ -48,6 +48,8 @@ export function useConvinceSense(wsUrl: string = DEFAULT_WS_URL): UseConvinceSen
 
   // ── Connect logic ──────────────────────────────────────────────────────
   const connect = useCallback(() => {
+    if (!wsUrl) return;
+
     // Prevent duplicate connections
     if (
       wsRef.current &&
@@ -58,6 +60,8 @@ export function useConvinceSense(wsUrl: string = DEFAULT_WS_URL): UseConvinceSen
     }
 
     setStatus('connecting');
+    setRecords([]);
+    setLatestRecord(null);
 
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
@@ -98,7 +102,11 @@ export function useConvinceSense(wsUrl: string = DEFAULT_WS_URL): UseConvinceSen
 
   // ── Lifecycle ──────────────────────────────────────────────────────────
   useEffect(() => {
-    connect();
+    if (wsUrl) {
+      connect();
+    } else {
+      setStatus('disconnected');
+    }
 
     return () => {
       // Clear any pending reconnect timer
@@ -114,7 +122,8 @@ export function useConvinceSense(wsUrl: string = DEFAULT_WS_URL): UseConvinceSen
         wsRef.current = null;
       }
     };
-  }, [connect]);
+  }, [connect, wsUrl]);
+
 
   // ── Derived aggregates ─────────────────────────────────────────────────
   const averageScore = useMemo(() => {
