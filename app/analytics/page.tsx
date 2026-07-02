@@ -227,9 +227,10 @@ export default function AnalyticsPage() {
                       <span className="font-semibold color-success">{sentimentSplit.Positive}</span>
                     </div>
                     <div className="analytics-progress-bg">
-                      <div
-                        className="analytics-progress-fill analytics-progress-fill-success"
-                        style={{ width: `${(sentimentSplit.Positive / totalCalls) * 100}%` }}
+                      <progress
+                        className="analytics-progress-bar analytics-progress-bar-success"
+                        value={sentimentSplit.Positive}
+                        max={totalCalls}
                       />
                     </div>
                   </div>
@@ -243,9 +244,10 @@ export default function AnalyticsPage() {
                       </span>
                     </div>
                     <div className="analytics-progress-bg">
-                      <div
-                        className="analytics-progress-fill analytics-progress-fill-neutral"
-                        style={{ width: `${(sentimentSplit.Neutral / totalCalls) * 100}%` }}
+                      <progress
+                        className="analytics-progress-bar analytics-progress-bar-neutral"
+                        value={sentimentSplit.Neutral}
+                        max={totalCalls}
                       />
                     </div>
                   </div>
@@ -257,9 +259,10 @@ export default function AnalyticsPage() {
                       <span className="font-semibold color-error">{sentimentSplit.Negative}</span>
                     </div>
                     <div className="analytics-progress-bg">
-                      <div
-                        className="analytics-progress-fill analytics-progress-fill-error"
-                        style={{ width: `${(sentimentSplit.Negative / totalCalls) * 100}%` }}
+                      <progress
+                        className="analytics-progress-bar analytics-progress-bar-error"
+                        value={sentimentSplit.Negative}
+                        max={totalCalls}
                       />
                     </div>
                   </div>
@@ -291,9 +294,10 @@ export default function AnalyticsPage() {
                         <span className="font-semibold">{count} occurrences</span>
                       </div>
                       <div className="analytics-objection-progress-bg">
-                        <div
-                          className="analytics-objection-progress-fill"
-                          style={{ width: `${(count / totalIntentsSum) * 100}%` }}
+                        <progress
+                          className="analytics-objection-progress-bar"
+                          value={count}
+                          max={totalIntentsSum}
                         />
                       </div>
                     </div>

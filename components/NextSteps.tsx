@@ -130,10 +130,7 @@ Best regards,`;
         <ul className="next-steps-list-gap-5">
           {dynamicSteps.map((step, i) => (
             <li key={i} className="d-flex align-start gap-3">
-              <div
-                className="task-checkbox cursor-default"
-                style={{ background: 'var(--accent-muted)' }}
-              >
+              <div className="task-checkbox task-checkbox-accent cursor-default">
                 <span className="material-symbols-outlined fs-14 color-accent">auto_awesome</span>
               </div>
               <div>
@@ -162,10 +159,7 @@ Best regards,`;
             <div className="d-flex align-start gap-3 flex-1">
               <button
                 onClick={() => handleToggle(step.id, step.isCompleted)}
-                style={{
-                  color: step.isCompleted ? 'var(--success)' : 'var(--text-secondary)',
-                }}
-                className="task-toggle-btn"
+                className={`task-toggle-btn ${step.isCompleted ? 'is-completed' : 'is-pending'}`}
               >
                 {step.isCompleted ? (
                   <span className="material-symbols-outlined fs-20">check_box</span>
@@ -173,13 +167,7 @@ Best regards,`;
                   <span className="material-symbols-outlined fs-20">check_box_outline_blank</span>
                 )}
               </button>
-              <div
-                style={{
-                  textDecoration: step.isCompleted ? 'line-through' : 'none',
-                  opacity: step.isCompleted ? 0.6 : 1,
-                  transition: 'all 0.2s ease',
-                }}
-              >
+              <div className={`next-steps-task-text ${step.isCompleted ? 'is-completed' : ''}`}>
                 <p className="text-body font-semibold color-primary m-0 mb-1">{step.title}</p>
                 {step.description && <p className="text-caption m-0">{step.description}</p>}
               </div>
@@ -209,8 +197,7 @@ Best regards,`;
 
           {!isLive && !isAdding && (
             <button
-              className="btn btn-ghost fs-12 color-accent"
-              style={{ padding: '4px 8px' }}
+              className="btn btn-ghost fs-12 color-accent next-steps-btn-sm"
               onClick={() => setIsAdding(true)}
             >
               <span className="material-symbols-outlined fs-14 mr-4">add</span>
@@ -233,8 +220,7 @@ Best regards,`;
             <div className="d-flex justify-end gap-2">
               <button
                 type="button"
-                className="btn btn-ghost fs-12"
-                style={{ padding: '4px 8px' }}
+                className="btn btn-ghost fs-12 next-steps-btn-sm"
                 onClick={() => {
                   setIsAdding(false);
                   setNewTaskTitle('');
@@ -244,8 +230,7 @@ Best regards,`;
               </button>
               <button
                 type="submit"
-                className="btn btn-primary fs-12"
-                style={{ padding: '4px 10px' }}
+                className="btn btn-primary fs-12 next-steps-btn-sm-wide"
                 disabled={!newTaskTitle.trim()}
               >
                 Add
@@ -261,8 +246,7 @@ Best regards,`;
       <div className="ai-draft-card">
         <div className="d-flex align-center gap-2 mb-3">
           <span
-            className="material-symbols-outlined color-accent fs-20"
-            style={{ fontVariationSettings: "'FILL' 1" }}
+            className="material-symbols-outlined color-accent fs-20 next-steps-mail-icon"
           >
             mail
           </span>

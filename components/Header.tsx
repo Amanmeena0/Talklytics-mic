@@ -188,15 +188,7 @@ export default function Header() {
                     <div
                       key={n.id}
                       onClick={() => handleMarkNotifRead(n.id, !n.read)}
-                      style={{
-                        padding: 'var(--space-2)',
-                        borderRadius: 'var(--radius-sm)',
-                        background: n.read ? 'transparent' : 'rgba(124, 106, 239, 0.06)',
-                        borderLeft: `3px solid ${n.type === 'SUCCESS' ? 'var(--success)' : n.type === 'WARNING' ? 'var(--warning)' : 'var(--accent)'}`,
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease',
-                      }}
-                      className="header-notif-item"
+                      className={`header-notif-item ${!n.read ? 'is-unread' : ''} ${n.type === 'SUCCESS' ? 'is-success' : n.type === 'WARNING' ? 'is-warning' : 'is-default'}`}
                     >
                       <div className="d-flex justify-between align-start">
                         <span className="fs-12 font-semibold color-primary">{n.title}</span>
@@ -253,31 +245,21 @@ export default function Header() {
                 <div className="header-user-demo-title">SWITCH ROLE (DEMO)</div>
                 <button
                   onClick={() => handleSwitchUser('jane.smith@convincesense.com')}
-                  style={{
-                    background:
-                      currentUser?.role === 'SALES_REP' ? 'var(--bg-card)' : 'transparent',
-                  }}
-                  className="header-user-demo-btn"
+                  className={`header-user-demo-btn ${currentUser?.role === 'SALES_REP' ? 'is-active' : ''}`}
                 >
                   <span className="material-symbols-outlined fs-16">person</span>
                   Jane Smith (Sales Rep)
                 </button>
                 <button
                   onClick={() => handleSwitchUser('manager@convincesense.com')}
-                  style={{
-                    background: currentUser?.role === 'MANAGER' ? 'var(--bg-card)' : 'transparent',
-                  }}
-                  className="header-user-demo-btn"
+                  className={`header-user-demo-btn ${currentUser?.role === 'MANAGER' ? 'is-active' : ''}`}
                 >
                   <span className="material-symbols-outlined fs-16">supervisor_account</span>
                   Sarah Connor (Manager)
                 </button>
                 <button
                   onClick={() => handleSwitchUser('admin@convincesense.com')}
-                  style={{
-                    background: currentUser?.role === 'ADMIN' ? 'var(--bg-card)' : 'transparent',
-                  }}
-                  className="header-user-demo-btn"
+                  className={`header-user-demo-btn ${currentUser?.role === 'ADMIN' ? 'is-active' : ''}`}
                 >
                   <span className="material-symbols-outlined fs-16">admin_panel_settings</span>
                   Alex Rivera (Admin)

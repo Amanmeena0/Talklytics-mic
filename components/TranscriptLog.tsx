@@ -48,89 +48,38 @@ export default function TranscriptLog() {
     }
   };
 
-  // Avatar styles
-  const sentimentAvatarStyle = (sentiment: string): { background: string; color: string } => {
+  const sentimentAvatarClass = (sentiment: string): string => {
     switch (sentiment.toLowerCase()) {
       case 'positive':
-        return { background: 'var(--accent-muted)', color: 'var(--accent)' };
+        return 'transcript-avatar--positive';
       case 'negative':
-        return { background: 'rgba(239, 68, 68, 0.15)', color: 'var(--error)' };
+        return 'transcript-avatar--negative';
       default:
-        return { background: 'var(--bg-elevated)', color: 'var(--text-secondary)' };
+        return 'transcript-avatar--neutral';
     }
   };
 
   return (
     <section className="card-flush">
       {/* Header bar */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: 'var(--space-4) var(--space-6)',
-          background: 'var(--bg-elevated)',
-          borderBottom: '1px solid var(--border-default)',
-          flexWrap: 'wrap',
-          gap: 'var(--space-4)',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+      <div className="transcript-log-header">
+        <div className="transcript-log-header-left">
           {/* Main Tab Switcher */}
-          <div
-            style={{
-              display: 'flex',
-              gap: 'var(--space-1)',
-              background: 'var(--bg-root)',
-              padding: '4px',
-              borderRadius: 'var(--radius-md)',
-            }}
-          >
+          <div className="transcript-log-tabs">
             <button
               onClick={() => setActiveTab('transcript')}
-              style={{
-                background: activeTab === 'transcript' ? 'var(--bg-card)' : 'none',
-                border: 'none',
-                color: activeTab === 'transcript' ? 'var(--text-primary)' : 'var(--text-secondary)',
-                padding: '6px 12px',
-                borderRadius: 'var(--radius-sm)',
-                fontSize: '12px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-              }}
+              className={`transcript-log-tab ${activeTab === 'transcript' ? 'is-active' : ''}`}
             >
               Transcript
             </button>
             {!isLive && (
               <button
                 onClick={() => setActiveTab('comments')}
-                style={{
-                  background: activeTab === 'comments' ? 'var(--bg-card)' : 'none',
-                  border: 'none',
-                  color: activeTab === 'comments' ? 'var(--text-primary)' : 'var(--text-secondary)',
-                  padding: '6px 12px',
-                  borderRadius: 'var(--radius-sm)',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                }}
+                className={`transcript-log-tab transcript-log-tab has-count ${activeTab === 'comments' ? 'is-active' : ''}`}
               >
                 Comments
                 {comments.length > 0 && (
-                  <span
-                    style={{
-                      background: 'var(--accent)',
-                      color: 'white',
-                      fontSize: '10px',
-                      padding: '1px 6px',
-                      borderRadius: '50%',
-                    }}
-                  >
+                  <span className="transcript-log-count">
                     {comments.length}
                   </span>
                 )}
@@ -139,34 +88,15 @@ export default function TranscriptLog() {
           </div>
 
           {status === 'connected' && (
-            <span
-              style={{
-                width: 6,
-                height: 6,
-                borderRadius: '50%',
-                background: 'var(--success)',
-                display: 'inline-block',
-                animation: 'pulse-glow 2s ease-in-out infinite',
-              }}
-            />
+            <span className="transcript-live-dot" />
           )}
         </div>
 
         {/* Filters and search */}
         {activeTab === 'transcript' && (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 'var(--space-4)',
-              flexWrap: 'wrap',
-            }}
-          >
-            <div className="search-input" style={{ width: '180px', height: '32px' }}>
-              <span
-                className="material-symbols-outlined"
-                style={{ fontSize: '16px', color: 'var(--text-muted)' }}
-              >
+          <div className="transcript-log-filters">
+            <div className="search-input transcript-search-input">
+              <span className="material-symbols-outlined">
                 search
               </span>
               <input
@@ -174,15 +104,13 @@ export default function TranscriptLog() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                style={{ fontSize: '12px' }}
               />
             </div>
 
             <div className="filter-tabs">
               <button
                 onClick={() => setSpeakerFilter('All')}
-                className={`filter-tab ${speakerFilter === 'All' ? 'active' : ''}`}
-                style={{ height: '30px', padding: '0 12px', fontSize: '11px' }}
+                className={`filter-tab transcript-filter-tab ${speakerFilter === 'All' ? 'active' : ''}`}
               >
                 All
               </button>
@@ -190,8 +118,7 @@ export default function TranscriptLog() {
                 <button
                   key={speaker}
                   onClick={() => setSpeakerFilter(speaker)}
-                  className={`filter-tab ${speakerFilter === speaker ? 'active' : ''}`}
-                  style={{ height: '30px', padding: '0 12px', fontSize: '11px' }}
+                  className={`filter-tab transcript-filter-tab ${speakerFilter === speaker ? 'active' : ''}`}
                 >
                   {speaker}
                 </button>
@@ -202,21 +129,14 @@ export default function TranscriptLog() {
       </div>
 
       {/* Main Content Area */}
-      <div
-        className="custom-scrollbar"
-        style={{
-          height: 384,
-          overflowY: 'auto',
-          padding: 'var(--space-6)',
-        }}
-      >
+      <div className="custom-scrollbar transcript-log-scroll">
         {activeTab === 'transcript' ? (
           /* TRANSCRIPT TAB */
           hasData ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+            <div className="transcript-list">
               {filteredRecords.length > 0 ? (
                 filteredRecords.map((record, i) => {
-                  const avatarStyle = sentimentAvatarStyle(record.sentiment);
+                  const avatarClass = sentimentAvatarClass(record.sentiment);
                   const initials = record.speaker
                     ? record.speaker
                         .split(' ')
@@ -228,57 +148,33 @@ export default function TranscriptLog() {
                   return (
                     <div
                       key={record.id || i}
-                      className="transcript-entry"
-                      style={{ animation: 'fadeInUp 0.3s ease' }}
+                      className="transcript-entry transcript-entry-animate"
                     >
-                      <div className="transcript-avatar" style={avatarStyle}>
+                      <div className={`transcript-avatar ${avatarClass}`}>
                         {initials}
                       </div>
-                      <div style={{ minWidth: 0, flex: 1 }}>
-                        <div
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 'var(--space-2)',
-                            marginBottom: 'var(--space-1)',
-                            flexWrap: 'wrap',
-                          }}
-                        >
-                          <span
-                            style={{ fontWeight: 600, fontSize: 14, color: 'var(--text-primary)' }}
-                          >
+                      <div className="transcript-entry-body">
+                        <div className="transcript-entry-meta">
+                          <span className="transcript-speaker">
                             {record.speaker}
                           </span>
                           <span className="text-caption">{formatTime(record.timestamp)}</span>
 
                           {/* Sentiment badge */}
                           <span
-                            style={{
-                              fontSize: 10,
-                              fontWeight: 600,
-                              padding: '1px 6px',
-                              borderRadius: 'var(--radius-full)',
-                              background:
-                                record.sentiment === 'Positive'
-                                  ? 'var(--success-muted)'
-                                  : record.sentiment === 'Negative'
-                                    ? 'var(--error-muted)'
-                                    : 'rgba(156, 163, 175, 0.1)',
-                              color:
-                                record.sentiment === 'Positive'
-                                  ? 'var(--success)'
-                                  : record.sentiment === 'Negative'
-                                    ? 'var(--error)'
-                                    : 'var(--text-secondary)',
-                            }}
+                            className={`transcript-sentiment-badge ${
+                              record.sentiment === 'Positive'
+                                ? 'transcript-sentiment-badge--positive'
+                                : record.sentiment === 'Negative'
+                                  ? 'transcript-sentiment-badge--negative'
+                                  : 'transcript-sentiment-badge--neutral'
+                            }`}
                           >
                             {record.sentiment}
                           </span>
 
                           {/* Score indicator */}
-                          <span
-                            style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)' }}
-                          >
+                          <span className="transcript-score">
                             Score: {record.score}/5
                           </span>
 
@@ -289,70 +185,30 @@ export default function TranscriptLog() {
                                 setCommentTimestamp(record.timestamp);
                                 setActiveTab('comments');
                               }}
-                              style={{
-                                background: 'none',
-                                border: 'none',
-                                color: 'var(--accent)',
-                                fontSize: '11px',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '2px',
-                                marginLeft: 'auto',
-                              }}
+                              className="transcript-annotate-btn"
                               title="Add timestamped note"
                             >
-                              <span
-                                className="material-symbols-outlined"
-                                style={{ fontSize: '14px' }}
-                              >
+                              <span className="material-symbols-outlined transcript-annotate-icon">
                                 chat_bubble
                               </span>
                               Annotate
                             </button>
                           )}
                         </div>
-                        <p className="text-body" style={{ margin: 0 }}>
+                        <p className="text-body transcript-transcript-text">
                           {record.transcript}
                         </p>
 
                         {/* Buying signals & hesitations */}
                         {(record.buying_signals.length > 0 || record.hesitations.length > 0) && (
-                          <div
-                            style={{
-                              display: 'flex',
-                              flexWrap: 'wrap',
-                              gap: 'var(--space-1)',
-                              marginTop: 'var(--space-2)',
-                            }}
-                          >
+                          <div className="transcript-signals">
                             {record.buying_signals.map((signal, j) => (
-                              <span
-                                key={`buy-${j}`}
-                                style={{
-                                  fontSize: 10,
-                                  fontWeight: 600,
-                                  padding: '2px 8px',
-                                  borderRadius: 'var(--radius-full)',
-                                  background: 'var(--success-muted)',
-                                  color: 'var(--success)',
-                                }}
-                              >
+                              <span key={`buy-${j}`} className="transcript-signal-chip transcript-signal-chip--positive">
                                 🟢 {signal}
                               </span>
                             ))}
                             {record.hesitations.map((h, j) => (
-                              <span
-                                key={`hes-${j}`}
-                                style={{
-                                  fontSize: 10,
-                                  fontWeight: 600,
-                                  padding: '2px 8px',
-                                  borderRadius: 'var(--radius-full)',
-                                  background: 'var(--warning-muted)',
-                                  color: 'var(--warning)',
-                                }}
-                              >
+                              <span key={`hes-${j}`} className="transcript-signal-chip transcript-signal-chip--warning">
                                 ⚠️ {h}
                               </span>
                             ))}
@@ -363,37 +219,17 @@ export default function TranscriptLog() {
                   );
                 })
               ) : (
-                <div
-                  style={{
-                    textAlign: 'center',
-                    padding: 'var(--space-8) 0',
-                    color: 'var(--text-muted)',
-                  }}
-                >
+                <div className="transcript-empty-state">
                   <p>No transcript segments match your search criteria.</p>
                 </div>
               )}
             </div>
           ) : (
-            <div
-              style={{
-                textAlign: 'center',
-                padding: 'var(--space-8) 0',
-                color: 'var(--text-muted)',
-              }}
-            >
-              <span
-                className="material-symbols-outlined"
-                style={{
-                  fontSize: 48,
-                  display: 'block',
-                  marginBottom: 'var(--space-3)',
-                  opacity: 0.4,
-                }}
-              >
+            <div className="transcript-empty-state">
+              <span className="material-symbols-outlined transcript-empty-state-icon">
                 mic
               </span>
-              <p style={{ fontSize: 14, fontWeight: 500, margin: 0 }}>
+              <p className="transcript-empty-state-title">
                 {status === 'connecting'
                   ? 'Connecting to backend...'
                   : status === 'connected'
@@ -407,58 +243,21 @@ export default function TranscriptLog() {
           )
         ) : (
           /* COMMENTS TAB */
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 'var(--space-6)',
-              height: '100%',
-            }}
-          >
+          <div className="transcript-comments-stack">
             {/* Comment Form */}
-            <form
-              onSubmit={handlePostComment}
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 'var(--space-3)',
-                background: 'var(--bg-elevated)',
-                padding: 'var(--space-4)',
-                borderRadius: 'var(--radius-md)',
-                border: '1px solid var(--border-default)',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-                <span className="text-section-heading" style={{ fontSize: '13px', margin: 0 }}>
+            <form onSubmit={handlePostComment} className="transcript-comment-form">
+              <div className="transcript-comment-form-header">
+                <span className="text-section-heading transcript-comment-heading">
                   Add Review Note
                 </span>
                 {commentTimestamp !== null && (
-                  <span
-                    style={{
-                      fontSize: '11px',
-                      background: 'var(--accent-muted)',
-                      color: 'var(--accent)',
-                      padding: '2px 8px',
-                      borderRadius: '4px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px',
-                    }}
-                  >
+                  <span className="transcript-comment-link">
                     Linked to segment {formatTime(commentTimestamp)}
                     <button
                       type="button"
                       onClick={() => setCommentTimestamp(null)}
-                      style={{
-                        background: 'none',
-                        border: 'none',
-                        color: 'var(--accent)',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        padding: 0,
-                      }}
                     >
-                      <span className="material-symbols-outlined" style={{ fontSize: '12px' }}>
+                      <span className="material-symbols-outlined transcript-comment-link-icon">
                         close
                       </span>
                     </button>
@@ -470,24 +269,12 @@ export default function TranscriptLog() {
                 value={newCommentText}
                 onChange={(e) => setNewCommentText(e.target.value)}
                 rows={2}
-                style={{
-                  width: '100%',
-                  background: 'var(--bg-root)',
-                  border: '1px solid var(--border-default)',
-                  color: 'var(--text-primary)',
-                  padding: 'var(--space-3)',
-                  borderRadius: 'var(--radius-md)',
-                  fontSize: '13px',
-                  outline: 'none',
-                  resize: 'none',
-                  fontFamily: 'inherit',
-                }}
+                className="transcript-comment-textarea"
               />
-              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <div className="transcript-comment-actions">
                 <button
                   type="submit"
-                  className="btn btn-primary"
-                  style={{ padding: '6px 16px', fontSize: '12px' }}
+                  className="btn btn-primary transcript-comment-submit"
                   disabled={!newCommentText.trim()}
                 >
                   Post Note
@@ -496,86 +283,47 @@ export default function TranscriptLog() {
             </form>
 
             {/* List of comments */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+            <div className="transcript-comment-list">
               {comments.length > 0 ? (
                 comments.map((comment: any) => (
                   <div
                     key={comment.id}
-                    style={{
-                      display: 'flex',
-                      gap: 'var(--space-3)',
-                      animation: 'fadeInUp 0.3s ease',
-                    }}
+                    className="transcript-comment-entry"
                   >
-                    <div
-                      style={{
-                        width: '32px',
-                        height: '32px',
-                        borderRadius: '50%',
-                        overflow: 'hidden',
-                        border: '1px solid var(--border-default)',
-                        flexShrink: 0,
-                      }}
-                    >
+                    <div className="transcript-comment-avatar">
                       <img
                         src={
                           comment.author?.avatarUrl ||
                           'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100'
                         }
                         alt={comment.author?.name}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        className="transcript-comment-avatar-img"
                       />
                     </div>
-                    <div
-                      style={{
-                        flex: 1,
-                        background: 'var(--bg-elevated)',
-                        padding: 'var(--space-3) var(--space-4)',
-                        borderRadius: 'var(--radius-md)',
-                        border: '1px solid var(--border-default)',
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          marginBottom: 'var(--space-1)',
-                        }}
-                      >
-                        <span style={{ fontWeight: 600, fontSize: '13px' }}>
+                    <div className="transcript-comment-card">
+                      <div className="transcript-comment-card-header">
+                        <span className="transcript-comment-author">
                           {comment.author?.name}
                         </span>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <div className="d-flex align-center gap-8px">
                           {comment.timestamp !== null && (
-                            <span
-                              style={{ fontSize: '11px', color: 'var(--accent)', fontWeight: 600 }}
-                            >
+                            <span className="transcript-comment-link-time">
                               @{formatTime(comment.timestamp)}
                             </span>
                           )}
-                          <span className="text-caption" style={{ fontSize: '11px' }}>
+                          <span className="text-caption transcript-comment-date">
                             {new Date(comment.createdAt).toLocaleDateString()}
                           </span>
                         </div>
                       </div>
-                      <p
-                        className="text-body"
-                        style={{ margin: 0, fontSize: '13px', color: 'var(--text-primary)' }}
-                      >
+                      <p className="text-body transcript-comment-content">
                         {comment.content}
                       </p>
                     </div>
                   </div>
                 ))
               ) : (
-                <div
-                  style={{
-                    textAlign: 'center',
-                    padding: 'var(--space-6) 0',
-                    color: 'var(--text-muted)',
-                  }}
-                >
+                <div className="transcript-comment-empty">
                   <p>No comments or feedback notes have been left yet.</p>
                 </div>
               )}

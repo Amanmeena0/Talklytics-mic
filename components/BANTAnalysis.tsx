@@ -41,9 +41,9 @@ export default function BANTAnalysis() {
       icon: (isLive ? allIntents.includes('PRICING') : bantBudgetMet)
         ? 'check_circle'
         : 'radio_button_unchecked',
-      iconColor: (isLive ? allIntents.includes('PRICING') : bantBudgetMet)
-        ? 'var(--success)'
-        : 'var(--text-muted)',
+      iconClass: (isLive ? allIntents.includes('PRICING') : bantBudgetMet)
+        ? 'bant-icon--success'
+        : 'bant-icon--muted',
     },
     {
       label: 'AUTHORITY',
@@ -63,9 +63,9 @@ export default function BANTAnalysis() {
       icon: (isLive ? allIntents.includes('COMMITMENT') : bantAuthorityMet)
         ? 'check_circle'
         : 'radio_button_unchecked',
-      iconColor: (isLive ? allIntents.includes('COMMITMENT') : bantAuthorityMet)
-        ? 'var(--success)'
-        : 'var(--text-muted)',
+      iconClass: (isLive ? allIntents.includes('COMMITMENT') : bantAuthorityMet)
+        ? 'bant-icon--success'
+        : 'bant-icon--muted',
     },
     {
       label: 'NEED',
@@ -91,13 +91,13 @@ export default function BANTAnalysis() {
       )
         ? 'info'
         : 'radio_button_unchecked',
-      iconColor: (
+      iconClass: (
         isLive
           ? allIntents.includes('INFORMATION') || allIntents.includes('COMPARISON')
           : bantNeedMet
       )
-        ? 'var(--info)'
-        : 'var(--text-muted)',
+        ? 'bant-icon--info'
+        : 'bant-icon--muted',
     },
     {
       label: 'TIMELINE',
@@ -123,13 +123,13 @@ export default function BANTAnalysis() {
       )
         ? 'pending'
         : 'radio_button_unchecked',
-      iconColor: (
+      iconClass: (
         isLive
           ? allIntents.includes('COMMITMENT') || allIntents.includes('PRICING')
           : bantTimelineMet
       )
-        ? 'var(--warning)'
-        : 'var(--text-muted)',
+        ? 'bant-icon--warning'
+        : 'bant-icon--muted',
     },
   ];
 
@@ -145,13 +145,10 @@ export default function BANTAnalysis() {
 
       <div className="bant-grid">
         {bantItems.map((item) => (
-          <div key={item.label} className="bant-item" style={{ opacity: hasData ? 1 : 0.7 }}>
+          <div key={item.label} className={`bant-item ${hasData ? '' : 'is-dimmed'}`}>
             <div className="d-flex align-center justify-between mb-2">
               <span className="text-overline">{item.label}</span>
-              <span
-                className="material-symbols-outlined bant-icon"
-                style={{ color: item.iconColor }}
-              >
+              <span className={`material-symbols-outlined bant-icon ${item.iconClass}`}>
                 {item.icon}
               </span>
             </div>

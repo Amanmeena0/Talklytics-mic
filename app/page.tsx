@@ -168,15 +168,7 @@ export default function Home() {
           <div className="grid-dashboard">
             {/* Recent Calls */}
             <div className="card-flush lg:col-span-8">
-              <div
-                className="d-flex justify-between align-center p-4 gap-4"
-                style={{
-                  borderBottom: '1px solid var(--border-default)',
-                  background: 'var(--bg-elevated)',
-                  paddingLeft: 'var(--space-6)',
-                  paddingRight: 'var(--space-6)',
-                }}
-              >
+                <div className="d-flex justify-between align-center p-4 gap-4 dashboard-section-header">
                 <h2 className="text-section-heading m-0 d-flex align-center gap-8px">
                   <span className="material-symbols-outlined fs-20 color-accent">history</span>
                   Recent Conversation Records
@@ -208,16 +200,10 @@ export default function Home() {
                           <td className="dashboard-table-td" onClick={(e) => e.stopPropagation()}>
                             <button
                               onClick={() => handleToggleFavorite(call.id, call.isFavorite)}
-                              style={{
-                                color: call.isFavorite ? 'var(--warning)' : 'var(--text-muted)',
-                              }}
-                              className="dashboard-star-btn"
+                              className={`dashboard-star-btn ${call.isFavorite ? 'is-favorite' : ''}`}
                             >
                               <span
-                                className="material-symbols-outlined fs-18"
-                                style={{
-                                  fontVariationSettings: call.isFavorite ? "'FILL' 1" : undefined,
-                                }}
+                                className={`material-symbols-outlined fs-18 dashboard-star-icon ${call.isFavorite ? 'is-favorite' : ''}`}
                               >
                                 star
                               </span>
@@ -260,8 +246,7 @@ export default function Home() {
                       <tr>
                         <td
                           colSpan={6}
-                          className="dashboard-table-td text-center color-muted"
-                          style={{ paddingTop: 'var(--space-8)', paddingBottom: 'var(--space-8)' }}
+                          className="dashboard-table-td text-center color-muted dashboard-empty-cell"
                         >
                           No call recordings available. Connect to the WebSocket stream to capture
                           logs.
@@ -282,15 +267,7 @@ export default function Home() {
                     notifications.map((n) => (
                       <div key={n.id} className="dashboard-notif-item">
                         <span
-                          className="material-symbols-outlined fs-20"
-                          style={{
-                            color:
-                              n.type === 'SUCCESS'
-                                ? 'var(--success)'
-                                : n.type === 'WARNING'
-                                  ? 'var(--warning)'
-                                  : 'var(--accent)',
-                          }}
+                          className={`material-symbols-outlined fs-20 dashboard-notif-icon ${n.type === 'SUCCESS' ? 'dashboard-notif-icon--success' : n.type === 'WARNING' ? 'dashboard-notif-icon--warning' : 'dashboard-notif-icon--accent'}`}
                         >
                           {n.type === 'SUCCESS'
                             ? 'check_circle'

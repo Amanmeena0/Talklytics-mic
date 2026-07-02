@@ -83,47 +83,20 @@ export default function SessionHeader({ id }: SessionHeaderProps) {
     : '';
 
   return (
-    <header
-      style={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
-        gap: 'var(--space-4)',
-        marginBottom: 'var(--space-8)',
-      }}
-    >
+    <header className="session-header-root">
       <div>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 'var(--space-2)',
-            marginBottom: 'var(--space-2)',
-            flexWrap: 'wrap',
-          }}
-        >
+        <div className="session-header-topline">
           <span className="badge badge-accent">{isLive ? 'Live Session' : 'Recorded Call'}</span>
           {isLive ? (
             <ConnectionIndicator />
           ) : (
-            <span
-              className="badge"
-              style={{
-                background: 'var(--bg-elevated)',
-                border: '1px solid var(--border-default)',
-                color: 'var(--text-secondary)',
-              }}
-            >
+            <span className="badge session-header-id-badge">
               ID: {id?.substring(0, 8)}...
             </span>
           )}
           {hasData && (
-            <span
-              className="text-caption"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}
-            >
-              <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>
+            <span className="text-caption session-header-segments">
+              <span className="material-symbols-outlined fs-14">
                 schedule
               </span>
               {records.length} segments • {formatDuration(sessionDuration)}
@@ -131,34 +104,17 @@ export default function SessionHeader({ id }: SessionHeaderProps) {
           )}
         </div>
 
-        <h1
-          className="text-page-title"
-          style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
-        >
+        <h1 className="text-page-title session-header-title">
           {isLive ? 'Live Call Monitor' : title || 'Call Report'}
           {!isLive && (
             <button
               onClick={handleFavoriteClick}
               disabled={isFavoriting}
-              style={{
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                color: isFavorite ? 'var(--warning)' : 'var(--text-muted)',
-                padding: 0,
-                display: 'flex',
-                alignItems: 'center',
-                transition: 'color 0.2s ease',
-                outline: 'none',
-              }}
+              className={`session-header-favorite-btn ${isFavorite ? 'is-favorite' : ''}`}
               title={isFavorite ? 'Remove from favorites' : 'Mark as favorite'}
             >
               <span
-                className="material-symbols-outlined"
-                style={{
-                  fontSize: '24px',
-                  fontVariationSettings: isFavorite ? "'FILL' 1" : undefined,
-                }}
+                className={`material-symbols-outlined session-header-favorite-icon ${isFavorite ? 'is-favorite' : ''}`}
               >
                 star
               </span>
@@ -166,30 +122,26 @@ export default function SessionHeader({ id }: SessionHeaderProps) {
           )}
         </h1>
 
-        <p
-          className="text-body"
-          style={{ marginTop: 'var(--space-1)', display: 'flex', alignItems: 'center', gap: '8px' }}
-        >
+        <p className="text-body session-header-subtitle">
           {isLive ? (
             'Real-time AI-powered conversation coaching'
           ) : (
             <>
-              <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{clientName}</span>
+              <span className="session-header-client">{clientName}</span>
               {formattedDate && <span>• Conducted on {formattedDate}</span>}
             </>
           )}
         </p>
       </div>
 
-      <div style={{ display: 'flex', gap: 'var(--space-3)' }}>
+      <div className="session-header-actions">
         {!isLive && (
           <button
             onClick={handleDeleteClick}
-            className="btn btn-secondary"
-            style={{ borderColor: 'var(--error-muted)', color: 'var(--error)' }}
+            className="btn btn-secondary session-header-delete-btn"
             disabled={isDeleting}
           >
-            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
+            <span className="material-symbols-outlined fs-18">
               delete
             </span>
             Delete Call

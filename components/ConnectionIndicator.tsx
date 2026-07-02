@@ -22,14 +22,11 @@ export default function ConnectionIndicator() {
   return (
     <div className="connection-indicator-container">
       <span
-        className="connection-indicator-dot"
-        style={{
-          background: config.color,
-          boxShadow: status === 'connected' ? `0 0 8px ${config.color}` : 'none',
-          animation: status === 'connected' ? 'pulse-glow 2s ease-in-out infinite' : 'none',
-        }}
+        className={`connection-indicator-dot connection-indicator-dot--${status} ${status === 'connected' ? 'is-connected' : ''}`}
       />
-      <span style={{ color: config.color }}>{config.label}</span>
+      <span className={`connection-indicator-label connection-indicator-label--${status}`}>
+        {config.label}
+      </span>
     </div>
   );
 }

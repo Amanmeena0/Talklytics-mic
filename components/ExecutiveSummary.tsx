@@ -53,7 +53,7 @@ export default function ExecutiveSummary() {
             {status === 'connected' ? '● Live' : 'AI Generated'}
           </span>
         </div>
-        <p className="text-body" style={{ opacity: hasData ? 1 : 0.6 }}>
+        <p className={`text-body executive-summary-summary ${hasData ? '' : 'is-muted'}`}>
           {summaryText}
         </p>
       </div>
@@ -61,10 +61,23 @@ export default function ExecutiveSummary() {
         <div>
           <p className="text-overline mb-1">Overall Sentiment</p>
           <div className="flex items-center gap-2">
-            <div className="connection-indicator-dot" style={{ background: sentimentColor }} />
+            <div
+              className={`connection-indicator-dot ${
+                dominantSentiment === 'Positive'
+                  ? 'sentiment-dot--positive'
+                  : dominantSentiment === 'Negative'
+                    ? 'sentiment-dot--negative'
+                    : 'sentiment-dot--neutral'
+              }`}
+            />
             <span
-              className="font-bold fs-14"
-              style={{ color: sentimentColor, transition: 'color 0.3s ease' }}
+              className={`font-bold fs-14 ${
+                dominantSentiment === 'Positive'
+                  ? 'sentiment-label--positive'
+                  : dominantSentiment === 'Negative'
+                    ? 'sentiment-label--negative'
+                    : 'sentiment-label--neutral'
+              }`}
             >
               {hasData ? sentimentLabel : '—'}
             </span>

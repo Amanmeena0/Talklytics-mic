@@ -31,23 +31,12 @@ export default function Sidebar() {
     <aside className="app-sidebar custom-scrollbar">
       {/* Live Monitor Section */}
       <div className="sidebar-section">
-        <Link href="/calls/live" style={{ textDecoration: 'none' }}>
-          <div
-            className={`sidebar-item ${pathname === '/calls/live' ? 'active' : ''}`}
-            style={{ gap: 'var(--space-3)', cursor: 'pointer' }}
-          >
-            <span
-              className="pulse-dot"
-              style={{
-                background: liveCallAvailable ? 'var(--success)' : 'var(--text-muted)',
-                boxShadow: liveCallAvailable ? '0 0 6px var(--success)' : 'none',
-              }}
-            />
+        <Link href="/calls/live" className="no-underline">
+          <div className={`sidebar-item sidebar-live-item ${pathname === '/calls/live' ? 'active' : ''}`}>
+            <span className={`pulse-dot ${liveCallAvailable ? '' : 'is-idle'}`} />
             <div>
-              <div style={{ color: 'var(--text-primary)', fontSize: '13px', fontWeight: 600 }}>
-                Live Monitor
-              </div>
-              <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+              <div className="sidebar-live-title">Live Monitor</div>
+              <div className="sidebar-live-status">
                 {liveCallAvailable ? 'Uvicorn Server Active' : 'No Active Stream'}
               </div>
             </div>
@@ -74,13 +63,7 @@ export default function Sidebar() {
           className={`sidebar-item ${pathname.startsWith('/calls') && pathname !== '/calls/live' ? 'active' : ''}`}
         >
           <span
-            className="material-symbols-outlined"
-            style={{
-              fontVariationSettings:
-                pathname.startsWith('/calls') && pathname !== '/calls/live'
-                  ? "'FILL' 1"
-                  : undefined,
-            }}
+            className={`material-symbols-outlined sidebar-history-icon ${pathname.startsWith('/calls') && pathname !== '/calls/live' ? 'is-active' : ''}`}
           >
             history
           </span>
@@ -118,11 +101,11 @@ export default function Sidebar() {
       </div>
 
       {/* Spacer pushes bottom section down */}
-      <div style={{ flex: 1 }} />
+      <div className="flex-1" />
 
       {/* Bottom Section */}
       <div className="sidebar-divider" />
-      <div className="sidebar-section" style={{ marginBottom: 0 }}>
+      <div className="sidebar-section sidebar-bottom-section">
         <Link href="/settings?tab=support" className="sidebar-item">
           <span className="material-symbols-outlined">contact_support</span>
           <span>Support &amp; FAQ</span>

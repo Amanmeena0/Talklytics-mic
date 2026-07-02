@@ -237,18 +237,37 @@ export default function EngagementTimeline() {
       {/* Signal Cards */}
       <div className="signal-row custom-scrollbar mt-8">
         {displayCards.map((card, i) => (
-          <div key={i} className="signal-card" style={{ borderColor: card.borderColor }}>
+          <div
+            key={i}
+            className={`signal-card ${
+              card.type === 'Buying Signal'
+                ? 'signal-card--success'
+                : card.type === 'Objection'
+                  ? 'signal-card--error'
+                  : 'signal-card--accent'
+            }`}
+          >
             <div className="flex items-center gap-2 mb-2">
               <span
-                className="material-symbols-outlined fs-16"
-                style={{
-                  color: card.color,
-                  fontVariationSettings: card.type === 'Buying Signal' ? "'FILL' 1" : undefined,
-                }}
+                className={`material-symbols-outlined fs-16 ${
+                  card.type === 'Buying Signal'
+                    ? 'signal-icon--success signal-icon--filled'
+                    : card.type === 'Objection'
+                      ? 'signal-icon--error'
+                      : 'signal-icon--accent'
+                }`}
               >
                 {card.icon}
               </span>
-              <span className="text-overline" style={{ color: card.color }}>
+              <span
+                className={`text-overline ${
+                  card.type === 'Buying Signal'
+                    ? 'signal-icon--success'
+                    : card.type === 'Objection'
+                      ? 'signal-icon--error'
+                      : 'signal-icon--accent'
+                }`}
+              >
                 {card.type}
               </span>
             </div>
