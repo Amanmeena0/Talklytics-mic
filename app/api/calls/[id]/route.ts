@@ -1,4 +1,11 @@
-import { NextResponse } from 'next/server';
+import { apiSuccess, apiError, handleApiCatch } from '@/shared/utils/api';
+import { 
+  calculateAverage, 
+  calculateDuration, 
+  determineDominantSentiment, 
+  evaluateBantCriteria, 
+  parseClientName 
+} from '@/features/calls/utils/metrics';
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -15,7 +22,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
 
     if (!res.ok) {
       if (res.status === 404) {
-        return NextResponse.json({ error: 'Call not found' }, { status: 404 });
+        return apiError('Call not found', 404, 'CALL_NOT_FOUND');
       }
       throw new Error(`Backend returned status ${res.status}`);
     }
@@ -23,59 +30,19 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
     const call = await res.json();
     const records = call.records || [];
     
-    // Calculate fields dynamically
-    const duration = records.length > 0 ? Math.max(...records.map((r: any) => r.timestamp)) : 0;
-    const averageScore = records.length > 0 
-      ? parseFloat((records.reduce((sum: number, r: any) => sum + r.score, 0) / records.length).toFixed(2))
-      : 0;
-    const averageEnergy = records.length > 0 
-      ? parseFloat((records.reduce((sum: number, r: any) => sum + r.energy, 0) / records.length).toFixed(2))
-      : 0;
-    const averageConfidence = records.length > 0 
-      ? parseFloat((records.reduce((sum: number, r: any) => sum + r.confidence, 0) / records.length).toFixed(2))
-      : 0;
-      
-    let overallSentiment = 'Neutral';
-    if (records.length > 0) {
-      const freq: Record<string, number> = {};
-      records.forEach((r: any) => {
-        freq[r.sentiment] = (freq[r.sentiment] || 0) + 1;
-      });
-      let max = 0;
-      Object.entries(freq).forEach(([k, v]) => {
-        if (v > max) {
-          max = v;
-          overallSentiment = k;
-        }
-      });
-    }
-    
-    let bantBudgetMet = false;
-    let bantAuthorityMet = false;
-    let bantNeedMet = false;
-    let bantTimelineMet = false;
-    
-    records.forEach((r: any) => {
-      const txt = r.transcript.toLowerCase();
-      const intents = (r.detected_intents || []).map((i: string) => i.toUpperCase());
-      if (intents.includes('PRICING') || txt.includes('price') || txt.includes('budget')) bantBudgetMet = true;
-      if (txt.includes('decision') || txt.includes('approve') || txt.includes('authority')) bantAuthorityMet = true;
-      if (intents.includes('INFORMATION') || txt.includes('need') || txt.includes('want')) bantNeedMet = true;
-      if (intents.includes('COMMITMENT') || txt.includes('timeline') || txt.includes('schedule')) bantTimelineMet = true;
-    });
-    
-    let clientName = 'Prospective Client';
-    let displayTitle = call.title;
-    if (call.title && call.title.includes(' - ')) {
-      const parts = call.title.split(' - ');
-      displayTitle = parts[0];
-      clientName = parts.slice(1).join(' - ');
-    }
+    // Calculate fields dynamically using extracted utility functions
+    const duration = calculateDuration(records);
+    const averageScore = calculateAverage(records, 'score');
+    const averageEnergy = calculateAverage(records, 'energy');
+    const averageConfidence = calculateAverage(records, 'confidence');
+    const overallSentiment = determineDominantSentiment(records);
+    const bant = evaluateBantCriteria(records);
+    const clientTitleInfo = parseClientName(call.title);
 
     const formattedCall = {
       id: String(call.id),
-      title: displayTitle,
-      clientName,
+      title: clientTitleInfo.title,
+      clientName: clientTitleInfo.clientName,
       date: call.created_at,
       duration,
       status: 'COMPLETED',
@@ -87,14 +54,14 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       summary: call.summary || '',
       isFavorite: call.is_favorite,
       isSoftDeleted: call.is_deleted,
-      bantBudget: bantBudgetMet ? 'Pricing Discussion Detected' : 'No Budget Details',
-      bantBudgetMet,
-      bantAuthority: bantAuthorityMet ? 'Commitment Signals Found' : 'Authority Unverified',
-      bantAuthorityMet,
-      bantNeed: bantNeedMet ? 'Active Inquiry Detected' : 'No Clear Need',
-      bantNeedMet,
-      bantTimeline: bantTimelineMet ? 'Urgency Indicators Present' : 'No Timeline Discussed',
-      bantTimelineMet,
+      bantBudget: bant.bantBudget,
+      bantBudgetMet: bant.bantBudgetMet,
+      bantAuthority: bant.bantAuthority,
+      bantAuthorityMet: bant.bantAuthorityMet,
+      bantNeed: bant.bantNeed,
+      bantNeedMet: bant.bantNeedMet,
+      bantTimeline: bant.bantTimeline,
+      bantTimelineMet: bant.bantTimelineMet,
       records: records.map((r: any) => ({
         ...r,
         id: String(r.id),
@@ -133,9 +100,9 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       }
     };
 
-    return NextResponse.json(formattedCall);
+    return apiSuccess(formattedCall);
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || 'Failed to fetch call' }, { status: 500 });
+    return handleApiCatch(error);
   }
 }
 
@@ -166,13 +133,13 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     }
 
     const updated = await res.json();
-    return NextResponse.json({
+    return apiSuccess({
       ...updated,
       id: String(updated.id),
       isFavorite: updated.is_favorite,
     });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || 'Failed to update call' }, { status: 500 });
+    return handleApiCatch(error);
   }
 }
 
@@ -193,8 +160,8 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
       throw new Error(`Backend returned status ${res.status}`);
     }
 
-    return NextResponse.json({ success: true, message: 'Call deleted successfully' });
+    return apiSuccess({ success: true, message: 'Call deleted successfully' });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || 'Failed to delete call' }, { status: 500 });
+    return handleApiCatch(error);
   }
 }

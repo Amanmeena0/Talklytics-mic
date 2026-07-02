@@ -1,4 +1,11 @@
-import { NextResponse } from 'next/server';
+import { apiSuccess, apiError, handleApiCatch } from '@/shared/utils/api';
+import { 
+  calculateAverage, 
+  calculateDuration, 
+  determineDominantSentiment, 
+  evaluateBantCriteria, 
+  parseClientName 
+} from '@/features/calls/utils/metrics';
 
 export async function GET(request: Request) {
   try {
@@ -40,68 +47,19 @@ export async function GET(request: Request) {
     let mappedCalls = backendCalls.map((call: any) => {
       const records = call.records || [];
       
-      // Calculate duration (max timestamp)
-      const duration = records.length > 0 ? Math.max(...records.map((r: any) => r.timestamp)) : 0;
-      
-      // Calculate average interest score
-      const averageScore = records.length > 0 
-        ? parseFloat((records.reduce((sum: number, r: any) => sum + r.score, 0) / records.length).toFixed(2))
-        : 0;
-        
-      // Calculate average energy
-      const averageEnergy = records.length > 0 
-        ? parseFloat((records.reduce((sum: number, r: any) => sum + r.energy, 0) / records.length).toFixed(2))
-        : 0;
-        
-      // Calculate average confidence
-      const averageConfidence = records.length > 0 
-        ? parseFloat((records.reduce((sum: number, r: any) => sum + r.confidence, 0) / records.length).toFixed(2))
-        : 0;
-        
-      // Calculate dominant sentiment
-      let overallSentiment = 'Neutral';
-      if (records.length > 0) {
-        const freq: Record<string, number> = {};
-        records.forEach((r: any) => {
-          freq[r.sentiment] = (freq[r.sentiment] || 0) + 1;
-        });
-        let max = 0;
-        Object.entries(freq).forEach(([k, v]) => {
-          if (v > max) {
-            max = v;
-            overallSentiment = k;
-          }
-        });
-      }
-
-      // Determine BANT flags
-      let bantBudgetMet = false;
-      let bantAuthorityMet = false;
-      let bantNeedMet = false;
-      let bantTimelineMet = false;
-      
-      records.forEach((r: any) => {
-        const txt = r.transcript.toLowerCase();
-        const intents = (r.detected_intents || []).map((i: string) => i.toUpperCase());
-        if (intents.includes('PRICING') || txt.includes('price') || txt.includes('budget')) bantBudgetMet = true;
-        if (txt.includes('decision') || txt.includes('approve') || txt.includes('authority')) bantAuthorityMet = true;
-        if (intents.includes('INFORMATION') || txt.includes('need') || txt.includes('want')) bantNeedMet = true;
-        if (intents.includes('COMMITMENT') || txt.includes('timeline') || txt.includes('schedule')) bantTimelineMet = true;
-      });
-
-      // Derive clientName from title (if title is "Discovery Call - Acme Corp")
-      let clientName = 'Prospective Client';
-      let displayTitle = call.title;
-      if (call.title && call.title.includes(' - ')) {
-        const parts = call.title.split(' - ');
-        displayTitle = parts[0];
-        clientName = parts.slice(1).join(' - ');
-      }
+      // Calculate derived fields using extracted utility functions
+      const duration = calculateDuration(records);
+      const averageScore = calculateAverage(records, 'score');
+      const averageEnergy = calculateAverage(records, 'energy');
+      const averageConfidence = calculateAverage(records, 'confidence');
+      const overallSentiment = determineDominantSentiment(records);
+      const bant = evaluateBantCriteria(records);
+      const clientTitleInfo = parseClientName(call.title);
 
       return {
         id: String(call.id),
-        title: displayTitle,
-        clientName,
+        title: clientTitleInfo.title,
+        clientName: clientTitleInfo.clientName,
         date: call.created_at,
         duration,
         status: 'COMPLETED',
@@ -113,14 +71,14 @@ export async function GET(request: Request) {
         summary: call.summary || '',
         isFavorite: call.is_favorite,
         isSoftDeleted: call.is_deleted,
-        bantBudget: bantBudgetMet ? 'Pricing Discussion Detected' : 'No Budget Details',
-        bantBudgetMet,
-        bantAuthority: bantAuthorityMet ? 'Commitment Signals Found' : 'Authority Unverified',
-        bantAuthorityMet,
-        bantNeed: bantNeedMet ? 'Active Inquiry Detected' : 'No Clear Need',
-        bantNeedMet,
-        bantTimeline: bantTimelineMet ? 'Urgency Indicators Present' : 'No Timeline Discussed',
-        bantTimelineMet,
+        bantBudget: bant.bantBudget,
+        bantBudgetMet: bant.bantBudgetMet,
+        bantAuthority: bant.bantAuthority,
+        bantAuthorityMet: bant.bantAuthorityMet,
+        bantNeed: bant.bantNeed,
+        bantNeedMet: bant.bantNeedMet,
+        bantTimeline: bant.bantTimeline,
+        bantTimelineMet: bant.bantTimelineMet,
         records,
         salesRep: {
           id: '1',
@@ -166,7 +124,7 @@ export async function GET(request: Request) {
     const totalPages = Math.ceil(totalCount / limit);
     const paginatedCalls = mappedCalls.slice((page - 1) * limit, page * limit);
 
-    return NextResponse.json({
+    return apiSuccess({
       calls: paginatedCalls,
       pagination: {
         page,
@@ -176,7 +134,7 @@ export async function GET(request: Request) {
       },
     });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || 'Failed to fetch calls' }, { status: 500 });
+    return handleApiCatch(error);
   }
 }
 
@@ -223,11 +181,11 @@ export async function POST(request: Request) {
     }
 
     const createdCall = await res.json();
-    return NextResponse.json({
+    return apiSuccess({
       ...createdCall,
       id: String(createdCall.id), // ensure id is string to maintain frontend compatibility
-    }, { status: 201 });
+    }, 201);
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || 'Failed to create call' }, { status: 500 });
+    return handleApiCatch(error);
   }
 }
