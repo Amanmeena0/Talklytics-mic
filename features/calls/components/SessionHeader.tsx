@@ -89,7 +89,7 @@ export default function SessionHeader({ id }: SessionHeaderProps) {
   return (
     <header className="session-header-root">
       <div>
-        <div className="session-header-topline">
+        <div className="session-header-topline ">
           {isLive ? (
             isRecording ? (
               <span className="badge badge-error badge-pulsing d-flex align-center gap-1">

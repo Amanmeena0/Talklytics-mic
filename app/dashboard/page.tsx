@@ -132,7 +132,7 @@ export default function DashboardHome() {
         <div className="max-w-6xl mx-auto space-y-10">
         
         {/* Workspace Switcher & Top Row */}
-        <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-[#E5E7EB] pb-6">
+        <header className="flex flex-col md:flex-row md:items-left justify-between gap-6 border-b border-[#E5E7EB] pb-6">
           <div className="space-y-1">
             <div className="flex items-center gap-3">
               {/* Custom Workspace Switcher */}

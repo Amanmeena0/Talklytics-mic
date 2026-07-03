@@ -4,9 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Layout from '@/shared/components/Layout/Layout';
 import LiveDashboardProvider from '@/features/live-session/components/LiveDashboardProvider';
 import SessionHeader from '@/features/calls/components/SessionHeader';
-import Footer from '@/shared/components/Layout/Footer';
 import { useLiveData } from '@/shared/hooks/LiveDataContext';
-import useHealthCheck from '@/shared/hooks/useHealthCheck';
 import { motion, AnimatePresence } from 'framer-motion';
 import SentimentBadge from '@/shared/components/SentimentBadge';
 import {
@@ -21,12 +19,11 @@ import {
 
 function LiveCallContent() {
   const {
-    status,
-    records,
     isRecording,
     isSaving,
     startSession,
     stopSession,
+    records,
     bantBudget,
     bantBudgetMet,
     bantAuthority,
@@ -46,8 +43,6 @@ function LiveCallContent() {
     sessionDuration
   } = useLiveData();
 
-  const { isBackendOnline, isLoading: isHealthLoading } = useHealthCheck();
-
   const [title, setTitle] = useState('');
   const [clientName, setClientName] = useState('Prospective Client');
   const [autoSum, setAutoSum] = useState(true);
@@ -64,7 +59,6 @@ function LiveCallContent() {
 
   const handleStart = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isBackendOnline) return;
     if (startSession) {
       startSession(title, clientName, autoSum);
     }
@@ -172,16 +166,13 @@ function LiveCallContent() {
         )}
       </AnimatePresence>
 
-      {/* Header */}
-      <SessionHeader />
-
       {!isSessionActive ? (
         /* Configuration dashboard */
-        <div className="max-w-xl mx-auto py-12">
+        <div className="flex items-center justify-center h-full min-h-[calc(100vh-120px)] bg-[#FAFBFC]">
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white border border-[#E5E7EB] rounded-3xl p-8 shadow-sm space-y-8"
+            className="bg-white border border-[#E5E7EB] rounded-3xl p-8 shadow-sm space-y-8 max-w-xl w-full mx-6"
           >
             <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
               <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-[#4F46E5]">
@@ -254,192 +245,195 @@ function LiveCallContent() {
           </motion.div>
         </div>
       ) : (
-        /* FUTURISTIC SPLIT LAYOUT */
-        <div className="grid lg:grid-cols-12 gap-8 items-start py-4">
+        /* Active session dashboard - Full Viewport h-full flex flex-col */
+        <div className="h-full flex flex-col justify-between overflow-hidden">
           
-          {/* LEFT SIDE: Live Transcript & Timeline */}
-          <div className="lg:col-span-7 space-y-6">
-            
-            {/* Transcript Log card */}
-            <div className="bg-white border border-[#E5E7EB] rounded-2xl shadow-sm flex flex-col justify-between h-[480px]">
-              <div>
-                <div className="p-6 border-b border-[#E5E7EB] flex items-center justify-between bg-slate-50/40">
-                  <div className="space-y-1">
-                    <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Live Voice Translation</h3>
-                    <p className="text-[10px] text-[#6B7280]">Real-time dialogue scoring and emotional classification</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping" />
-                    <span className="text-[10px] font-bold text-red-600 uppercase tracking-wider">Streaming Live</span>
-                  </div>
-                </div>
+          {/* Header row containing title info */}
+          <div className="bg-white border-b border-[#E5E7EB] px-6 py-4 shrink-0 flex items-center justify-between">
+            <SessionHeader />
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-indigo-600 animate-ping" />
+              <span className="text-[10px] font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded uppercase">Live Session Connected</span>
+            </div>
+          </div>
 
-                <div className="p-6 space-y-4 max-h-[380px] overflow-y-auto custom-scrollbar">
-                  {records.length > 0 ? (
-                    records.map((r, i) => (
-                      <motion.div
-                        key={i}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="bg-white border border-slate-100 p-4 rounded-xl shadow-sm space-y-2 hover:border-slate-200 transition-all"
-                      >
-                        <div className="flex justify-between items-center text-[10px]">
-                          <div className="flex items-center gap-2">
-                            <span className={`font-bold px-1.5 py-0.5 rounded ${
-                              r.speaker?.toLowerCase().includes('seller') || r.speaker?.toLowerCase().includes('you') 
-                                ? 'bg-indigo-50 text-indigo-700' 
-                                : 'bg-slate-100 text-slate-700'
-                            }`}>
-                              {r.speaker || 'Unknown'}
-                            </span>
-                            <span className="text-slate-400 font-mono">{r.timestamp}s</span>
-                          </div>
-                          <div className="flex items-center gap-2 font-semibold">
-                            <span className="text-slate-400">Confidence: {Math.round(r.confidence * 100)}%</span>
-                            <SentimentBadge sentiment={r.sentiment} />
-                          </div>
+          {/* Core content grid - grid-cols-12 */}
+          <div className="flex-1 min-h-0 grid lg:grid-cols-12 gap-6 p-6 overflow-hidden">
+            
+            {/* LEFT COLUMN: Live Transcript & Timeline */}
+            <div className="lg:col-span-7 flex flex-col h-full overflow-hidden bg-white border border-[#E5E7EB] rounded-3xl p-6 shadow-sm">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100 shrink-0 mb-4">
+                <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">WebSocket Transcript Stream</span>
+                <span className="text-[10px] bg-slate-100 text-slate-500 px-2.5 py-0.5 rounded-lg font-bold">
+                  {records.length} segments analyzed
+                </span>
+              </div>
+              
+              {/* Scrollable transcript list */}
+              <div className="flex-1 overflow-y-auto pr-2 space-y-4">
+                {records.length > 0 ? (
+                  records.map((r, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className={`p-4 rounded-2xl border transition-all ${
+                        r.speaker?.toLowerCase().includes('seller') || r.speaker?.toLowerCase().includes('you')
+                          ? 'bg-slate-50/60 border-slate-100 ml-12'
+                          : 'bg-white border-[#E5E7EB] mr-12'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[11px] font-bold text-slate-800">{r.speaker}</span>
+                          <SentimentBadge sentiment={r.sentiment} />
                         </div>
-                        <p className="text-xs text-slate-700 leading-relaxed font-medium">
-                          &ldquo;{r.transcript}&rdquo;
-                        </p>
-                      </motion.div>
-                    ))
+                        <div className="flex items-center gap-2 text-[10px] text-slate-400 font-semibold font-mono">
+                          <span>Conf: {Math.round(r.confidence * 100)}%</span>
+                          <span>•</span>
+                          <span>Score: {r.score}/5</span>
+                        </div>
+                      </div>
+                      <p className="text-xs text-slate-700 leading-relaxed font-medium">
+                        &ldquo;{r.transcript}&rdquo;
+                      </p>
+                    </motion.div>
+                  ))
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-full space-y-3">
+                    <div className="w-10 h-10 rounded-full border-2 border-indigo-600/10 border-t-indigo-600 animate-spin" />
+                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Waiting for incoming audio stream...</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Engagement Timeline index */}
+              <div className="border-t border-slate-100 pt-4 mt-4 shrink-0 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">Engagement Timeline</span>
+                  <span className="text-[10px] text-[#6B7280]">Running Sentiment Index</span>
+                </div>
+                <div className="h-14 bg-slate-50 border border-slate-100 rounded-xl flex items-end p-2 gap-1 overflow-x-auto">
+                  {records.length > 0 ? (
+                    records.map((r, i) => {
+                      const heightPercent = Math.max(15, Math.min(100, r.score * 20));
+                      const isPositive = r.sentiment === 'Positive';
+                      const isNegative = r.sentiment === 'Negative';
+                      return (
+                        <div
+                          key={i}
+                          className={`w-3 rounded-t-sm transition-all duration-300 ${
+                            isPositive ? 'bg-[#10B981]' : isNegative ? 'bg-red-400' : 'bg-slate-300'
+                          }`}
+                          style={{ height: `${heightPercent}%` }}
+                          title={`Score: ${r.score} | Sentiment: ${r.sentiment}`}
+                        />
+                      );
+                    })
                   ) : (
-                    <div className="text-center py-20 space-y-3">
-                      <div className="w-10 h-10 rounded-full border-2 border-indigo-600/10 border-t-indigo-600 animate-spin mx-auto" />
-                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Waiting for incoming audio stream...</p>
-                    </div>
+                    <div className="w-full text-center text-[10px] text-slate-400 font-semibold uppercase py-3">No data points yet</div>
                   )}
                 </div>
               </div>
+
             </div>
 
-            {/* Conversation timeline chart preview */}
-            <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-sm space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">Engagement Timeline</span>
-                <span className="text-[10px] text-[#6B7280]">Running Sentiment Index</span>
-              </div>
-              {/* Dynamic timeline visual */}
-              <div className="h-16 bg-slate-50 border border-slate-100 rounded-xl flex items-end p-2 gap-1 overflow-x-auto">
-                {records.length > 0 ? (
-                  records.map((r, i) => {
-                    const heightPercent = Math.max(15, Math.min(100, r.score * 20));
-                    const isPositive = r.sentiment === 'Positive';
-                    const isNegative = r.sentiment === 'Negative';
-                    return (
-                      <div
-                        key={i}
-                        className={`w-3.5 rounded-t-sm transition-all duration-300 ${
-                          isPositive ? 'bg-[#10B981]' : isNegative ? 'bg-red-400' : 'bg-slate-300'
-                        }`}
-                        style={{ height: `${heightPercent}%` }}
-                        title={`Score: ${r.score} | Sentiment: ${r.sentiment}`}
-                      />
-                    );
-                  })
-                ) : (
-                  <div className="w-full text-center text-[10px] text-slate-400 font-semibold uppercase py-4">No data points yet</div>
-                )}
-              </div>
-            </div>
-
-          </div>
-
-          {/* RIGHT SIDE: AI Coach, checklists, objection widgets */}
-          <div className="lg:col-span-5 space-y-6">
-            
-            {/* AI Coach Card */}
-            <div className="bg-[#4F46E5] text-white rounded-2xl p-6 shadow-xl space-y-4 relative overflow-hidden shadow-indigo-100">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-xl" />
-              <div className="flex items-center justify-between border-b border-white/20 pb-3">
-                <div className="flex items-center gap-2">
-                  <Sparkles className="w-4.5 h-4.5" />
-                  <span className="text-xs font-bold uppercase tracking-wider">Real-Time AI Coach</span>
-                </div>
-                {isRecording && (
-                  <span className="text-[8px] bg-white/25 text-white font-bold px-2 py-0.5 rounded uppercase tracking-wider animate-pulse">
-                    Active listening
-                  </span>
-                )}
-              </div>
-              <div className="space-y-2">
-                <span className="text-[10px] uppercase font-bold text-indigo-200 tracking-wider">LATEST RECOMMENDATION</span>
-                <p className="text-sm font-semibold leading-relaxed">
-                  {latestRecommendation || 'AI is evaluating conversation to generate next tactic recommendations...'}
-                </p>
-              </div>
-            </div>
-
-            {/* BANT Qualification Scorecard */}
-            <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-sm space-y-4">
-              <span className="text-xs font-bold text-slate-900 uppercase tracking-wider block">BANT Tracker</span>
-              <div className="grid grid-cols-2 gap-4">
-                {[
-                  { name: 'Budget', met: bantBudgetMet, val: bantBudget },
-                  { name: 'Authority', met: bantAuthorityMet, val: bantAuthority },
-                  { name: 'Need', met: bantNeedMet, val: bantNeed },
-                  { name: 'Timeline', met: bantTimelineMet, val: bantTimeline }
-                ].map((item, i) => (
-                  <div key={i} className="border border-slate-100 bg-slate-50/50 rounded-xl p-3 space-y-1.5">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{item.name}</span>
-                      <span className={`w-2.5 h-2.5 rounded-full ${item.met ? 'bg-[#10B981]' : 'bg-slate-200'}`} />
-                    </div>
-                    <span className="text-[11px] font-bold text-slate-800 block truncate">
-                      {item.met ? (item.val || 'Qualified') : 'Not discussed'}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Key stats panel: Win probability, Quality, Talk ratio, objections */}
-            <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-sm space-y-6">
-              <span className="text-xs font-bold text-slate-900 uppercase tracking-wider block">Running Deal Metrics</span>
+            {/* RIGHT COLUMN: AI Coach Card, BANT qualified tracker, win percentage */}
+            <div className="lg:col-span-5 flex flex-col h-full overflow-y-auto pr-2 space-y-6">
               
-              <div className="grid grid-cols-2 gap-6 text-center">
-                <div className="space-y-1 bg-slate-50/50 border border-slate-100 rounded-xl p-3">
-                  <span className="text-[10px] text-[#6B7280] font-bold uppercase tracking-wider block">Win Probability</span>
-                  <span className="text-2xl font-extrabold text-[#10B981]">{winProb}%</span>
-                </div>
-                <div className="space-y-1 bg-slate-50/50 border border-slate-100 rounded-xl p-3">
-                  <span className="text-[10px] text-[#6B7280] font-bold uppercase tracking-wider block">Call Quality</span>
-                  <span className="text-2xl font-extrabold text-indigo-600">{qualityScore}/100</span>
-                </div>
-              </div>
-
-              <div className="space-y-2 border-t border-slate-100 pt-4">
-                <div className="flex justify-between text-xs font-semibold">
-                  <span className="text-slate-600">Talk Ratio:</span>
-                  <span className="text-slate-800">{repRatio}% Rep | {buyerRatio}% Buyer</span>
-                </div>
-                <div className="h-2.5 bg-slate-100 rounded-full flex overflow-hidden">
-                  <div className="bg-indigo-600 h-full transition-all duration-300" style={{ width: `${repRatio}%` }} />
-                  <div className="bg-slate-300 h-full transition-all duration-300" style={{ width: `${buyerRatio}%` }} />
-                </div>
-              </div>
-
-              <div className="space-y-2 border-t border-slate-100 pt-4">
-                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Objection Risks Detected</span>
-                {allHesitations.length > 0 ? (
-                  <div className="flex flex-wrap gap-2">
-                    {allHesitations.map((h, i) => (
-                      <span key={i} className="text-[10px] bg-red-50 text-red-700 px-2 py-0.5 rounded font-bold border border-red-100">
-                        {h}
-                      </span>
-                    ))}
+              {/* AI Coach recommendation */}
+              <div className="bg-[#4F46E5] text-white rounded-2xl p-6 shadow-xl space-y-4 relative overflow-hidden shrink-0">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-xl" />
+                <div className="flex items-center justify-between border-b border-white/20 pb-3">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-4.5 h-4.5" />
+                    <span className="text-xs font-bold uppercase tracking-wider">Real-Time AI Coach</span>
                   </div>
-                ) : (
-                  <p className="text-[10px] text-slate-400 font-semibold uppercase">No risk objects detected in transcript</p>
-                )}
+                  {isRecording && (
+                    <span className="text-[8px] bg-white/25 text-white font-bold px-2 py-0.5 rounded uppercase tracking-wider animate-pulse">
+                      Active listening
+                    </span>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <span className="text-[10px] uppercase font-bold text-indigo-200 tracking-wider">LATEST RECOMMENDATION</span>
+                  <p className="text-sm font-semibold leading-relaxed">
+                    {latestRecommendation || 'AI is evaluating conversation to generate next tactic recommendations...'}
+                  </p>
+                </div>
               </div>
+
+              {/* BANT Qualification Scorecard */}
+              <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-sm space-y-4 shrink-0">
+                <span className="text-xs font-bold text-slate-900 uppercase tracking-wider block">BANT Tracker</span>
+                <div className="grid grid-cols-2 gap-4">
+                  {[
+                    { name: 'Budget', met: bantBudgetMet, val: bantBudget },
+                    { name: 'Authority', met: bantAuthorityMet, val: bantAuthority },
+                    { name: 'Need', met: bantNeedMet, val: bantNeed },
+                    { name: 'Timeline', met: bantTimelineMet, val: bantTimeline }
+                  ].map((item, i) => (
+                    <div key={i} className="border border-slate-100 bg-slate-50/50 rounded-xl p-3 space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{item.name}</span>
+                        <span className={`w-2.5 h-2.5 rounded-full ${item.met ? 'bg-[#10B981]' : 'bg-slate-200'}`} />
+                      </div>
+                      <span className="text-[11px] font-bold text-slate-800 block truncate">
+                        {item.met ? (item.val || 'Qualified') : 'Not discussed'}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Running metrics stats */}
+              <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-sm space-y-6 shrink-0">
+                <span className="text-xs font-bold text-slate-900 uppercase tracking-wider block">Running Deal Metrics</span>
+                
+                <div className="grid grid-cols-2 gap-6 text-center">
+                  <div className="space-y-1 bg-slate-50/50 border border-slate-100 rounded-xl p-3">
+                    <span className="text-[10px] text-[#6B7280] font-bold uppercase tracking-wider block">Win Probability</span>
+                    <span className="text-2xl font-extrabold text-[#10B981]">{winProb}%</span>
+                  </div>
+                  <div className="space-y-1 bg-slate-50/50 border border-slate-100 rounded-xl p-3">
+                    <span className="text-[10px] text-[#6B7280] font-bold uppercase tracking-wider block">Call Quality</span>
+                    <span className="text-2xl font-extrabold text-indigo-600">{qualityScore}/100</span>
+                  </div>
+                </div>
+
+                <div className="space-y-2 border-t border-slate-100 pt-4">
+                  <div className="flex justify-between text-xs font-semibold">
+                    <span className="text-slate-600">Talk Ratio:</span>
+                    <span className="text-slate-800">{repRatio}% Rep | {buyerRatio}% Buyer</span>
+                  </div>
+                  <div className="h-2.5 bg-slate-100 rounded-full flex overflow-hidden">
+                    <div className="bg-indigo-600 h-full transition-all duration-300" style={{ width: `${repRatio}%` }} />
+                    <div className="bg-slate-300 h-full transition-all duration-300" style={{ width: `${buyerRatio}%` }} />
+                  </div>
+                </div>
+
+                <div className="space-y-2 border-t border-slate-100 pt-4">
+                  <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Objection Risks Detected</span>
+                  {allHesitations.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                      {allHesitations.map((h, i) => (
+                        <span key={i} className="text-[10px] bg-red-50 text-red-700 px-2 py-0.5 rounded font-bold border border-red-100">
+                          {h}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-[10px] text-slate-400 font-semibold uppercase">No risk objects detected in transcript</p>
+                  )}
+                </div>
+              </div>
+
             </div>
 
           </div>
 
           {/* BOTTOM CONTROLLER BAR */}
-          <div className="lg:col-span-12 bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="h-20 shrink-0 bg-white border-t border-[#E5E7EB] px-6 flex items-center justify-between gap-6">
             <div className="flex items-center gap-4">
               <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isRecording ? 'bg-red-50 text-red-600' : 'bg-slate-50 text-slate-500'}`}>
                 <Mic className={`w-5 h-5 ${isRecording ? 'animate-pulse' : ''}`} />
@@ -486,13 +480,10 @@ function LiveCallContent() {
 export default function LiveCallPage() {
   return (
     <Layout>
-      <main className="min-h-screen bg-[#FAFBFC] pt-20 px-8 pb-16 font-sans">
-        <div className="max-w-6xl mx-auto">
-          <LiveDashboardProvider>
-            <LiveCallContent />
-          </LiveDashboardProvider>
-        </div>
-        <Footer />
+      <main className="main-content h-[calc(100vh-64px)] bg-[#FAFBFC] overflow-hidden font-sans">
+        <LiveDashboardProvider>
+          <LiveCallContent />
+        </LiveDashboardProvider>
       </main>
     </Layout>
   );
