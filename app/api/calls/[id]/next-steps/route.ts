@@ -41,10 +41,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   } catch (error: any) {
     const match = error.message?.match(/Backend returned status (\d+)/);
     const status = match ? parseInt(match[1], 10) : 500;
-    return NextResponse.json(
-      { error: error.message || 'Failed to fetch next steps' },
-      { status }
-    );
+    return NextResponse.json({ error: error.message || 'Failed to fetch next steps' }, { status });
   }
 }
 
@@ -97,10 +94,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   } catch (error: any) {
     const match = error.message?.match(/Backend returned status (\d+)/);
     const status = match ? parseInt(match[1], 10) : 500;
-    return NextResponse.json(
-      { error: error.message || 'Failed to create next step' },
-      { status }
-    );
+    return NextResponse.json({ error: error.message || 'Failed to create next step' }, { status });
   }
 }
 
@@ -183,9 +177,6 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   } catch (error: any) {
     const match = error.message?.match(/Backend returned status (\d+)/);
     const status = match ? parseInt(match[1], 10) : 500;
-    return NextResponse.json(
-      { error: error.message || 'Failed to update next step' },
-      { status }
-    );
+    return NextResponse.json({ error: error.message || 'Failed to update next step' }, { status });
   }
 }
