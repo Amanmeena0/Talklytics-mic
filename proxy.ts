@@ -6,7 +6,7 @@ const PROTECTED_PREFIXES = ['/dashboard', '/calls', '/analytics', '/settings'];
 // Authentication pages
 const AUTH_PAGES = ['/login', '/register'];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Determine if the route is protected or an auth page
@@ -51,7 +51,7 @@ export async function middleware(request: NextRequest) {
           return response;
         }
       } catch (err) {
-        console.error('[Middleware] Silent refresh error:', err);
+        console.error('[Proxy] Silent refresh error:', err);
       }
     }
 
@@ -95,7 +95,7 @@ export async function middleware(request: NextRequest) {
           return response;
         }
       } catch (err) {
-        console.error('[Middleware] Silent refresh error on auth page:', err);
+        console.error('[Proxy] Silent refresh error on auth page:', err);
       }
     }
 
@@ -104,7 +104,7 @@ export async function middleware(request: NextRequest) {
   }
 }
 
-// Configure middleware matching paths
+// Configure proxy matching paths
 export const config = {
   matcher: [
     '/dashboard/:path*',
