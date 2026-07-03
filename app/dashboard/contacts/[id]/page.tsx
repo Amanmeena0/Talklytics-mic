@@ -27,6 +27,7 @@ import {
   Plus
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import ReactMarkdown from 'react-markdown';
 
 export default function ContactDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = React.use(params);
@@ -210,9 +211,13 @@ export default function ContactDetailsPage({ params }: { params: Promise<{ id: s
                     LLM Executive Summary
                   </h3>
                 </div>
-                <p className="text-xs text-slate-600 leading-relaxed bg-slate-50/50 border border-slate-100 p-4 rounded-2xl">
-                  {call.summary || 'Summary analysis pending for this contact session.'}
-                </p>
+                <div className="text-xs text-slate-600 leading-relaxed bg-slate-50/50 border border-slate-100 p-4 rounded-2xl markdown-container prose max-w-none">
+                  {call.summary ? (
+                    <ReactMarkdown>{call.summary}</ReactMarkdown>
+                  ) : (
+                    'Summary analysis pending for this contact session.'
+                  )}
+                </div>
               </div>
 
               {/* Conversation history transcripts list */}

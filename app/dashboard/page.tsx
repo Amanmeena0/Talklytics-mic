@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import clientFetch from '@/shared/utils/clientFetch';
 import SentimentBadge from '@/shared/components/SentimentBadge';
+import Layout from '@/shared/components/Layout/Layout';
 import {
   Sparkles,
   Search,
@@ -116,16 +117,19 @@ export default function DashboardHome() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#FAFBFC] pt-24 px-8 pb-12 flex flex-col justify-center items-center font-sans">
-        <div className="w-10 h-10 rounded-full border-2 border-indigo-600/20 border-t-indigo-600 animate-spin mb-4" />
-        <p className="text-xs text-slate-500 font-semibold tracking-wide uppercase">Assembling Workspace Intelligence...</p>
-      </div>
+      <Layout>
+        <main className="main-content min-h-screen pt-24 px-8 pb-12 flex flex-col justify-center items-center font-sans">
+          <div className="w-10 h-10 rounded-full border-2 border-indigo-600/20 border-t-indigo-600 animate-spin mb-4" />
+          <p className="text-xs text-slate-500 font-semibold tracking-wide uppercase">Assembling Workspace Intelligence...</p>
+        </main>
+      </Layout>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#FAFBFC] pt-20 px-8 pb-16 font-sans text-slate-900">
-      <div className="max-w-6xl mx-auto space-y-10">
+    <Layout>
+      <main className="main-content min-h-screen pt-20 px-8 pb-16 font-sans text-slate-900">
+        <div className="max-w-6xl mx-auto space-y-10">
         
         {/* Workspace Switcher & Top Row */}
         <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-[#E5E7EB] pb-6">
@@ -431,5 +435,6 @@ export default function DashboardHome() {
 
       </div>
     </main>
+    </Layout>
   );
 }

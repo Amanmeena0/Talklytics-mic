@@ -1,6 +1,7 @@
 'use client';
 
 import { useLiveData } from '@/shared/hooks/LiveDataContext';
+import ReactMarkdown from 'react-markdown';
 
 export default function ExecutiveSummary() {
   const {
@@ -53,9 +54,9 @@ export default function ExecutiveSummary() {
             {status === 'connected' ? '● Live' : 'AI Generated'}
           </span>
         </div>
-        <p className={`text-body executive-summary-summary ${hasData ? '' : 'is-muted'}`}>
-          {summaryText}
-        </p>
+        <div className={`text-body executive-summary-summary ${hasData ? '' : 'is-muted'} prose max-w-none`}>
+          <ReactMarkdown>{summaryText}</ReactMarkdown>
+        </div>
       </div>
       <div className="grid grid-cols-2 gap-4 executive-summary-footer">
         <div>
