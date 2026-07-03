@@ -38,7 +38,9 @@ export async function POST() {
     // Propagate Set-Cookie headers
     const setCookies = res.headers.getSetCookie();
     for (const cookie of setCookies) {
-      response.headers.append('set-cookie', cookie);
+      // Strip domain attribute to allow setting cookie on the frontend domain
+      const cleanCookie = cookie.replace(/domain=[^;]+;?/i, '').trim();
+      response.headers.append('set-cookie', cleanCookie);
     }
 
     return response;

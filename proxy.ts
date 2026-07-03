@@ -45,7 +45,9 @@ export async function proxy(request: NextRequest) {
           // Propagate Set-Cookie headers from backend response to the client response
           const setCookies = refreshRes.headers.getSetCookie();
           for (const cookie of setCookies) {
-            response.headers.append('set-cookie', cookie);
+            // Strip domain attribute to allow setting cookie on the frontend domain
+            const cleanCookie = cookie.replace(/domain=[^;]+;?/i, '').trim();
+            response.headers.append('set-cookie', cleanCookie);
           }
 
           return response;
@@ -90,7 +92,9 @@ export async function proxy(request: NextRequest) {
           const response = NextResponse.redirect(new URL('/dashboard', request.url));
           const setCookies = refreshRes.headers.getSetCookie();
           for (const cookie of setCookies) {
-            response.headers.append('set-cookie', cookie);
+            // Strip domain attribute to allow setting cookie on the frontend domain
+            const cleanCookie = cookie.replace(/domain=[^;]+;?/i, '').trim();
+            response.headers.append('set-cookie', cleanCookie);
           }
           return response;
         }
