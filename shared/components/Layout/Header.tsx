@@ -186,15 +186,7 @@ export default function Header({ isSidebarCollapsed = false, toggleSidebar }: He
       
       {/* Brand logo & Sidebar Toggle */}
       <div className="flex items-center gap-4">
-        {toggleSidebar && (
-          <button 
-            onClick={toggleSidebar}
-            className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-900 transition-colors hidden md:block"
-            title={isSidebarCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
-          >
-            <Menu className="w-4 h-4" />
-          </button>
-        )}
+        
         <Link href="/" className="flex items-center gap-2 group">
           <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-sm transition-all group-hover:scale-105">
             <Sparkles className="w-4 h-4" />
