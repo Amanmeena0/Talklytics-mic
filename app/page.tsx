@@ -765,7 +765,7 @@ export default function LandingPage() {
                   <p className="text-xs text-[#6B7280] mt-1">Perfect for small teams and single agents.</p>
                 </div>
                 <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-bold text-[#111827]">$79</span>
+                  <span className="text-4xl font-bold text-[#111827]">$29</span>
                   <span className="text-xs text-[#6B7280]">/ seat / mo</span>
                 </div>
                 <ul className="space-y-3 pt-4 border-t border-slate-100 text-xs text-[#6B7280]">
@@ -794,7 +794,7 @@ export default function LandingPage() {
                   <p className="text-xs text-[#6B7280] mt-1">Best for high-growth scaling sales organizations.</p>
                 </div>
                 <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-bold text-indigo-600">$129</span>
+                  <span className="text-4xl font-bold text-indigo-600">$79</span>
                   <span className="text-xs text-[#6B7280]">/ seat / mo</span>
                 </div>
                 <ul className="space-y-3 pt-4 border-t border-slate-100 text-xs text-[#6B7280]">
