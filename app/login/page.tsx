@@ -7,7 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectPath = searchParams.get('redirect') || '/dashboard';
+  const redirectPath = searchParams.get('redirect') || '/';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -167,28 +167,6 @@ function LoginForm() {
         </Link>
       </div>
 
-      {/* Demo helper */}
-      <div className="border-t border-surface-container-high mt-8 pt-6">
-        <p className="text-xs text-secondary text-center font-semibold mb-3 uppercase tracking-wider">
-          Demo Accounts (FastAPI Seeded)
-        </p>
-        <div className="grid grid-cols-2 gap-2 text-xs">
-          <button
-            onClick={() => handleDemoFill('jane.smith@talklytics.com')}
-            className="flex items-center justify-center gap-1.5 py-2 px-3 bg-surface-container-high hover:bg-surface-container-highest rounded-xl text-secondary hover:text-primary transition-all border border-surface-container-high"
-          >
-            <span className="material-symbols-outlined text-sm">person</span>
-            Sales Rep
-          </button>
-          <button
-            onClick={() => handleDemoFill('admin@talklytics.com')}
-            className="flex items-center justify-center gap-1.5 py-2 px-3 bg-surface-container-high hover:bg-surface-container-highest rounded-xl text-secondary hover:text-primary transition-all border border-surface-container-high"
-          >
-            <span className="material-symbols-outlined text-sm">admin_panel_settings</span>
-            Admin User
-          </button>
-        </div>
-      </div>
     </div>
   );
 }

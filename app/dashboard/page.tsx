@@ -2,11 +2,33 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Layout from '@/shared/components/Layout/Layout';
-import Footer from '@/shared/components/Layout/Footer';
-import SentimentBadge from '@/shared/components/SentimentBadge';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import clientFetch from '@/shared/utils/clientFetch';
+import SentimentBadge from '@/shared/components/SentimentBadge';
+import {
+  Sparkles,
+  Search,
+  SlidersHorizontal,
+  ChevronDown,
+  Activity,
+  TrendingUp,
+  Award,
+  BookOpen,
+  Calendar,
+  CheckCircle2,
+  AlertCircle,
+  Play,
+  Pause,
+  Star,
+  Trash2,
+  ExternalLink,
+  ChevronRight,
+  User,
+  Bell,
+  Clock,
+  Briefcase
+} from 'lucide-react';
 
 export default function DashboardHome() {
   const router = useRouter();
@@ -17,15 +39,20 @@ export default function DashboardHome() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Table interactive states
+  const [expandedCallId, setExpandedCallId] = useState<string | null>(null);
+  const [playingCallId, setPlayingCallId] = useState<string | null>(null);
+  const [currentWorkspace, setCurrentWorkspace] = useState('Talklytics Corporate');
+
   const loadDashboardData = async () => {
     setIsLoading(true);
     setError(null);
     try {
       const [analyticsRes, callsRes, userRes, notifRes] = await Promise.all([
         clientFetch('/api/analytics'),
-        clientFetch('/api/calls?limit=5'), // Top 5 recent calls
+        clientFetch('/api/calls?limit=5'),
         clientFetch('/api/users'),
-        clientFetch('/api/notifications?limit=3'), // Top 3 notifications
+        clientFetch('/api/notifications?limit=3'),
       ]);
 
       if (analyticsRes.ok) {
@@ -55,8 +82,8 @@ export default function DashboardHome() {
     loadDashboardData();
   }, []);
 
-  // Toggle favorite on list
   const handleToggleFavorite = async (id: string, currentStatus: boolean) => {
+    // Optimistic UI update
     setRecentCalls((prev) =>
       prev.map((c) => (c.id === id ? { ...c, isFavorite: !currentStatus } : c))
     );
@@ -69,7 +96,7 @@ export default function DashboardHome() {
       });
     } catch (e) {
       console.error(e);
-      loadDashboardData(); // Reload to align state
+      loadDashboardData(); // Revert on failure
     }
   };
 
@@ -89,167 +116,229 @@ export default function DashboardHome() {
 
   if (isLoading) {
     return (
-      <Layout>
-        <main className="main-content">
-          <div className="content-container">
-            <h1 className="text-page-title">Workspace Dashboard</h1>
-            <p className="text-body">Loading dashboard...</p>
-            <div className="analytics-grid">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="card animate-pulse analytics-skeleton-card" />
-              ))}
-            </div>
-          </div>
-          <Footer />
-        </main>
-      </Layout>
+      <div className="min-h-screen bg-[#FAFBFC] pt-24 px-8 pb-12 flex flex-col justify-center items-center font-sans">
+        <div className="w-10 h-10 rounded-full border-2 border-indigo-600/20 border-t-indigo-600 animate-spin mb-4" />
+        <p className="text-xs text-slate-500 font-semibold tracking-wide uppercase">Assembling Workspace Intelligence...</p>
+      </div>
     );
   }
 
   return (
-    <Layout>
-      <main className="main-content">
-        <div className="content-container">
-          {/* Header */}
-          <header className="d-flex justify-between align-start mb-8">
-            <div>
-              <span className="badge badge-accent mb-2">Enterprise Agent</span>
-              <h1 className="text-page-title">Welcome Back, {activeUser?.name || 'Jane'}</h1>
-              <p className="text-body mt-1">
-                Here is your AI conversation intelligence activity for today.
-              </p>
-            </div>
-
-            <div className="d-flex gap-3">
-              <Link href="/calls/live" className="no-underline">
-                <button className="btn btn-primary">
-                  <span className="material-symbols-outlined fs-16 mr-6">sensors</span>
-                  Go Live Monitor
+    <main className="min-h-screen bg-[#FAFBFC] pt-20 px-8 pb-16 font-sans text-slate-900">
+      <div className="max-w-6xl mx-auto space-y-10">
+        
+        {/* Workspace Switcher & Top Row */}
+        <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-[#E5E7EB] pb-6">
+          <div className="space-y-1">
+            <div className="flex items-center gap-3">
+              {/* Custom Workspace Switcher */}
+              <div className="relative group">
+                <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[#E5E7EB] bg-white text-xs font-semibold hover:border-slate-300 transition-all text-slate-800">
+                  <Briefcase className="w-3.5 h-3.5 text-indigo-600" />
+                  {currentWorkspace}
+                  <ChevronDown className="w-3 h-3 text-slate-400" />
                 </button>
-              </Link>
+              </div>
+              <span className="text-[10px] bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Series A Active</span>
             </div>
-          </header>
-
-          {/* Metric cards grid */}
-          <div className="analytics-metrics-grid">
-            <div className="card">
-              <p className="text-overline color-secondary">TOTAL CALLS</p>
-              <h3 className="fs-28 font-bold mt-2 mb-1 color-primary">{stats?.totalCalls || 0}</h3>
-              <p className="mt-1 fs-11 color-secondary">
-                {stats?.totalDurationMinutes || 0} minutes total
-              </p>
-            </div>
-
-            <div className="card">
-              <p className="text-overline color-secondary">AVG INTEREST SCORE</p>
-              <h3 className="fs-28 font-bold mt-2 mb-1 color-accent">
-                {(stats?.averageScore || 0).toFixed(1)}/5
-              </h3>
-              <p className="mt-1 fs-11 color-success">🟢 High Engagement Avg</p>
-            </div>
-
-            <div className="card">
-              <p className="text-overline color-secondary">CONVERSION CHANCE</p>
-              <h3 className="fs-28 font-bold mt-2 mb-1 color-success">
-                {stats?.averageConversionProbability || 0}%
-              </h3>
-              <p className="mt-1 fs-11 color-secondary">Aggregated Win Chance</p>
-            </div>
-
-            <div className="card">
-              <p className="text-overline color-secondary">BANT COMPLETION</p>
-              <h3 className="fs-28 font-bold mt-2 mb-1 color-info">
-                {stats?.bantCompletionRate || 0}%
-              </h3>
-              <p className="mt-1 fs-11 color-secondary">Compliance qualification</p>
-            </div>
+            <h1 className="text-2xl font-bold text-[#111827] mt-3">Welcome, {activeUser?.name || 'Jane'}</h1>
+            <p className="text-xs text-[#6B7280]">
+              Real-time pipeline intelligence and deal coaching overview for today.
+            </p>
           </div>
 
-          <div className="grid-dashboard">
-            {/* Recent Calls */}
-            <div className="card-flush lg:col-span-8">
-              <div className="d-flex justify-between align-center p-4 gap-4 dashboard-section-header">
-                <h2 className="text-section-heading m-0 d-flex align-center gap-8px">
-                  <span className="material-symbols-outlined fs-20 color-accent">history</span>
-                  Recent Conversation Records
-                </h2>
-                <Link href="/calls" className="no-underline fs-12 color-accent font-semibold">
-                  View All History →
+          <div className="flex items-center gap-3">
+            <Link 
+              href="/calls/live"
+              className="bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs font-semibold px-5 py-3 rounded-full shadow-sm hover:shadow-indigo-100 hover:shadow-md transition-all flex items-center gap-2"
+            >
+              <Activity className="w-4 h-4" />
+              Go Live Monitor
+            </Link>
+          </div>
+        </header>
+
+        {/* Spaciously Designed Metrics Grid */}
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            {
+              label: 'TOTAL CALLS RECORDED',
+              value: stats?.totalCalls || 0,
+              change: '+18.4% this month',
+              sparkline: 'M0 20 Q10 5, 20 18 T40 10 T60 15 T80 5 T100 12',
+              color: 'text-indigo-600'
+            },
+            {
+              label: 'AVG ENGAGEMENT SCORE',
+              value: `${(stats?.averageScore || 0).toFixed(1)}/5`,
+              change: 'Optimal interest level',
+              sparkline: 'M0 15 Q10 20, 20 10 T40 8 T60 18 T80 12 T100 5',
+              color: 'text-[#10B981]' // Green only on positive metric value
+            },
+            {
+              label: 'WIN PROBABILITY CHANCE',
+              value: `${stats?.averageConversionProbability || 0}%`,
+              change: '+4.2% deal health boost',
+              sparkline: 'M0 25 Q10 18, 20 22 T40 12 T60 8 T80 5 T100 3',
+              color: 'text-[#10B981]'
+            },
+            {
+              label: 'BANT QUALIFIED INDEX',
+              value: `${stats?.bantCompletionRate || 0}%`,
+              change: 'CRM sync compliant',
+              sparkline: 'M0 20 Q10 25, 20 15 T40 18 T60 12 T80 10 T100 8',
+              color: 'text-indigo-600'
+            }
+          ].map((metric, i) => (
+            <div key={i} className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-sm flex flex-col justify-between h-40 hover:shadow-md transition-all duration-300">
+              <div className="space-y-1">
+                <span className="text-[10px] text-[#6B7280] font-bold uppercase tracking-wider block">{metric.label}</span>
+                <span className={`text-3xl font-extrabold ${metric.color} tracking-tight`}>{metric.value}</span>
+              </div>
+              <div className="flex items-center justify-between border-t border-slate-50 pt-3">
+                <span className="text-[10px] text-slate-500 font-medium">{metric.change}</span>
+                {/* Micro Trend Curve */}
+                <svg className="w-16 h-8 stroke-indigo-600/40 fill-none stroke-2" viewBox="0 0 100 30">
+                  <path d={metric.sparkline} />
+                </svg>
+              </div>
+            </div>
+          ))}
+        </section>
+
+        {/* Dashboard split layout */}
+        <section className="grid lg:grid-cols-12 gap-8">
+          
+          {/* Recent Call Records Table */}
+          <div className="lg:col-span-8 bg-white border border-[#E5E7EB] rounded-2xl shadow-sm overflow-hidden flex flex-col justify-between">
+            <div>
+              <div className="p-6 flex items-center justify-between border-b border-[#E5E7EB]">
+                <div className="space-y-1">
+                  <h2 className="text-sm font-bold text-[#111827]">Recent Conversation Intelligence</h2>
+                  <p className="text-[10px] text-[#6B7280]">Click a call row to inspect live summaries and recordings</p>
+                </div>
+                <Link href="/calls" className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 transition-colors flex items-center gap-1">
+                  View Database
+                  <ChevronRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
 
               <div className="overflow-x-auto">
-                <table className="dashboard-table">
+                <table className="w-full text-left text-xs border-collapse">
                   <thead>
-                    <tr className="dashboard-table-header-row">
-                      <th className="dashboard-table-th-star" />
-                      <th className="dashboard-table-th">CLIENT</th>
-                      <th className="dashboard-table-th">TITLE</th>
-                      <th className="dashboard-table-th">DURATION</th>
-                      <th className="dashboard-table-th">SENTIMENT</th>
-                      <th className="dashboard-table-th text-right">SCORE</th>
+                    <tr className="bg-slate-50/70 border-b border-[#E5E7EB] text-[#6B7280] font-bold uppercase tracking-wider text-[10px]">
+                      <th className="py-4 px-6 w-10 text-center">Star</th>
+                      <th className="py-4 px-6">Client</th>
+                      <th className="py-4 px-6">Recording Title</th>
+                      <th className="py-4 px-6">Duration</th>
+                      <th className="py-4 px-6">Sentiment</th>
+                      <th className="py-4 px-6 text-right">Score</th>
                     </tr>
                   </thead>
                   <tbody>
                     {recentCalls.length > 0 ? (
-                      recentCalls.map((call) => (
-                        <tr
-                          key={call.id}
-                          className="dashboard-table-row hover:bg-[rgba(255,255,255,0.01)]"
-                        >
-                          <td className="dashboard-table-td" onClick={(e) => e.stopPropagation()}>
-                            <button
-                              onClick={() => handleToggleFavorite(call.id, call.isFavorite)}
-                              className={`dashboard-star-btn ${call.isFavorite ? 'is-favorite' : ''}`}
+                      recentCalls.map((call) => {
+                        const isExpanded = expandedCallId === call.id;
+                        const isPlaying = playingCallId === call.id;
+                        return (
+                          <React.Fragment key={call.id}>
+                            <tr 
+                              onClick={() => setExpandedCallId(isExpanded ? null : call.id)}
+                              className="border-b border-[#E5E7EB] hover:bg-slate-50/40 transition-colors cursor-pointer"
                             >
-                              <span
-                                className={`material-symbols-outlined fs-18 dashboard-star-icon ${call.isFavorite ? 'is-favorite' : ''}`}
-                              >
-                                star
-                              </span>
-                            </button>
-                          </td>
-                          <td
-                            className="dashboard-table-td font-semibold fs-13"
-                            onClick={() => router.push(`/calls/${call.id}`)}
-                          >
-                            {call.clientName}
-                          </td>
-                          <td
-                            className="dashboard-table-td fs-13"
-                            onClick={() => router.push(`/calls/${call.id}`)}
-                          >
-                            <div>{call.title}</div>
-                            <span className="fs-10 color-muted">{formatDate(call.date)}</span>
-                          </td>
-                          <td
-                            className="dashboard-table-td color-secondary fs-13"
-                            onClick={() => router.push(`/calls/${call.id}`)}
-                          >
-                            {formatDuration(call.duration)}
-                          </td>
-                          <td
-                            className="dashboard-table-td"
-                            onClick={() => router.push(`/calls/${call.id}`)}
-                          >
-                            <SentimentBadge sentiment={call.overallSentiment} />
-                          </td>
-                          <td
-                            className="dashboard-table-td text-right font-bold fs-13 color-accent"
-                            onClick={() => router.push(`/calls/${call.id}`)}
-                          >
-                            {call.averageScore.toFixed(1)}/5
-                          </td>
-                        </tr>
-                      ))
+                              <td className="py-4 px-6 text-center" onClick={(e) => e.stopPropagation()}>
+                                <button 
+                                  onClick={() => handleToggleFavorite(call.id, call.isFavorite)}
+                                  className={`p-1 rounded hover:bg-slate-100 transition-colors ${call.isFavorite ? 'text-amber-500' : 'text-slate-300'}`}
+                                >
+                                  <Star className={`w-4 h-4 ${call.isFavorite ? 'fill-current' : ''}`} />
+                                </button>
+                              </td>
+                              <td className="py-4 px-6 font-semibold text-slate-900">{call.clientName}</td>
+                              <td className="py-4 px-6">
+                                <div className="font-medium text-slate-800">{call.title}</div>
+                                <div className="text-[10px] text-slate-400 mt-0.5">{formatDate(call.date)}</div>
+                              </td>
+                              <td className="py-4 px-6 text-slate-500">{formatDuration(call.duration)}</td>
+                              <td className="py-4 px-6">
+                                <SentimentBadge sentiment={call.overallSentiment} />
+                              </td>
+                              <td className="py-4 px-6 text-right font-bold text-indigo-600">{call.averageScore.toFixed(1)}/5</td>
+                            </tr>
+
+                            {/* Expandable row details */}
+                            <AnimatePresence>
+                              {isExpanded && (
+                                <tr>
+                                  <td colSpan={6} className="bg-slate-50/60 p-6 border-b border-[#E5E7EB]">
+                                    <motion.div 
+                                      initial={{ opacity: 0, height: 0 }}
+                                      animate={{ opacity: 1, height: 'auto' }}
+                                      exit={{ opacity: 0, height: 0 }}
+                                      className="grid md:grid-cols-12 gap-6"
+                                    >
+                                      {/* Audio controller */}
+                                      <div className="md:col-span-4 bg-white border border-[#E5E7EB] p-4 rounded-xl space-y-4 shadow-sm">
+                                        <div className="flex items-center gap-3">
+                                          <button 
+                                            onClick={() => setPlayingCallId(isPlaying ? null : call.id)}
+                                            className="w-10 h-10 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center shadow-sm transition-all"
+                                          >
+                                            {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
+                                          </button>
+                                          <div>
+                                            <span className="text-[10px] text-slate-400 font-bold uppercase block">Recording Stream</span>
+                                            <span className="text-xs font-bold text-slate-800">
+                                              {isPlaying ? 'Playing audio recording...' : 'Audio stream ready'}
+                                            </span>
+                                          </div>
+                                        </div>
+
+                                        {isPlaying && (
+                                          <div className="h-6 flex items-center justify-between gap-0.5 pt-2">
+                                            {Array.from({ length: 24 }).map((_, i) => (
+                                              <span 
+                                                key={i} 
+                                                className="w-1 bg-indigo-500 rounded-full transition-all duration-300"
+                                                style={{ 
+                                                  height: `${Math.max(4, Math.random() * 24)}px`,
+                                                  animation: 'pulse 1.2s infinite ease-in-out',
+                                                  animationDelay: `${i * 0.05}s`
+                                                }}
+                                              />
+                                            ))}
+                                          </div>
+                                        )}
+                                      </div>
+
+                                      {/* Executive Summary */}
+                                      <div className="md:col-span-8 space-y-2">
+                                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">AI Generated Executive Summary</span>
+                                        <p className="text-xs text-slate-600 leading-relaxed bg-white border border-[#E5E7EB] p-4 rounded-xl shadow-sm font-medium">
+                                          {call.summary || 'Summary analysis generation pending...'}
+                                        </p>
+                                        <div className="flex gap-4 pt-1">
+                                          <Link 
+                                            href={`/calls/${call.id}`}
+                                            className="text-[11px] font-semibold text-indigo-600 hover:text-indigo-700 flex items-center gap-1 transition-colors"
+                                          >
+                                            Full Conversation Intelligence Report
+                                            <ExternalLink className="w-3.5 h-3.5" />
+                                          </Link>
+                                        </div>
+                                      </div>
+                                    </motion.div>
+                                  </td>
+                                </tr>
+                              )}
+                            </AnimatePresence>
+                          </React.Fragment>
+                        );
+                      })
                     ) : (
                       <tr>
-                        <td
-                          colSpan={6}
-                          className="dashboard-table-td text-center color-muted dashboard-empty-cell"
-                        >
-                          No call recordings available. Connect to the WebSocket stream to capture
-                          logs.
+                        <td colSpan={6} className="py-12 text-center text-slate-400 font-semibold uppercase text-[10px]">
+                          No completed conversation intelligence reports found.
                         </td>
                       </tr>
                     )}
@@ -258,46 +347,89 @@ export default function DashboardHome() {
               </div>
             </div>
 
-            {/* Notifications & System Updates */}
-            <div className="card lg:col-span-4 flex flex-col justify-between">
-              <div>
-                <h2 className="text-section-heading mb-6">Workspace Notifications</h2>
-                <div className="d-flex flex-col gap-4">
-                  {notifications.length > 0 ? (
-                    notifications.map((n) => (
-                      <div key={n.id} className="dashboard-notif-item">
-                        <span
-                          className={`material-symbols-outlined fs-20 dashboard-notif-icon ${n.type === 'SUCCESS' ? 'dashboard-notif-icon--success' : n.type === 'WARNING' ? 'dashboard-notif-icon--warning' : 'dashboard-notif-icon--accent'}`}
-                        >
-                          {n.type === 'SUCCESS'
-                            ? 'check_circle'
-                            : n.type === 'WARNING'
-                              ? 'warning'
-                              : 'info'}
-                        </span>
-                        <div>
-                          <span className="fs-12 font-semibold d-block color-primary">
-                            {n.title}
-                          </span>
-                          <span className="fs-11 color-secondary">{n.description}</span>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-caption m-0">No new alerts.</p>
-                  )}
-                </div>
-              </div>
-
-              <div className="analytics-footer-info">
-                <span>Role: {activeUser?.role || 'Guest'}</span>
-                <span>Active User: {activeUser?.name || 'Jane'}</span>
-              </div>
+            <div className="p-4 bg-slate-50 border-t border-[#E5E7EB] text-center text-[10px] text-[#6B7280] font-semibold">
+              Showing top 5 completed recordings in workspace pipeline
             </div>
           </div>
-        </div>
-        <Footer />
-      </main>
-    </Layout>
+
+          {/* AI Insights & Notifications */}
+          <div className="lg:col-span-4 space-y-6">
+            
+            {/* System Notifications */}
+            <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-sm space-y-6">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2">
+                  <Bell className="w-4 h-4 text-indigo-600" />
+                  <h3 className="text-sm font-bold text-[#111827]">Workspace Alerts</h3>
+                </div>
+                {notifications.length > 0 && (
+                  <span className="text-[10px] font-bold text-[#6B7280] bg-slate-100 px-2 py-0.5 rounded-full">
+                    {notifications.length} New
+                  </span>
+                )}
+              </div>
+
+              <div className="space-y-4">
+                {notifications.length > 0 ? (
+                  notifications.map((n) => (
+                    <div key={n.id} className="flex gap-3 items-start">
+                      <div className={`mt-0.5 w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center ${
+                        n.type === 'SUCCESS' ? 'bg-emerald-50 text-emerald-600' :
+                        n.type === 'WARNING' ? 'bg-amber-50 text-amber-600' : 'bg-indigo-50 text-indigo-600'
+                      }`}>
+                        {n.type === 'SUCCESS' ? <CheckCircle2 className="w-3.5 h-3.5" /> : 
+                         n.type === 'WARNING' ? <AlertCircle className="w-3.5 h-3.5" /> : <Sparkles className="w-3.5 h-3.5" />}
+                      </div>
+                      <div>
+                        <span className="text-xs font-bold text-slate-800 block">{n.title}</span>
+                        <p className="text-[11px] text-slate-500 leading-normal mt-0.5">{n.description}</p>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-[10px] text-slate-400 text-center py-4 font-semibold uppercase">No active workspace alerts.</p>
+                )}
+              </div>
+            </div>
+
+            {/* AI Coaching Insight Tip */}
+            <div className="bg-gradient-to-tr from-indigo-600 to-[#4338CA] text-white rounded-2xl p-6 space-y-4 shadow-md">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4" />
+                <span className="text-[10px] font-bold tracking-wider uppercase opacity-80">AI Coach Recommendation</span>
+              </div>
+              <p className="text-xs leading-relaxed font-medium">
+                🎯 Acme Corp has expressed concern over HubSpot CRM custom mappings. Use our pre-built bi-directional workflow templates to qualify timelines automatically.
+              </p>
+              <div className="pt-2">
+                <Link 
+                  href="/settings"
+                  className="bg-white/10 hover:bg-white/20 border border-white/20 px-4 py-2 rounded-lg text-[11px] font-semibold tracking-wide transition-all inline-block text-center"
+                >
+                  Configure Integrations
+                </Link>
+              </div>
+            </div>
+
+            {/* User Profile summary footer */}
+            <div className="bg-slate-50 border border-slate-200/60 rounded-2xl p-4 flex items-center justify-between text-xs">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold">
+                  {activeUser?.name?.substring(0, 2).toUpperCase() || 'JA'}
+                </div>
+                <div>
+                  <span className="font-bold text-slate-800 block">{activeUser?.name || 'Jane'}</span>
+                  <span className="text-[10px] text-[#6B7280] uppercase tracking-wider">{activeUser?.role || 'SALES_REP'}</span>
+                </div>
+              </div>
+              <span className="text-[10px] text-slate-400 font-mono">ID: {activeUser?.id || 1}</span>
+            </div>
+
+          </div>
+
+        </section>
+
+      </div>
+    </main>
   );
 }
