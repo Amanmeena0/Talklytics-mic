@@ -260,14 +260,6 @@ export default function LandingPage() {
             <a href="#features" className="text-sm text-[#6B7280] hover:text-[#111827] transition-colors font-medium">Product</a>
             <a href="#showcase" className="text-sm text-[#6B7280] hover:text-[#111827] transition-colors font-medium">Showcase</a>
             <a href="#pricing" className="text-sm text-[#6B7280] hover:text-[#111827] transition-colors font-medium">Pricing</a>
-            {isLoggedIn && (
-              <>
-                <Link href="/dashboard" className="text-sm text-[#6B7280] hover:text-[#111827] transition-colors font-medium">Dashboard</Link>
-                <Link href="/calls" className="text-sm text-[#6B7280] hover:text-[#111827] transition-colors font-medium">Recordings</Link>
-                <Link href="/calls/live" className="text-sm text-[#6B7280] hover:text-[#111827] transition-colors font-medium">Live Stream</Link>
-                <Link href="/settings" className="text-sm text-[#6B7280] hover:text-[#111827] transition-colors font-medium">Settings</Link>
-              </>
-            )}
           </div>
 
           <div className="flex items-center gap-4">
