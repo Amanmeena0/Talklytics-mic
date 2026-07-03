@@ -39,6 +39,9 @@ function LoginForm() {
         throw new Error(data.error || 'Invalid credentials or login failed.');
       }
 
+      // Set cookie to indicate logged-in state on the client side
+      document.cookie = 'logged_in=true; path=/; max-age=604800; SameSite=Lax';
+
       // Route to redirect path or dashboard
       router.push(redirectPath);
     } catch (err: any) {

@@ -2,6 +2,7 @@
 
 import React, { useEffect } from 'react';
 import Link from 'next/link';
+import Header from '@/shared/components/Layout/Header';
 
 export default function LandingPage() {
   useEffect(() => {
@@ -27,58 +28,10 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="bg-background text-on-background font-body-md selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col">
+    <div className="bg-background text-on-background font-body-md selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col pt-[var(--header-height)]">
       {/* TopNavBar */}
-      <header className="bg-surface/90 backdrop-blur-md docked full-width top-0 z-50 sticky shadow-sm dark:shadow-none shadow-[0px_4px_20px_rgba(15,23,42,0.05)] border-b border-surface-container-high">
-        <div className="flex justify-between items-center w-full px-container-padding max-w-[1280px] mx-auto h-20">
-          <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary text-2xl">lens_blur</span>
-            <span className="font-title text-headline-lg font-extrabold text-on-background tracking-tighter">
-              Talklytics
-            </span>
-          </div>
-          <nav className="hidden md:flex items-center gap-8">
-            <Link
-              className="font-label-bold text-label-bold text-secondary hover:text-primary transition-colors duration-200 no-underline"
-              href="/dashboard"
-            >
-              Dashboard
-            </Link>
-            <Link
-              className="font-label-bold text-label-bold text-secondary hover:text-primary transition-colors duration-200 no-underline"
-              href="/calls"
-            >
-              Recordings
-            </Link>
-            <Link
-              className="font-label-bold text-label-bold text-secondary hover:text-primary transition-colors duration-200 no-underline"
-              href="/analytics"
-            >
-              Analytics
-            </Link>
-            <Link
-              className="font-label-bold text-label-bold text-secondary hover:text-primary transition-colors duration-200 no-underline"
-              href="/settings"
-            >
-              Settings
-            </Link>
-          </nav>
-          <div className="flex items-center gap-4">
-            <Link
-              href="/dashboard"
-              className="hidden sm:block font-label-bold text-label-bold text-on-background hover:opacity-80 transition-opacity px-4 py-2 no-underline"
-            >
-              Login
-            </Link>
-            <Link
-              href="/dashboard"
-              className="bg-primary-container text-on-primary-container font-label-bold text-label-bold px-6 py-3 rounded-full hover:opacity-90 active:scale-95 transition-all shadow-nature no-underline"
-            >
-              Get Started
-            </Link>
-          </div>
-        </div>
-      </header>
+      <Header />
+
 
       <main className="flex-1">
         {/* Hero Section */}

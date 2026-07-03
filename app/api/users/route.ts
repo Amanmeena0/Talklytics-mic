@@ -60,8 +60,11 @@ export async function GET(request: Request) {
     }
 
     // Fallback: Read switch user cookie for local demo compatibility
-    const activeUserEmail =
-      cookieStore.get('active_user_email')?.value || 'jane.smith@talklytics.com';
+    const activeUserEmail = cookieStore.get('active_user_email')?.value;
+
+    if (!accessToken && !activeUserEmail) {
+      return NextResponse.json(null);
+    }
 
     const user = users.find((u) => u.email === activeUserEmail) || defaultUser;
     return NextResponse.json(user);
