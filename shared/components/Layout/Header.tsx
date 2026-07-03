@@ -74,13 +74,15 @@ export default function Header() {
 
   useEffect(() => {
     // Check if we are logged in from document.cookie
-    const hasLoginCookie = document.cookie.split('; ').some((row) => row.startsWith('logged_in=true'));
+    const hasLoginCookie = document.cookie
+      .split('; ')
+      .some((row) => row.startsWith('logged_in=true'));
     const isProtected = pathname !== '/' && pathname !== '/login' && pathname !== '/register';
-    
+
     if (hasLoginCookie || isProtected) {
       setIsLoggedIn(true);
     }
-    
+
     loadUserData();
   }, [pathname]);
 
@@ -284,8 +286,12 @@ export default function Header() {
                 <div className="header-user-dropdown">
                   <div className="header-user-info-section">
                     <span className="header-user-name">{currentUser?.name || 'Jane Smith'}</span>
-                    <span className="header-user-email">{currentUser?.email || 'jane.smith@talklytics.com'}</span>
-                    <span className="header-user-role-badge">{currentUser?.role || 'SALES_REP'}</span>
+                    <span className="header-user-email">
+                      {currentUser?.email || 'jane.smith@talklytics.com'}
+                    </span>
+                    <span className="header-user-role-badge">
+                      {currentUser?.role || 'SALES_REP'}
+                    </span>
                   </div>
 
                   <div className="d-flex flex-col gap-1">

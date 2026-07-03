@@ -32,7 +32,6 @@ export default function LandingPage() {
       {/* TopNavBar */}
       <Header />
 
-
       <main className="flex-1">
         {/* Hero Section */}
         <section className="relative overflow-hidden pt-20 pb-section-gap gradient-mesh">
