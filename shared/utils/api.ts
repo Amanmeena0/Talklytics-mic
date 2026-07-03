@@ -23,5 +23,13 @@ export function apiError(message: string, status: number = 500, code?: string) {
 export function handleApiCatch(error: unknown) {
   const message = error instanceof Error ? error.message : 'An unexpected error occurred';
   console.error('[API Exception]:', error);
+
+  // Extract backend status code if present
+  const match = message.match(/Backend returned status (\d+)/);
+  if (match) {
+    const status = parseInt(match[1], 10);
+    return apiError(message, status, 'BACKEND_ERROR');
+  }
+
   return apiError(message, 500, 'UNEXPECTED_EXCEPTION');
 }

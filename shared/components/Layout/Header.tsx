@@ -347,22 +347,12 @@ export default function Header() {
           <>
             <Link
               href="/dashboard"
-              className="font-label-bold text-label-bold text-secondary hover:text-primary transition-colors duration-200 no-underline"
-              style={{ fontSize: '13px', fontWeight: 600, padding: '6px 12px' }}
+              className="font-label-bold text-label-bold text-secondary hover:text-primary transition-colors duration-200 no-underline header-login-link"
             >
               Login
             </Link>
             <Link href="/dashboard" className="no-underline">
-              <button
-                className="btn btn-primary"
-                style={{
-                  borderRadius: '9999px',
-                  padding: '8px 20px',
-                  boxShadow: '0 4px 12px rgba(65, 105, 0, 0.2)',
-                }}
-              >
-                Get Started
-              </button>
+              <button className="btn btn-primary header-get-started">Get Started</button>
             </Link>
           </>
         )}

@@ -43,9 +43,11 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
 
     return NextResponse.json(comments);
   } catch (error: any) {
+    const match = error.message?.match(/Backend returned status (\d+)/);
+    const status = match ? parseInt(match[1], 10) : 500;
     return NextResponse.json(
       { error: error.message || 'Failed to fetch comments' },
-      { status: 500 }
+      { status }
     );
   }
 }
@@ -98,6 +100,8 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       { status: 201 }
     );
   } catch (error: any) {
-    return NextResponse.json({ error: error.message || 'Failed to post comment' }, { status: 500 });
+    const match = error.message?.match(/Backend returned status (\d+)/);
+    const status = match ? parseInt(match[1], 10) : 500;
+    return NextResponse.json({ error: error.message || 'Failed to post comment' }, { status });
   }
 }

@@ -158,9 +158,11 @@ export async function GET() {
       totalHesitations,
     });
   } catch (error: any) {
+    const match = error.message?.match(/Backend returned status (\d+)/);
+    const status = match ? parseInt(match[1], 10) : 500;
     return NextResponse.json(
       { error: error.message || 'Failed to compute analytics' },
-      { status: 500 }
+      { status }
     );
   }
 }

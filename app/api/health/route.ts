@@ -6,7 +6,8 @@ import { NextResponse } from 'next/server';
  */
 export async function GET() {
   try {
-    const res = await fetch('http://127.0.0.1:8000/health', {
+    const backendUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/health`;
+    const res = await fetch(backendUrl, {
       signal: AbortSignal.timeout(1500), // Quick timeout
     });
 
