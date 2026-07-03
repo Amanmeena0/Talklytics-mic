@@ -31,6 +31,14 @@ export default function Header({ isSidebarCollapsed = false, toggleSidebar }: He
   const router = useRouter();
   const pathname = usePathname();
 
+  // Handle logo/site name click: scroll to top if already on home, otherwise navigate normally
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname === '/') {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   // State
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -187,7 +195,7 @@ export default function Header({ isSidebarCollapsed = false, toggleSidebar }: He
       {/* Brand logo & Sidebar Toggle */}
       <div className="flex items-center gap-4">
         
-        <Link href="/" className="flex items-center gap-2 group">
+        <Link href="/" className="flex items-center gap-2 group" onClick={handleLogoClick}>
           <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-sm transition-all group-hover:scale-105">
             <Sparkles className="w-4 h-4" />
           </div>
@@ -205,6 +213,7 @@ export default function Header({ isSidebarCollapsed = false, toggleSidebar }: He
       {/* Top Navigation Links */}
       <nav className="hidden md:flex items-center gap-8">
         <Link 
+        
           href="/" 
           className={`text-xs font-bold tracking-wider uppercase transition-colors ${pathname === '/' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-800'}`}
         >
