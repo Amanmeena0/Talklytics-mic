@@ -168,13 +168,15 @@ function LiveCallContent() {
 
       {!isSessionActive ? (
         /* Configuration dashboard */
-        <div className="flex items-center justify-center h-full min-h-[calc(100vh-120px)] bg-[#FAFBFC]">
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white border border-[#E5E7EB] rounded-3xl p-8 shadow-sm space-y-8 max-w-xl w-full mx-6"
-          >
-            <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
+        <div className="max-w-6xl mx-auto py-8 px-6 space-y-8">
+          <SessionHeader />
+          <div className="flex items-center justify-center py-6">
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white border border-[#E5E7EB] rounded-3xl p-8 shadow-sm space-y-8 max-w-xl w-full"
+            >
+              <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
               <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-[#4F46E5]">
                 <Mic className="w-5 h-5" />
               </div>
@@ -243,6 +245,7 @@ function LiveCallContent() {
               </button>
             </form>
           </motion.div>
+          </div>
         </div>
       ) : (
         /* Active session dashboard - Full Viewport h-full flex flex-col */

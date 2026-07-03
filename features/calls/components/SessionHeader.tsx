@@ -86,38 +86,50 @@ export default function SessionHeader({ id }: SessionHeaderProps) {
       })
     : '';
 
+  const isIdleLive = isLive && !isRecording;
+
   return (
     <header className="session-header-root">
-      <div>
-        <div className="session-header-topline ">
+      <div className={isIdleLive ? 'text-center flex flex-col items-center justify-center w-full' : ''}>
+        <div className={`flex items-center gap-2.5 flex-wrap ${isIdleLive ? 'justify-center' : ''}`}>
           {isLive ? (
             isRecording ? (
-              <span className="badge badge-error badge-pulsing d-flex align-center gap-1">
-                <span className="pulse-dot-red" />
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-red-50 border border-red-100 text-red-700 font-bold text-[10px] tracking-wider uppercase rounded-full shadow-sm">
+                <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping" />
                 Live Recording
               </span>
             ) : (
-              <span className="badge badge-secondary">Live Monitor Idle</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 border border-slate-200 text-slate-600 font-bold text-[10px] tracking-wider uppercase rounded-full shadow-sm">
+                <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
+                Live Monitor Idle
+              </span>
             )
           ) : (
-            <span className="badge badge-accent">Recorded Call</span>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-50 border border-indigo-100 text-indigo-700 font-bold text-[10px] tracking-wider uppercase rounded-full shadow-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
+              Recorded Call
+            </span>
           )}
 
           {isLive ? (
             isRecording && <ConnectionIndicator />
           ) : (
-            <span className="badge session-header-id-badge">ID: {id?.substring(0, 8)}...</span>
+            <span className="inline-flex items-center gap-1 bg-slate-100 border border-slate-200/60 text-slate-500 font-bold text-[9px] px-2 py-0.5 rounded uppercase">
+              ID: {id?.substring(0, 8)}...
+            </span>
           )}
 
           {hasData && (
-            <span className="text-caption session-header-segments">
-              <span className="material-symbols-outlined fs-14">schedule</span>
-              {records.length} segments • {formatDuration(sessionDuration)}
+            <span className="inline-flex items-center gap-1 text-[10px] text-slate-400 font-semibold">
+              <span>•</span>
+              <span>{records.length} segments</span>
+              <span>•</span>
+              <span>{formatDuration(sessionDuration)}</span>
             </span>
           )}
         </div>
 
-        <h1 className="text-page-title session-header-title">
+        <h1 className={`text-2xl md:text-3xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600 font-sans mt-3 flex items-center gap-2 ${isIdleLive ? 'justify-center text-center' : ''}`}>
           {isLive
             ? isRecording
               ? sessionTitle || 'Live Session'
@@ -139,19 +151,19 @@ export default function SessionHeader({ id }: SessionHeaderProps) {
           )}
         </h1>
 
-        <p className="text-body session-header-subtitle">
+        <p className={`text-xs font-semibold text-slate-500 mt-1 max-w-xl leading-relaxed font-sans ${isIdleLive ? 'text-center mx-auto' : ''}`}>
           {isLive ? (
             isRecording && sessionClientName ? (
               <span>
-                Active coaching session for: <strong>{sessionClientName}</strong>
+                Active coaching session for: <strong className="text-slate-800 font-bold">{sessionClientName}</strong>
               </span>
             ) : (
               'Real-time AI-powered conversation coaching'
             )
           ) : (
             <>
-              <span className="session-header-client">{clientName}</span>
-              {formattedDate && <span>• Conducted on {formattedDate}</span>}
+              <strong className="text-slate-800 font-bold">{clientName}</strong>
+              {formattedDate && <span className="text-slate-400 font-normal"> • Conducted on {formattedDate}</span>}
             </>
           )}
         </p>
