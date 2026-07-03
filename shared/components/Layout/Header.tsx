@@ -212,7 +212,7 @@ export default function Header({ isSidebarCollapsed = false, toggleSidebar }: He
         </Link>
         <Link 
           href="/dashboard" 
-          className={`text-xs font-bold tracking-wider uppercase transition-colors ${pathname === '/pricing' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-800'}`}
+          className={`text-xs font-bold tracking-wider uppercase transition-colors ${pathname === '/dashboard' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-800'}`}
         >
           Dashboard
         </Link>
