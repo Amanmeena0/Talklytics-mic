@@ -249,6 +249,8 @@ export default function DashboardHome() {
                               <td className="py-4 px-6 text-center" onClick={(e) => e.stopPropagation()}>
                                 <button 
                                   onClick={() => handleToggleFavorite(call.id, call.isFavorite)}
+                                  aria-label={call.isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+                                  title={call.isFavorite ? 'Remove from favorites' : 'Add to favorites'}
                                   className={`p-1 rounded hover:bg-slate-100 transition-colors ${call.isFavorite ? 'text-amber-500' : 'text-slate-300'}`}
                                 >
                                   <Star className={`w-4 h-4 ${call.isFavorite ? 'fill-current' : ''}`} />
