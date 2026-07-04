@@ -7,6 +7,7 @@ import Layout from '@/shared/components/Layout/Layout';
 import SentimentBadge from '@/shared/components/SentimentBadge';
 import clientFetch from '@/shared/utils/clientFetch';
 import { motion, AnimatePresence } from 'framer-motion';
+import ReactMarkdown from 'react-markdown';
 import {
   Search,
   SlidersHorizontal,
@@ -48,8 +49,8 @@ export default function CallHistoryPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Expanded Row & Recording States
-  const [expandedCallId, setExpandedCallId] = useState<string | null>(null);
+  // Modal & Recording States
+  const [selectedCallForModal, setSelectedCallForModal] = useState<any | null>(null);
   const [playingCallId, setPlayingCallId] = useState<string | null>(null);
 
   // Load calls from API
@@ -321,12 +322,11 @@ export default function CallHistoryPage() {
                     ))
                   ) : calls.length > 0 ? (
                     calls.map((call) => {
-                      const isExpanded = expandedCallId === call.id;
                       const isPlaying = playingCallId === call.id;
                       return (
                         <React.Fragment key={call.id}>
                           <tr 
-                            onClick={() => setExpandedCallId(isExpanded ? null : call.id)}
+                            onClick={() => setSelectedCallForModal(call)}
                             className="border-b border-[#E5E7EB] hover:bg-slate-50/40 transition-all cursor-pointer"
                           >
                             <td className="py-4 px-6 text-center" onClick={(e) => e.stopPropagation()}>
@@ -369,77 +369,6 @@ export default function CallHistoryPage() {
                               </div>
                             </td>
                           </tr>
-
-                          {/* Expandable details panel */}
-                          <AnimatePresence>
-                            {isExpanded && (
-                              <tr>
-                                <td colSpan={8} className="bg-slate-50/50 p-6 border-b border-[#E5E7EB]">
-                                  <motion.div 
-                                    initial={{ opacity: 0, height: 0 }}
-                                    animate={{ opacity: 1, height: 'auto' }}
-                                    exit={{ opacity: 0, height: 0 }}
-                                    className="grid md:grid-cols-12 gap-6"
-                                  >
-                                    {/* Audio Controller */}
-                                    <div className="md:col-span-4 bg-white border border-[#E5E7EB] p-4 rounded-xl shadow-sm space-y-4">
-                                      <div className="flex items-center gap-3">
-                                        <button
-                                          type="button"
-                                          onClick={() => setPlayingCallId(isPlaying ? null : call.id)}
-                                          aria-label={isPlaying ? 'Pause audio playback' : 'Play audio playback'}
-                                          title={isPlaying ? 'Pause audio playback' : 'Play audio playback'}
-                                          className="w-10 h-10 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center shadow-sm transition-all"
-                                        >
-                                          {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
-                                        </button>
-                                        <div>
-                                          <span className="text-[10px] text-slate-400 font-bold uppercase block">Audio Record</span>
-                                          <span className="text-xs font-bold text-slate-800">
-                                            {isPlaying ? 'Playing transcript audio...' : 'Audio recording ready'}
-                                          </span>
-                                        </div>
-                                      </div>
-                                      
-                                      {isPlaying && (
-                                        <div className="h-6 flex items-center justify-between gap-0.5 pt-2">
-                                          {Array.from({ length: 24 }).map((_, i) => (
-                                            <span 
-                                              key={i} 
-                                              className="w-1 bg-indigo-500 rounded-full transition-all duration-300"
-                                              style={{ 
-                                                height: `${Math.max(4, Math.random() * 24)}px`,
-                                                animation: 'pulse 1.2s infinite ease-in-out',
-                                                animationDelay: `${i * 0.05}s`
-                                              }}
-                                            />
-                                          ))}
-                                        </div>
-                                      )}
-                                    </div>
-
-                                    {/* Summary */}
-                                    <div className="md:col-span-8 space-y-2">
-                                      <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">AI Generated Executive Summary</span>
-                                      <p className="text-xs text-slate-600 leading-relaxed bg-white border border-[#E5E7EB] p-4 rounded-xl shadow-sm font-medium">
-                                        {call.summary || 'Summary data not available for this record.'}
-                                      </p>
-                                      <div className="pt-2">
-                                        <Link 
-                                          href={`/calls/${call.id}`}
-                                          className="text-[11px] font-semibold text-indigo-600 hover:text-indigo-700 flex items-center gap-1 transition-all"
-                                        >
-                                          Go to Full Post-Call Intelligence Report
-                                          <ChevronRight className="w-3.5 h-3.5" />
-                                        </Link>
-                                      </div>
-                                    </div>
-
-                                  </motion.div>
-                                </td>
-                              </tr>
-                            )}
-                          </AnimatePresence>
                         </React.Fragment>
                       );
                     })
@@ -490,6 +419,113 @@ export default function CallHistoryPage() {
 
         </div>
       </main>
+
+      {/* Modal for Recording Details */}
+      <AnimatePresence>
+        {selectedCallForModal && (
+          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+              className="bg-white rounded-3xl max-w-2xl w-full border border-[#E5E7EB] shadow-2xl overflow-hidden flex flex-col max-h-[85vh]"
+            >
+              {/* Modal Header */}
+              <div className="bg-slate-50/50 border-b border-[#E5E7EB] px-6 py-4 flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] text-indigo-600 font-bold uppercase tracking-wider block">
+                    {selectedCallForModal.clientName}
+                  </span>
+                  <h3 className="text-sm font-bold text-slate-800 mt-0.5">
+                    {selectedCallForModal.title}
+                  </h3>
+                </div>
+                <button
+                  onClick={() => {
+                    setSelectedCallForModal(null);
+                    setPlayingCallId(null);
+                  }}
+                  className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors text-slate-400 hover:text-slate-600 flex items-center justify-center"
+                >
+                  <span className="material-symbols-outlined fs-20">close</span>
+                </button>
+              </div>
+
+              {/* Modal Body */}
+              <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                {/* Audio Controller */}
+                <div className="bg-slate-50/50 border border-[#E5E7EB] p-4 rounded-xl space-y-4 shadow-sm">
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setPlayingCallId(playingCallId === selectedCallForModal.id ? null : selectedCallForModal.id)}
+                      aria-label={playingCallId === selectedCallForModal.id ? 'Pause audio playback' : 'Play audio playback'}
+                      title={playingCallId === selectedCallForModal.id ? 'Pause audio playback' : 'Play audio playback'}
+                      className="w-10 h-10 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center shadow-sm transition-all"
+                    >
+                      {playingCallId === selectedCallForModal.id ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
+                    </button>
+                    <div>
+                      <span className="text-[10px] text-slate-400 font-bold uppercase block">Audio Record</span>
+                      <span className="text-xs font-bold text-slate-800">
+                        {playingCallId === selectedCallForModal.id ? 'Playing transcript audio...' : 'Audio recording ready'}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  {playingCallId === selectedCallForModal.id && (
+                    <div className="h-6 flex items-center justify-between gap-0.5 pt-2">
+                      {Array.from({ length: 36 }).map((_, i) => (
+                        <span 
+                          key={i} 
+                          className="w-1 bg-indigo-500 rounded-full transition-all duration-300"
+                          style={{ 
+                            height: `${Math.max(4, Math.random() * 24)}px`,
+                            animation: 'pulse 1.2s infinite ease-in-out',
+                            animationDelay: `${i * 0.05}s`
+                          }}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* AI Executive Summary */}
+                <div className="space-y-2">
+                  <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">AI Generated Executive Summary</span>
+                  <div className="text-xs text-slate-600 leading-relaxed bg-white border border-[#E5E7EB] p-4 rounded-xl shadow-sm font-medium prose max-w-none">
+                    <ReactMarkdown>
+                      {selectedCallForModal.summary || 'Summary data not available for this record.'}
+                    </ReactMarkdown>
+                  </div>
+                </div>
+              </div>
+
+              {/* Modal Footer */}
+              <div className="bg-slate-50/50 border-t border-[#E5E7EB] px-6 py-4 flex items-center justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedCallForModal(null);
+                    setPlayingCallId(null);
+                  }}
+                  className="px-4 py-2 border border-[#E5E7EB] rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-100 transition-colors"
+                >
+                  Close
+                </button>
+                <Link 
+                  href={`/calls/${selectedCallForModal.id}`}
+                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold shadow-sm hover:shadow transition-all flex items-center gap-1"
+                >
+                  Full Report
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </Layout>
   );
 }

@@ -11,6 +11,8 @@ export default function ExecutiveSummary() {
     averageConfidence,
     latestRecommendation,
     status,
+    summary,
+    isLive,
   } = useLiveData();
 
   const hasData = records.length > 0;
@@ -18,12 +20,14 @@ export default function ExecutiveSummary() {
   // Compute a conversion probability estimate from average score (1-5 mapped to 0-100%)
   const conversionProb = hasData ? Math.round((averageScore / 5) * 100) : 0;
 
-  // Build a dynamic summary from the latest data
-  const summaryText = hasData
-    ? `Session in progress with ${records.length} segment${records.length > 1 ? 's' : ''} analyzed. ` +
-      `The dominant sentiment is ${dominantSentiment} with an average engagement score of ${averageScore.toFixed(1)}/5. ` +
-      (latestRecommendation ? `Latest AI recommendation: "${latestRecommendation}"` : '')
-    : 'Waiting for live data from the Talklytics backend. Ensure the microphone session is active and the backend server is running.';
+  // Build a dynamic summary from the latest data, or use the pre-generated AI summary if viewing historical details
+  const summaryText = !isLive && summary
+    ? summary
+    : hasData
+      ? `Session in progress with ${records.length} segment${records.length > 1 ? 's' : ''} analyzed. ` +
+        `The dominant sentiment is ${dominantSentiment} with an average engagement score of ${averageScore.toFixed(1)}/5. ` +
+        (latestRecommendation ? `Latest AI recommendation: "${latestRecommendation}"` : '')
+      : 'Waiting for live data from the Talklytics backend. Ensure the microphone session is active and the backend server is running.';
 
   // Determine sentiment display
   const sentimentColor =
@@ -54,7 +58,7 @@ export default function ExecutiveSummary() {
             {status === 'connected' ? '● Live' : 'AI Generated'}
           </span>
         </div>
-        <div className={`text-body executive-summary-summary ${hasData ? '' : 'is-muted'} prose max-w-none`}>
+        <div className={`text-body executive-summary-summary ${hasData ? '' : 'is-muted'} prose max-w-none max-h-[320px] overflow-y-auto pr-2 custom-scrollbar`}>
           <ReactMarkdown>{summaryText}</ReactMarkdown>
         </div>
       </div>

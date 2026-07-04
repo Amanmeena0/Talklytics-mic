@@ -242,12 +242,10 @@ export default function DashboardHome() {
                   <tbody>
                     {recentCalls.length > 0 ? (
                       recentCalls.map((call) => {
-                        const isExpanded = expandedCallId === call.id;
-                        const isPlaying = playingCallId === call.id;
                         return (
                           <React.Fragment key={call.id}>
                             <tr 
-                              onClick={() => setExpandedCallId(isExpanded ? null : call.id)}
+                              onClick={() => router.push(`/calls/${call.id}`)}
                               className="border-b border-[#E5E7EB] hover:bg-slate-50/40 transition-colors cursor-pointer"
                             >
                               <td className="py-4 px-6 text-center" onClick={(e) => e.stopPropagation()}>
@@ -269,73 +267,6 @@ export default function DashboardHome() {
                               </td>
                               <td className="py-4 px-6 text-right font-bold text-indigo-600">{call.averageScore.toFixed(1)}/5</td>
                             </tr>
-
-                            {/* Expandable row details */}
-                            <AnimatePresence>
-                              {isExpanded && (
-                                <tr>
-                                  <td colSpan={6} className="bg-slate-50/60 p-6 border-b border-[#E5E7EB]">
-                                    <motion.div 
-                                      initial={{ opacity: 0, height: 0 }}
-                                      animate={{ opacity: 1, height: 'auto' }}
-                                      exit={{ opacity: 0, height: 0 }}
-                                      className="grid md:grid-cols-12 gap-6"
-                                    >
-                                      {/* Audio controller */}
-                                      <div className="md:col-span-4 bg-white border border-[#E5E7EB] p-4 rounded-xl space-y-4 shadow-sm">
-                                        <div className="flex items-center gap-3">
-                                          <button 
-                                            onClick={() => setPlayingCallId(isPlaying ? null : call.id)}
-                                            className="w-10 h-10 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center shadow-sm transition-all"
-                                          >
-                                            {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
-                                          </button>
-                                          <div>
-                                            <span className="text-[10px] text-slate-400 font-bold uppercase block">Recording Stream</span>
-                                            <span className="text-xs font-bold text-slate-800">
-                                              {isPlaying ? 'Playing audio recording...' : 'Audio stream ready'}
-                                            </span>
-                                          </div>
-                                        </div>
-
-                                        {isPlaying && (
-                                          <div className="h-6 flex items-center justify-between gap-0.5 pt-2">
-                                            {Array.from({ length: 24 }).map((_, i) => (
-                                              <span 
-                                                key={i} 
-                                                className="w-1 bg-indigo-500 rounded-full transition-all duration-300"
-                                                style={{ 
-                                                  height: `${Math.max(4, Math.random() * 24)}px`,
-                                                  animation: 'pulse 1.2s infinite ease-in-out',
-                                                  animationDelay: `${i * 0.05}s`
-                                                }}
-                                              />
-                                            ))}
-                                          </div>
-                                        )}
-                                      </div>
-
-                                      {/* Executive Summary */}
-                                      <div className="md:col-span-8 space-y-2">
-                                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">AI Generated Executive Summary</span>
-                                        <p className="text-xs text-slate-600 leading-relaxed bg-white border border-[#E5E7EB] p-4 rounded-xl shadow-sm font-medium">
-                                          {call.summary || 'Summary analysis generation pending...'}
-                                        </p>
-                                        <div className="flex gap-4 pt-1">
-                                          <Link 
-                                            href={`/calls/${call.id}`}
-                                            className="text-[11px] font-semibold text-indigo-600 hover:text-indigo-700 flex items-center gap-1 transition-colors"
-                                          >
-                                            Full Conversation Intelligence Report
-                                            <ExternalLink className="w-3.5 h-3.5" />
-                                          </Link>
-                                        </div>
-                                      </div>
-                                    </motion.div>
-                                  </td>
-                                </tr>
-                              )}
-                            </AnimatePresence>
                           </React.Fragment>
                         );
                       })

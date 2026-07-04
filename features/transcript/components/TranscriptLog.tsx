@@ -129,7 +129,7 @@ export default function TranscriptLog() {
           hasData ? (
             <div className="transcript-list">
               {filteredRecords.length > 0 ? (
-                filteredRecords.map((record, i) => {
+                [...filteredRecords].reverse().map((record, i) => {
                   const avatarClass = sentimentAvatarClass(record.sentiment);
                   const initials = record.speaker
                     ? record.speaker
@@ -140,7 +140,7 @@ export default function TranscriptLog() {
                     : '?';
 
                   return (
-                    <div key={record.id || i} className="transcript-entry transcript-entry-animate">
+                    <div key={record.id || `${filteredRecords.length - 1 - i}`} className="transcript-entry transcript-entry-animate">
                       <div className={`transcript-avatar ${avatarClass}`}>{initials}</div>
                       <div className="transcript-entry-body">
                         <div className="transcript-entry-meta">

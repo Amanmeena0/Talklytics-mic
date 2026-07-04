@@ -121,116 +121,118 @@ export default function EngagementTimeline() {
   const displayCards = signalCards.length > 0 ? signalCards : fallbackCards;
 
   return (
-    <section className="card lg:col-span-7 overflow-hidden">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-section-heading flex items-center gap-2">
-          <span className="material-symbols-outlined color-accent fs-20">insights</span>
-          Engagement Timeline
-        </h2>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <div className="timeline-dot" />
-            <span className="text-caption">Interest Score</span>
+    <section className="card lg:col-span-7 overflow-hidden flex flex-col justify-between">
+      <div>
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-section-heading flex items-center gap-2">
+            <span className="material-symbols-outlined color-accent fs-20">insights</span>
+            Engagement Timeline
+          </h2>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <div className="timeline-dot" />
+              <span className="text-caption">Interest Score</span>
+            </div>
+            {hasData && <span className="text-caption color-accent">{records.length} segments</span>}
+            <button className="icon-btn">
+              <span className="material-symbols-outlined fs-18">fullscreen</span>
+            </button>
           </div>
-          {hasData && <span className="text-caption color-accent">{records.length} segments</span>}
-          <button className="icon-btn">
-            <span className="material-symbols-outlined fs-18">fullscreen</span>
-          </button>
         </div>
-      </div>
 
-      {/* Chart */}
-      <div className="chart-container">
-        {/* Chart Grid */}
-        <div className="timeline-chart-grid">
-          <div className="border-b-subtle d-flex align-end">
-            <span className="text-caption mb-4 fs-10">5 - High</span>
+        {/* Chart */}
+        <div className="chart-container" style={{ height: '220px' }}>
+          {/* Chart Grid */}
+          <div className="timeline-chart-grid">
+            <div className="border-b-subtle d-flex align-end">
+              <span className="text-caption mb-4 fs-10">5 - High</span>
+            </div>
+            <div className="border-b-subtle d-flex align-end">
+              <span className="text-caption mb-4 fs-10">3 - Neutral</span>
+            </div>
+            <div className="border-b-subtle d-flex align-end">
+              <span className="text-caption mb-4 fs-10">1 - Low</span>
+            </div>
           </div>
-          <div className="border-b-subtle d-flex align-end">
-            <span className="text-caption mb-4 fs-10">3 - Neutral</span>
-          </div>
-          <div className="border-b-subtle d-flex align-end">
-            <span className="text-caption mb-4 fs-10">1 - Low</span>
-          </div>
-        </div>
-        {/* SVG Chart — real data or placeholder */}
-        <svg
-          preserveAspectRatio="none"
-          viewBox="0 0 100 100"
-          className="pos-absolute-inset-0 w-full h-full overflow-visible"
-        >
-          <defs>
-            <linearGradient id="chartGradient" x1="0%" x2="0%" y1="0%" y2="100%">
-              <stop offset="0%" stopColor="#7c6aef" stopOpacity={0.2} />
-              <stop offset="100%" stopColor="#7c6aef" stopOpacity={0} />
-            </linearGradient>
-          </defs>
-          {hasData && linePath ? (
-            <>
-              <path d={areaPath} fill="url(#chartGradient)">
-                <animate attributeName="opacity" from="0" to="1" dur="0.6s" fill="freeze" />
-              </path>
-              <path d={linePath} fill="none" stroke="#7c6aef" strokeWidth="2">
-                <animate
-                  attributeName="stroke-dasharray"
-                  from="0,1000"
-                  to="1000,0"
-                  dur="1s"
-                  fill="freeze"
+          {/* SVG Chart — real data or placeholder */}
+          <svg
+            preserveAspectRatio="none"
+            viewBox="0 0 100 100"
+            className="pos-absolute-inset-0 w-full h-full overflow-visible"
+          >
+            <defs>
+              <linearGradient id="chartGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+                <stop offset="0%" stopColor="#7c6aef" stopOpacity={0.2} />
+                <stop offset="100%" stopColor="#7c6aef" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            {hasData && linePath ? (
+              <>
+                <path d={areaPath} fill="url(#chartGradient)">
+                  <animate attributeName="opacity" from="0" to="1" dur="0.6s" fill="freeze" />
+                </path>
+                <path d={linePath} fill="none" stroke="#7c6aef" strokeWidth="2">
+                  <animate
+                    attributeName="stroke-dasharray"
+                    from="0,1000"
+                    to="1000,0"
+                    dur="1s"
+                    fill="freeze"
+                  />
+                </path>
+                {/* Buying signal dots */}
+                {points
+                  .filter((p) => p.hasBuyingSignal)
+                  .map((p, i) => (
+                    <circle
+                      key={i}
+                      className="animate-pulse"
+                      cx={p.x}
+                      cy={p.y}
+                      fill="var(--success)"
+                      r="4"
+                    >
+                      <title>Buying Signal (Score: {p.score})</title>
+                    </circle>
+                  ))}
+              </>
+            ) : (
+              <>
+                <path
+                  d="M0,60 Q10,55 20,40 T40,45 T60,20 T80,30 T100,25 L100,100 L0,100 Z"
+                  fill="url(#chartGradient)"
+                  opacity="0.3"
                 />
-              </path>
-              {/* Buying signal dots */}
-              {points
-                .filter((p) => p.hasBuyingSignal)
-                .map((p, i) => (
-                  <circle
-                    key={i}
-                    className="animate-pulse"
-                    cx={p.x}
-                    cy={p.y}
-                    fill="var(--success)"
-                    r="4"
-                  >
-                    <title>Buying Signal (Score: {p.score})</title>
-                  </circle>
-                ))}
-            </>
-          ) : (
-            <>
-              <path
-                d="M0,60 Q10,55 20,40 T40,45 T60,20 T80,30 T100,25 L100,100 L0,100 Z"
-                fill="url(#chartGradient)"
-                opacity="0.3"
-              />
-              <path
-                d="M0,60 Q10,55 20,40 T40,45 T60,20 T80,30 T100,25"
-                fill="none"
-                stroke="#7c6aef"
-                strokeWidth="2"
-                opacity="0.3"
-                strokeDasharray="4 4"
-              />
-              <text
-                x="50"
-                y="50"
-                textAnchor="middle"
-                fill="var(--text-muted)"
-                fontSize="6"
-                fontFamily="inherit"
-              >
-                {status === 'connecting' ? 'Connecting to backend...' : 'Awaiting live data'}
-              </text>
-            </>
-          )}
-        </svg>
-        {/* Timeline markers */}
-        <div className="timeline-time-markers">
-          {timeMarkers.map((t, i) => (
-            <span key={i} className="text-caption fs-10">
-              {t}
-            </span>
-          ))}
+                <path
+                  d="M0,60 Q10,55 20,40 T40,45 T60,20 T80,30 T100,25"
+                  fill="none"
+                  stroke="#7c6aef"
+                  strokeWidth="2"
+                  opacity="0.3"
+                  strokeDasharray="4 4"
+                />
+                <text
+                  x="50"
+                  y="50"
+                  textAnchor="middle"
+                  fill="var(--text-muted)"
+                  fontSize="6"
+                  fontFamily="inherit"
+                >
+                  {status === 'connecting' ? 'Connecting to backend...' : 'Awaiting live data'}
+                </text>
+              </>
+            )}
+          </svg>
+          {/* Timeline markers */}
+          <div className="timeline-time-markers">
+            {timeMarkers.map((t, i) => (
+              <span key={i} className="text-caption fs-10">
+                {t}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 

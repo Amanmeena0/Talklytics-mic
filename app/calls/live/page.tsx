@@ -275,9 +275,9 @@ function LiveCallContent() {
               {/* Scrollable transcript list */}
               <div className="flex-1 overflow-y-auto pr-2 space-y-4">
                 {records.length > 0 ? (
-                  records.map((r, i) => (
+                  [...records].reverse().map((r, i) => (
                     <motion.div
-                      key={i}
+                      key={records.length - 1 - i}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       className={`p-4 rounded-2xl border transition-all ${
