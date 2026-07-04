@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Layout from '@/shared/components/Layout/Layout';
+import PageHeader from '@/shared/components/Layout/PageHeader';
 import Link from 'next/link';
 import clientFetch from '@/shared/utils/clientFetch';
 import { 
@@ -142,26 +143,25 @@ export default function ContactsPage() {
 
   return (
     <Layout>
-      <main className="main-content min-h-screen pt-20 pb-12 px-6">
-        <div className="max-w-7xl mx-auto space-y-8">
+      <main className="main-content min-h-screen pt-20 px-8 pb-16 font-sans text-slate-900 bg-[#FAFBFC]">
+        <div className="max-w-6xl mx-auto space-y-8">
           
           {/* Header section */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-2 text-indigo-600 font-semibold text-xs tracking-wider uppercase mb-1">
-                <Users className="w-3.5 h-3.5" />
+          <PageHeader 
+            title="Prospect Contacts"
+            subtitle="Manage organizations, conversation histories, and qualify deals dynamically."
+            badge={
+              <span className="inline-flex items-center gap-1.5 text-[9px] bg-indigo-50/80 text-indigo-600 border border-indigo-100/50 backdrop-blur-sm px-2.5 py-1 rounded-lg font-extrabold uppercase tracking-widest shadow-sm">
+                <Users className="w-3.5 h-3.5 text-indigo-500" />
                 Customer Database
-              </div>
-              <h1 className="text-2xl font-bold tracking-tight text-slate-900 font-sans">Prospect Contacts</h1>
-              <p className="text-xs text-slate-500 mt-0.5">Manage organizations, conversation histories, and qualify deals dynamically.</p>
-            </div>
-            
-            <div className="flex items-center gap-2">
+              </span>
+            }
+            actions={
               <span className="text-xs bg-slate-100 border border-slate-200/60 px-3 py-1.5 rounded-xl font-bold text-slate-600">
                 Total Contacts: {contacts.length}
               </span>
-            </div>
-          </div>
+            }
+          />
 
           {/* Search and filter toolbar */}
           <div className="bg-white border border-[#E5E7EB] rounded-2xl p-4 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">

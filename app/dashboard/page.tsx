@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import clientFetch from '@/shared/utils/clientFetch';
 import SentimentBadge from '@/shared/components/SentimentBadge';
 import Layout from '@/shared/components/Layout/Layout';
+import PageHeader from '@/shared/components/Layout/PageHeader';
 import {
   Sparkles,
   Search,
@@ -132,9 +133,11 @@ export default function DashboardHome() {
         <div className="max-w-6xl mx-auto space-y-10">
         
         {/* Workspace Switcher & Top Row */}
-        <header className="flex flex-col md:flex-row md:items-left justify-between gap-6 border-b border-[#E5E7EB] pb-6">
-          <div className="space-y-1">
-            <div className="flex items-center gap-3">
+        <PageHeader 
+          title={`Welcome, ${activeUser?.name || 'Jane'}`}
+          subtitle="Real-time pipeline intelligence and deal coaching overview for today."
+          badge={
+            <>
               {/* Custom Workspace Switcher */}
               <div className="relative group">
                 <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[#E5E7EB] bg-white text-xs font-semibold hover:border-slate-300 transition-all text-slate-800">
@@ -143,15 +146,10 @@ export default function DashboardHome() {
                   <ChevronDown className="w-3 h-3 text-slate-400" />
                 </button>
               </div>
-              <span className="text-[10px] bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Series A Active</span>
-            </div>
-            <h1 className="text-2xl font-bold text-[#111827] mt-3">Welcome, {activeUser?.name || 'Jane'}</h1>
-            <p className="text-xs text-[#6B7280]">
-              Real-time pipeline intelligence and deal coaching overview for today.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3">
+              <span className="text-[9px] bg-indigo-50/80 text-indigo-600 border border-indigo-100/50 backdrop-blur-sm px-2.5 py-1 rounded-lg font-extrabold uppercase tracking-widest shadow-sm">Series A Active</span>
+            </>
+          }
+          actions={
             <Link 
               href="/calls/live"
               className="bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs font-semibold px-5 py-3 rounded-full shadow-sm hover:shadow-indigo-100 hover:shadow-md transition-all flex items-center gap-2"
@@ -159,8 +157,8 @@ export default function DashboardHome() {
               <Activity className="w-4 h-4" />
               Go Live Monitor
             </Link>
-          </div>
-        </header>
+          }
+        />
 
         {/* Spaciously Designed Metrics Grid */}
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

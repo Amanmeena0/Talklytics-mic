@@ -168,8 +168,9 @@ function LiveCallContent() {
 
       {!isSessionActive ? (
         /* Configuration dashboard */
-        <div className="max-w-6xl mx-auto py-8 px-6 space-y-8">
-          <SessionHeader />
+        <main className="main-content bg-[#FAFBFC] font-sans text-slate-900">
+          <div className="max-w-6xl mx-auto space-y-8">
+            <SessionHeader />
           <div className="flex items-center justify-center py-6">
             <motion.div
               initial={{ opacity: 0, y: 15 }}
@@ -247,13 +248,15 @@ function LiveCallContent() {
           </motion.div>
           </div>
         </div>
+        </main>
       ) : (
         /* Active session dashboard - Full Viewport h-full flex flex-col */
-        <div className="h-full flex flex-col justify-between overflow-hidden">
+        <main className="main-content h-[calc(100vh-64px)] bg-[#FAFBFC] overflow-hidden font-sans p-0">
+          <div className="h-full flex flex-col justify-between overflow-hidden">
           
           {/* Header row containing title info */}
           <div className="bg-white border-b border-[#E5E7EB] px-6 py-4 shrink-0 flex items-center justify-between">
-            <SessionHeader />
+            <SessionHeader noBorder={true} />
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-indigo-600 animate-ping" />
               <span className="text-[10px] font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded uppercase">Live Session Connected</span>
@@ -475,6 +478,7 @@ function LiveCallContent() {
           </div>
 
         </div>
+        </main>
       )}
     </>
   );
@@ -483,11 +487,9 @@ function LiveCallContent() {
 export default function LiveCallPage() {
   return (
     <Layout>
-      <main className="main-content h-[calc(100vh-64px)] bg-[#FAFBFC] overflow-hidden font-sans">
-        <LiveDashboardProvider>
-          <LiveCallContent />
-        </LiveDashboardProvider>
-      </main>
+      <LiveDashboardProvider>
+        <LiveCallContent />
+      </LiveDashboardProvider>
     </Layout>
   );
 }

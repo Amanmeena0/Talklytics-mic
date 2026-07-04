@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Layout from '@/shared/components/Layout/Layout';
+import PageHeader from '@/shared/components/Layout/PageHeader';
 import SentimentBadge from '@/shared/components/SentimentBadge';
 import clientFetch from '@/shared/utils/clientFetch';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -150,27 +151,24 @@ export default function CallHistoryPage() {
         <div className="max-w-6xl mx-auto space-y-8">
           
           {/* Header */}
-          <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-[#E5E7EB] pb-6">
-            <div className="space-y-1">
-              <span className="text-[10px] bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Conversation Audit</span>
-              <h1 className="text-2xl font-bold text-[#111827] mt-3">Recording Database</h1>
-              <p className="text-xs text-[#6B7280]">
-                Search, analyze, and inspect completed calls ({totalCount} reports available)
-              </p>
-            </div>
-
-            <Link href="/calls/live">
-              <button
-                type="button"
-                aria-label="Start Live Coaching"
-                title="Start Live Coaching"
-                className="bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs font-semibold px-5 py-3 rounded-full shadow-sm hover:shadow-indigo-100 hover:shadow-md transition-all flex items-center gap-2"
-              >
-                <Video className="w-4 h-4" />
-                Start Live Coaching
-              </button>
-            </Link>
-          </header>
+          <PageHeader 
+            title="Recording Database"
+            subtitle={`Search, analyze, and inspect completed calls (${totalCount} reports available)`}
+            badge={<span className="text-[9px] bg-indigo-50/80 text-indigo-600 border border-indigo-100/50 backdrop-blur-sm px-2.5 py-1 rounded-lg font-extrabold uppercase tracking-widest shadow-sm">Conversation Audit</span>}
+            actions={
+              <Link href="/calls/live">
+                <button
+                  type="button"
+                  aria-label="Start Live Coaching"
+                  title="Start Live Coaching"
+                  className="bg-[#4F46E5] hover:bg-[#4338CA] text-white text-xs font-semibold px-5 py-3 rounded-full shadow-sm hover:shadow-indigo-100 hover:shadow-md transition-all flex items-center gap-2"
+                >
+                  <Video className="w-4 h-4" />
+                  Start Live Coaching
+                </button>
+              </Link>
+            }
+          />
 
           {/* Search & Advanced Filters Bar */}
           <div className="bg-white border border-[#E5E7EB] rounded-2xl p-4 shadow-sm">
