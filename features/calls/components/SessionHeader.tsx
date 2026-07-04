@@ -134,11 +134,13 @@ export default function SessionHeader({ id, noBorder = false }: SessionHeaderPro
         </>
       }
       title={
-        <h1 className={`text-2xl md:text-3xl font-extrabold tracking-tight bg-clip-text text-transparent font-sans mt-3 flex items-center gap-2 ${
-          isLive 
-            ? 'bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600' 
-            : 'bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900'
-        }`}>
+        <h1
+          className={`text-2xl md:text-3xl font-extrabold tracking-tight bg-clip-text text-transparent font-sans mt-3 flex items-center gap-2 ${
+            isLive
+              ? 'bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600'
+              : 'bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900'
+          }`}
+        >
           {isLive
             ? isRecording
               ? sessionTitle || 'Live Session'
@@ -164,17 +166,23 @@ export default function SessionHeader({ id, noBorder = false }: SessionHeaderPro
         isLive ? (
           isRecording && sessionClientName ? (
             <span>
-              Active coaching session for: <strong className="text-slate-800 font-bold">{sessionClientName}</strong>
+              Active coaching session for:{' '}
+              <strong className="text-slate-800 font-bold">{sessionClientName}</strong>
             </span>
           ) : (
             <span>
-              <span className="text-indigo-600 font-bold bg-indigo-50/50 px-1.5 py-0.5 rounded border border-indigo-100/50">Real-time</span> AI-powered conversation coaching & sales intelligence
+              <span className="text-indigo-600 font-bold bg-indigo-50/50 px-1.5 py-0.5 rounded border border-indigo-100/50">
+                Real-time
+              </span>{' '}
+              AI-powered conversation coaching & sales intelligence
             </span>
           )
         ) : (
           <>
             <strong className="text-slate-800 font-bold">{clientName}</strong>
-            {formattedDate && <span className="text-slate-400 font-normal"> • Conducted on {formattedDate}</span>}
+            {formattedDate && (
+              <span className="text-slate-400 font-normal"> • Conducted on {formattedDate}</span>
+            )}
           </>
         )
       }

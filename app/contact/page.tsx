@@ -11,7 +11,7 @@ export default function ContactPage() {
   const [email, setEmail] = useState('');
   const [org, setOrg] = useState('');
   const [message, setMessage] = useState('');
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -83,19 +83,22 @@ export default function ContactPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-slate-500 text-sm md:text-base max-w-xl mx-auto leading-relaxed"
           >
-            Have a question about features, custom scaling, or setting up a pilot? Our expert sales architect team is ready.
+            Have a question about features, custom scaling, or setting up a pilot? Our expert sales
+            architect team is ready.
           </motion.p>
         </section>
 
         {/* Contact split section */}
         <section className="max-w-7xl mx-auto px-6 py-12 grid lg:grid-cols-12 gap-16 items-start">
-          
           {/* Left panel: Info & Channels */}
           <div className="lg:col-span-5 space-y-8">
             <div className="space-y-4">
-              <h2 className="text-xl font-bold text-slate-900 tracking-tight">Talklytics Headquarters</h2>
+              <h2 className="text-xl font-bold text-slate-900 tracking-tight">
+                Talklytics Headquarters
+              </h2>
               <p className="text-xs text-slate-500 leading-relaxed">
-                Connect via email, phone, or stop by our office. Our enterprise customer success networks operate 24/7.
+                Connect via email, phone, or stop by our office. Our enterprise customer success
+                networks operate 24/7.
               </p>
             </div>
 
@@ -105,8 +108,13 @@ export default function ContactPage() {
                   <Mail className="w-4 h-4" />
                 </div>
                 <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Email Sales</span>
-                  <a href="mailto:hello@talklytics.com" className="text-xs font-semibold text-slate-800 hover:text-indigo-600 transition-colors">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">
+                    Email Sales
+                  </span>
+                  <a
+                    href="mailto:hello@talklytics.com"
+                    className="text-xs font-semibold text-slate-800 hover:text-indigo-600 transition-colors"
+                  >
                     hello@talklytics.com
                   </a>
                 </div>
@@ -117,8 +125,13 @@ export default function ContactPage() {
                   <Phone className="w-4 h-4" />
                 </div>
                 <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Phone Inquiries</span>
-                  <a href="tel:+18005558255" className="text-xs font-semibold text-slate-800 hover:text-indigo-600 transition-colors">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">
+                    Phone Inquiries
+                  </span>
+                  <a
+                    href="tel:+18005558255"
+                    className="text-xs font-semibold text-slate-800 hover:text-indigo-600 transition-colors"
+                  >
                     +1 (800) 555-TALK
                   </a>
                 </div>
@@ -129,9 +142,12 @@ export default function ContactPage() {
                   <MapPin className="w-4 h-4" />
                 </div>
                 <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">HQ Corporate Address</span>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">
+                    HQ Corporate Address
+                  </span>
                   <p className="text-xs font-semibold text-slate-800 leading-relaxed">
-                    100 Pine Street, Suite 2400<br />
+                    100 Pine Street, Suite 2400
+                    <br />
                     San Francisco, CA 94111
                   </p>
                 </div>
@@ -142,7 +158,9 @@ export default function ContactPage() {
 
             {/* Social channels links */}
             <div className="space-y-3">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Follow Corporate Channels</span>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">
+                Follow Corporate Channels
+              </span>
               <div className="flex gap-4">
                 {['LinkedIn', 'Twitter/X', 'GitHub', 'Medium'].map((social) => (
                   <a
@@ -166,8 +184,12 @@ export default function ContactPage() {
               className="bg-white border border-[#E5E7EB] rounded-3xl p-8 shadow-sm space-y-6"
             >
               <div className="pb-4 border-b border-slate-100">
-                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Enterprise Inquiry Form</h3>
-                <p className="text-[10px] text-slate-400 mt-0.5">Please fill out this form to connect with our accounts team.</p>
+                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
+                  Enterprise Inquiry Form
+                </h3>
+                <p className="text-[10px] text-slate-400 mt-0.5">
+                  Please fill out this form to connect with our accounts team.
+                </p>
               </div>
 
               <AnimatePresence mode="wait">
@@ -180,9 +202,12 @@ export default function ContactPage() {
                   >
                     <CheckCircle2 className="w-10 h-10 text-emerald-600 mx-auto" />
                     <div className="space-y-1">
-                      <h4 className="text-xs font-bold text-emerald-800 uppercase tracking-wider">Inquiry Submitted</h4>
+                      <h4 className="text-xs font-bold text-emerald-800 uppercase tracking-wider">
+                        Inquiry Submitted
+                      </h4>
                       <p className="text-xs text-emerald-600 leading-normal max-w-sm mx-auto">
-                        Thank you for reaching out! A Talklytics Sales Engineer will contact you within 2 business hours.
+                        Thank you for reaching out! A Talklytics Sales Engineer will contact you
+                        within 2 business hours.
                       </p>
                     </div>
                   </motion.div>
@@ -203,7 +228,10 @@ export default function ContactPage() {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <label htmlFor="user-name" className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+                        <label
+                          htmlFor="user-name"
+                          className="text-[10px] text-slate-500 font-bold uppercase tracking-wider"
+                        >
                           Full Name *
                         </label>
                         <input
@@ -218,7 +246,10 @@ export default function ContactPage() {
                       </div>
 
                       <div className="space-y-1.5">
-                        <label htmlFor="user-email" className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+                        <label
+                          htmlFor="user-email"
+                          className="text-[10px] text-slate-500 font-bold uppercase tracking-wider"
+                        >
                           Work Email *
                         </label>
                         <input
@@ -234,7 +265,10 @@ export default function ContactPage() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label htmlFor="user-org" className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+                      <label
+                        htmlFor="user-org"
+                        className="text-[10px] text-slate-500 font-bold uppercase tracking-wider"
+                      >
                         Organization / Company
                       </label>
                       <input
@@ -248,7 +282,10 @@ export default function ContactPage() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label htmlFor="user-msg" className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+                      <label
+                        htmlFor="user-msg"
+                        className="text-[10px] text-slate-500 font-bold uppercase tracking-wider"
+                      >
                         How can we help? *
                       </label>
                       <textarea
@@ -290,12 +327,17 @@ export default function ContactPage() {
         <section className="max-w-4xl mx-auto px-6 py-16">
           <div className="text-center space-y-2 mb-10">
             <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Contact FAQ</h2>
-            <p className="text-xs text-slate-500">Quick answers to common corporate engagement questions.</p>
+            <p className="text-xs text-slate-500">
+              Quick answers to common corporate engagement questions.
+            </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
             {contactFaqs.map((faq) => (
-              <div key={faq.q} className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm space-y-2">
+              <div
+                key={faq.q}
+                className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm space-y-2"
+              >
                 <h4 className="text-xs font-bold text-slate-800 leading-normal">{faq.q}</h4>
                 <p className="text-[11px] text-slate-500 leading-relaxed">{faq.a}</p>
               </div>

@@ -19,7 +19,7 @@ import {
   Info,
   BellOff,
   ChevronDown,
-  Menu
+  Menu,
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -191,10 +191,8 @@ export default function Header({ isSidebarCollapsed = false, toggleSidebar }: He
 
   return (
     <header className="fixed top-0 left-0 right-0 h-16 bg-[#FAFBFC] border-b border-[#E5E7EB] flex items-center justify-between px-6 z-50 font-sans select-none">
-      
       {/* Brand logo & Sidebar Toggle */}
       <div className="flex items-center gap-4">
-        
         <Link href="/" className="flex items-center gap-2 group" onClick={handleLogoClick}>
           <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-sm transition-all group-hover:scale-105">
             <Sparkles className="w-4 h-4" />
@@ -212,27 +210,26 @@ export default function Header({ isSidebarCollapsed = false, toggleSidebar }: He
 
       {/* Top Navigation Links */}
       <nav className="hidden md:flex items-center gap-8">
-        <Link 
-        
-          href="/" 
+        <Link
+          href="/"
           className={`text-xs font-bold tracking-wider uppercase transition-colors ${pathname === '/' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-800'}`}
         >
           Home
         </Link>
-        <Link 
-          href="/dashboard" 
+        <Link
+          href="/dashboard"
           className={`text-xs font-bold tracking-wider uppercase transition-colors ${pathname === '/dashboard' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-800'}`}
         >
           Dashboard
         </Link>
-        <Link 
-          href="/pricing" 
+        <Link
+          href="/pricing"
           className={`text-xs font-bold tracking-wider uppercase transition-colors ${pathname === '/pricing' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-800'}`}
         >
           Pricing
         </Link>
-        <Link 
-          href="/contact" 
+        <Link
+          href="/contact"
           className={`text-xs font-bold tracking-wider uppercase transition-colors ${pathname === '/contact' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-800'}`}
         >
           Contact
@@ -273,7 +270,10 @@ export default function Header({ isSidebarCollapsed = false, toggleSidebar }: He
                   <div className="px-4 py-2 border-b border-slate-100 flex items-center justify-between">
                     <span className="text-xs font-bold text-slate-800">Notifications</span>
                     {notifications.length > 0 && (
-                      <button onClick={handleClearAllNotifs} className="text-[10px] text-indigo-600 hover:text-indigo-700 font-bold">
+                      <button
+                        onClick={handleClearAllNotifs}
+                        className="text-[10px] text-indigo-600 hover:text-indigo-700 font-bold"
+                      >
                         Clear All
                       </button>
                     )}
@@ -286,21 +286,27 @@ export default function Header({ isSidebarCollapsed = false, toggleSidebar }: He
                           key={n.id}
                           onClick={() => handleMarkNotifRead(n.id, !n.read)}
                           className={`p-3 rounded-xl border transition-all cursor-pointer space-y-1 ${
-                            !n.read 
-                              ? 'bg-indigo-50/20 border-indigo-100' 
+                            !n.read
+                              ? 'bg-indigo-50/20 border-indigo-100'
                               : 'bg-white border-transparent hover:bg-slate-50'
                           }`}
                         >
                           <div className="flex justify-between items-start">
                             <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                              {n.type === 'SUCCESS' ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> :
-                               n.type === 'WARNING' ? <AlertTriangle className="w-3.5 h-3.5 text-amber-500" /> :
-                               <Info className="w-3.5 h-3.5 text-indigo-600" />}
+                              {n.type === 'SUCCESS' ? (
+                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                              ) : n.type === 'WARNING' ? (
+                                <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
+                              ) : (
+                                <Info className="w-3.5 h-3.5 text-indigo-600" />
+                              )}
                               {n.title}
                             </span>
                             {!n.read && <span className="w-1.5 h-1.5 rounded-full bg-indigo-600" />}
                           </div>
-                          <p className="text-[10px] text-slate-500 leading-normal">{n.description}</p>
+                          <p className="text-[10px] text-slate-500 leading-normal">
+                            {n.description}
+                          </p>
                         </div>
                       ))
                     ) : (
@@ -324,8 +330,8 @@ export default function Header({ isSidebarCollapsed = false, toggleSidebar }: He
 
             {/* Workspace switcher dropdown */}
             <div className="relative" ref={userMenuRef}>
-              <button 
-                onClick={() => setShowUserMenu(!showUserMenu)} 
+              <button
+                onClick={() => setShowUserMenu(!showUserMenu)}
                 className="flex items-center gap-1 p-0.5 rounded-full hover:bg-slate-100 transition-colors"
               >
                 <div className="w-7 h-7 rounded-full overflow-hidden bg-slate-100 border border-slate-200">
@@ -344,8 +350,12 @@ export default function Header({ isSidebarCollapsed = false, toggleSidebar }: He
               {showUserMenu && (
                 <div className="absolute right-0 mt-2 w-56 bg-white border border-[#E5E7EB] rounded-2xl shadow-xl overflow-hidden z-50 py-2">
                   <div className="px-4 py-3 border-b border-slate-100">
-                    <span className="text-xs font-bold text-slate-800 block">{currentUser?.name || 'Jane Smith'}</span>
-                    <span className="text-[10px] text-slate-400 block truncate">{currentUser?.email || 'jane.smith@talklytics.com'}</span>
+                    <span className="text-xs font-bold text-slate-800 block">
+                      {currentUser?.name || 'Jane Smith'}
+                    </span>
+                    <span className="text-[10px] text-slate-400 block truncate">
+                      {currentUser?.email || 'jane.smith@talklytics.com'}
+                    </span>
                     <span className="inline-block mt-2 text-[9px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-bold uppercase">
                       {currentUser?.role || 'SALES_REP'}
                     </span>
@@ -374,7 +384,10 @@ export default function Header({ isSidebarCollapsed = false, toggleSidebar }: He
           </>
         ) : (
           <>
-            <Link href="/login" className="text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors">
+            <Link
+              href="/login"
+              className="text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors"
+            >
               Login
             </Link>
             <Link href="/dashboard">
@@ -385,7 +398,6 @@ export default function Header({ isSidebarCollapsed = false, toggleSidebar }: He
           </>
         )}
       </div>
-
     </header>
   );
 }

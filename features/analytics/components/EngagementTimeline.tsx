@@ -134,7 +134,9 @@ export default function EngagementTimeline() {
               <div className="timeline-dot" />
               <span className="text-caption">Interest Score</span>
             </div>
-            {hasData && <span className="text-caption color-accent">{records.length} segments</span>}
+            {hasData && (
+              <span className="text-caption color-accent">{records.length} segments</span>
+            )}
             <button className="icon-btn">
               <span className="material-symbols-outlined fs-18">fullscreen</span>
             </button>

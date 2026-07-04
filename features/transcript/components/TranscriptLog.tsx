@@ -140,7 +140,10 @@ export default function TranscriptLog() {
                     : '?';
 
                   return (
-                    <div key={record.id || `${filteredRecords.length - 1 - i}`} className="transcript-entry transcript-entry-animate">
+                    <div
+                      key={record.id || `${filteredRecords.length - 1 - i}`}
+                      className="transcript-entry transcript-entry-animate"
+                    >
                       <div className={`transcript-avatar ${avatarClass}`}>{initials}</div>
                       <div className="transcript-entry-body">
                         <div className="transcript-entry-meta">

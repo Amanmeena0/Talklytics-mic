@@ -25,7 +25,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div className="app-shell min-h-screen bg-[#FAFBFC]">
       <Header isSidebarCollapsed={isCollapsed} toggleSidebar={toggleCollapse} />
       <Sidebar isCollapsed={isCollapsed} toggleCollapse={toggleCollapse} />
-      <div className={`transition-all duration-300 ${isCollapsed ? 'md:pl-16' : 'md:pl-[260px]'} w-full min-h-screen`}>
+      <div
+        className={`transition-all duration-300 ${isCollapsed ? 'md:pl-16' : 'md:pl-[260px]'} w-full min-h-screen`}
+      >
         {children}
       </div>
     </div>

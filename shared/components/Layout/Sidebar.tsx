@@ -13,7 +13,7 @@ import {
   Users,
   ChevronLeft,
   ChevronRight,
-  Mic
+  Mic,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -45,17 +45,16 @@ export default function Sidebar({ isCollapsed = false, toggleCollapse }: Sidebar
   }, []);
 
   return (
-    <aside 
+    <aside
       className={`fixed left-0 top-16 bottom-0 bg-white border-r border-[#E5E7EB] flex flex-col justify-between py-6 z-40 font-sans select-none hidden md:flex transition-all duration-300 shadow-sm ${
         isCollapsed ? 'w-16 px-2' : 'w-[260px] px-4'
       }`}
     >
       <div className="space-y-6">
-        
         {/* Collapse Toggle Button (Inside Sidebar) */}
         <div className="w-full px-1">
           {isCollapsed ? (
-            <button 
+            <button
               onClick={toggleCollapse}
               className="w-9 h-9 mx-auto flex items-center justify-center rounded-xl bg-slate-50 border border-slate-200 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 transition-all shadow-sm"
               title="Expand Sidebar"
@@ -63,7 +62,7 @@ export default function Sidebar({ isCollapsed = false, toggleCollapse }: Sidebar
               <ChevronRight className="w-4 h-4" />
             </button>
           ) : (
-            <button 
+            <button
               onClick={toggleCollapse}
               className="w-full py-2.5 px-3.5 flex items-center justify-between rounded-xl bg-slate-50 border border-slate-200 text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 transition-all shadow-sm font-semibold text-xs tracking-wide"
               title="Collapse Sidebar"
@@ -77,19 +76,24 @@ export default function Sidebar({ isCollapsed = false, toggleCollapse }: Sidebar
         {/* Live Stream Panel */}
         <div className="space-y-2">
           <Link href="/calls/live" className="block group">
-            <div className={`rounded-2xl border transition-all duration-300 ${
-              pathname === '/calls/live' 
-                ? 'bg-indigo-50/40 border-indigo-100 shadow-sm' 
-                : 'bg-transparent border-transparent hover:bg-slate-50'
-            } ${isCollapsed ? 'p-2 flex justify-center' : 'p-3'}`}>
-              
+            <div
+              className={`rounded-2xl border transition-all duration-300 ${
+                pathname === '/calls/live'
+                  ? 'bg-indigo-50/40 border-indigo-100 shadow-sm'
+                  : 'bg-transparent border-transparent hover:bg-slate-50'
+              } ${isCollapsed ? 'p-2 flex justify-center' : 'p-3'}`}
+            >
               {isCollapsed ? (
                 /* Collapsed Live Stream Icon */
-                <div className={`relative flex items-center justify-center w-8 h-8 rounded-xl bg-slate-50 text-slate-600 transition-all group-hover:bg-indigo-50 group-hover:text-indigo-600 ${
-                  pathname === '/calls/live' ? 'bg-indigo-50 text-indigo-700' : ''
-                }`}>
+                <div
+                  className={`relative flex items-center justify-center w-8 h-8 rounded-xl bg-slate-50 text-slate-600 transition-all group-hover:bg-indigo-50 group-hover:text-indigo-600 ${
+                    pathname === '/calls/live' ? 'bg-indigo-50 text-indigo-700' : ''
+                  }`}
+                >
                   <Mic className="w-4 h-4" />
-                  <span className={`absolute top-0 right-0 w-2 h-2 rounded-full border border-white ${liveCallAvailable ? 'bg-[#10B981]' : 'bg-slate-400'}`} />
+                  <span
+                    className={`absolute top-0 right-0 w-2 h-2 rounded-full border border-white ${liveCallAvailable ? 'bg-[#10B981]' : 'bg-slate-400'}`}
+                  />
                   {liveCallAvailable && (
                     <span className="absolute top-0 right-0 w-2 h-2 rounded-full bg-[#10B981] animate-ping" />
                   )}
@@ -99,7 +103,9 @@ export default function Sidebar({ isCollapsed = false, toggleCollapse }: Sidebar
                 <div className="flex items-center gap-3">
                   <div className="relative flex items-center justify-center w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 shrink-0">
                     <Mic className="w-4 h-4" />
-                    <span className={`absolute top-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-white ${liveCallAvailable ? 'bg-[#10B981]' : 'bg-slate-400'}`} />
+                    <span
+                      className={`absolute top-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-white ${liveCallAvailable ? 'bg-[#10B981]' : 'bg-slate-400'}`}
+                    />
                     {liveCallAvailable && (
                       <span className="absolute top-0 right-0 w-2.5 h-2.5 rounded-full bg-[#10B981] animate-ping" />
                     )}
@@ -107,7 +113,9 @@ export default function Sidebar({ isCollapsed = false, toggleCollapse }: Sidebar
                   <div>
                     <div className="text-xs font-bold text-slate-800 tracking-wide flex items-center gap-1.5">
                       Live Monitor
-                      {liveCallAvailable && <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />}
+                      {liveCallAvailable && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
+                      )}
                     </div>
                     <div className="text-[9px] text-slate-500 font-semibold uppercase tracking-wider mt-0.5">
                       {liveCallAvailable ? 'Active Connection' : 'No Live Stream'}
@@ -115,7 +123,6 @@ export default function Sidebar({ isCollapsed = false, toggleCollapse }: Sidebar
                   </div>
                 </div>
               )}
-
             </div>
           </Link>
         </div>
@@ -129,44 +136,50 @@ export default function Sidebar({ isCollapsed = false, toggleCollapse }: Sidebar
               Navigation
             </span>
           )}
-          
+
           <div className="space-y-1">
             {[
               {
                 href: '/dashboard',
                 label: 'Dashboard',
-                icon: BarChart3
+                icon: BarChart3,
               },
               {
                 href: '/calls/live',
                 label: 'Live Stream',
-                icon: Activity
+                icon: Activity,
               },
               {
                 href: '/calls',
                 label: 'Recordings',
-                icon: History
+                icon: History,
               },
               {
                 href: '/dashboard/contacts',
                 label: 'Contacts',
-                icon: Users
-              }
+                icon: Users,
+              },
             ].map((item) => {
               const Icon = item.icon;
-              const isActive = pathname === item.href || 
-                (item.href === '/calls' && pathname.startsWith('/calls') && pathname !== '/calls/live') ||
+              const isActive =
+                pathname === item.href ||
+                (item.href === '/calls' &&
+                  pathname.startsWith('/calls') &&
+                  pathname !== '/calls/live') ||
                 (item.href === '/dashboard/contacts' && pathname.startsWith('/dashboard/contacts'));
-              
+
               return (
                 <Link
                   key={item.href}
                   href={item.href}
                   title={isCollapsed ? item.label : undefined}
                   className={`flex items-center rounded-xl text-xs font-semibold tracking-wide transition-all ${
-                    isCollapsed 
-                      ? 'justify-center p-2.5' 
-                      : 'gap-3 py-2.5 pl-3 border-l-2 ' + (isActive ? 'border-indigo-600 bg-indigo-50/40 text-indigo-700' : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-50')
+                    isCollapsed
+                      ? 'justify-center p-2.5'
+                      : 'gap-3 py-2.5 pl-3 border-l-2 ' +
+                        (isActive
+                          ? 'border-indigo-600 bg-indigo-50/40 text-indigo-700'
+                          : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-50')
                   } ${isCollapsed && isActive ? 'bg-indigo-50 text-indigo-700' : isCollapsed ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' : ''}`}
                 >
                   <Icon className={`w-4 h-4 ${isActive ? 'text-indigo-600' : 'text-slate-400'}`} />
@@ -184,23 +197,27 @@ export default function Sidebar({ isCollapsed = false, toggleCollapse }: Sidebar
               Configuration
             </span>
           )}
-          
+
           <div className="space-y-1">
             <Link
               href="/settings"
               title={isCollapsed ? 'Settings' : undefined}
               className={`flex items-center rounded-xl text-xs font-semibold tracking-wide transition-all ${
-                isCollapsed 
-                  ? 'justify-center p-2.5' 
-                  : 'gap-3 py-2.5 pl-3 border-l-2 ' + (isActiveSettings(pathname) ? 'border-indigo-600 bg-indigo-50/40 text-indigo-700' : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-50')
+                isCollapsed
+                  ? 'justify-center p-2.5'
+                  : 'gap-3 py-2.5 pl-3 border-l-2 ' +
+                    (isActiveSettings(pathname)
+                      ? 'border-indigo-600 bg-indigo-50/40 text-indigo-700'
+                      : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-50')
               } ${isCollapsed && isActiveSettings(pathname) ? 'bg-indigo-50 text-indigo-700' : isCollapsed ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-50' : ''}`}
             >
-              <Settings className={`w-4 h-4 ${isActiveSettings(pathname) ? 'text-indigo-600' : 'text-slate-400'}`} />
+              <Settings
+                className={`w-4 h-4 ${isActiveSettings(pathname) ? 'text-indigo-600' : 'text-slate-400'}`}
+              />
               {!isCollapsed && <span>Settings</span>}
             </Link>
           </div>
         </div>
-
       </div>
 
       {/* Bottom Footer Section */}
@@ -226,7 +243,6 @@ export default function Sidebar({ isCollapsed = false, toggleCollapse }: Sidebar
           {!isCollapsed && <span>Account Profile</span>}
         </Link>
       </div>
-
     </aside>
   );
 }

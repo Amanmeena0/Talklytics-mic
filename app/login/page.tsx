@@ -166,7 +166,6 @@ function LoginForm() {
           Create one now
         </Link>
       </div>
-
     </div>
   );
 }

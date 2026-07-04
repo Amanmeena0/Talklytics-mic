@@ -25,12 +25,12 @@ import {
   Filter,
   CheckCircle,
   Video,
-  Database
+  Database,
 } from 'lucide-react';
 
 export default function CallHistoryPage() {
   const router = useRouter();
-  
+
   // Search & Filters State
   const [query, setQuery] = useState('');
   const [sentiment, setSentiment] = useState('All');
@@ -149,12 +149,15 @@ export default function CallHistoryPage() {
     <Layout>
       <main className="min-h-screen bg-[#FAFBFC] pt-20 px-8 pb-16 font-sans text-slate-900">
         <div className="max-w-6xl mx-auto space-y-8">
-          
           {/* Header */}
-          <PageHeader 
+          <PageHeader
             title="Recording Database"
             subtitle={`Search, analyze, and inspect completed calls (${totalCount} reports available)`}
-            badge={<span className="text-[9px] bg-indigo-50/80 text-indigo-600 border border-indigo-100/50 backdrop-blur-sm px-2.5 py-1 rounded-lg font-extrabold uppercase tracking-widest shadow-sm">Conversation Audit</span>}
+            badge={
+              <span className="text-[9px] bg-indigo-50/80 text-indigo-600 border border-indigo-100/50 backdrop-blur-sm px-2.5 py-1 rounded-lg font-extrabold uppercase tracking-widest shadow-sm">
+                Conversation Audit
+              </span>
+            }
             actions={
               <Link href="/calls/live">
                 <button
@@ -173,7 +176,6 @@ export default function CallHistoryPage() {
           {/* Search & Advanced Filters Bar */}
           <div className="bg-white border border-[#E5E7EB] rounded-2xl p-4 shadow-sm">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
-              
               {/* Search input */}
               <div className="md:col-span-4 relative">
                 <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -237,8 +239,8 @@ export default function CallHistoryPage() {
                   aria-label={isFavoriteOnly ? 'Show all calls' : 'Show starred calls only'}
                   title={isFavoriteOnly ? 'Show all calls' : 'Show starred calls only'}
                   className={`w-full flex items-center justify-center gap-2 px-3 py-2 border rounded-xl text-xs font-semibold transition-all ${
-                    isFavoriteOnly 
-                      ? 'bg-amber-50 border-amber-200 text-amber-700' 
+                    isFavoriteOnly
+                      ? 'bg-amber-50 border-amber-200 text-amber-700'
                       : 'bg-white border-[#E5E7EB] text-slate-700 hover:border-slate-300'
                   }`}
                 >
@@ -275,7 +277,6 @@ export default function CallHistoryPage() {
                   <ArrowUpDown className="w-3.5 h-3.5" />
                 </button>
               </div>
-
             </div>
           </div>
 
@@ -308,14 +309,31 @@ export default function CallHistoryPage() {
                     // Skeleton Rows
                     Array.from({ length: 5 }).map((_, i) => (
                       <tr key={i} className="border-b border-[#E5E7EB]/40 animate-pulse">
-                        <td className="py-4 px-6"><div className="w-4 h-4 bg-slate-100 rounded mx-auto" /></td>
-                        <td className="py-4 px-6"><div className="w-24 h-4 bg-slate-100 rounded" /></td>
-                        <td className="py-4 px-6"><div className="w-40 h-4 bg-slate-100 rounded mb-1" /><div className="w-16 h-3 bg-slate-50 rounded" /></td>
-                        <td className="py-4 px-6"><div className="w-16 h-4 bg-slate-100 rounded" /></td>
-                        <td className="py-4 px-6"><div className="w-12 h-4 bg-slate-100 rounded" /></td>
-                        <td className="py-4 px-6"><div className="w-16 h-5 bg-slate-100 rounded-full" /></td>
-                        <td className="py-4 px-6"><div className="w-8 h-4 bg-slate-100 rounded" /></td>
-                        <td className="py-4 px-6 text-right"><div className="w-12 h-6 bg-slate-100 rounded ml-auto" /></td>
+                        <td className="py-4 px-6">
+                          <div className="w-4 h-4 bg-slate-100 rounded mx-auto" />
+                        </td>
+                        <td className="py-4 px-6">
+                          <div className="w-24 h-4 bg-slate-100 rounded" />
+                        </td>
+                        <td className="py-4 px-6">
+                          <div className="w-40 h-4 bg-slate-100 rounded mb-1" />
+                          <div className="w-16 h-3 bg-slate-50 rounded" />
+                        </td>
+                        <td className="py-4 px-6">
+                          <div className="w-16 h-4 bg-slate-100 rounded" />
+                        </td>
+                        <td className="py-4 px-6">
+                          <div className="w-12 h-4 bg-slate-100 rounded" />
+                        </td>
+                        <td className="py-4 px-6">
+                          <div className="w-16 h-5 bg-slate-100 rounded-full" />
+                        </td>
+                        <td className="py-4 px-6">
+                          <div className="w-8 h-4 bg-slate-100 rounded" />
+                        </td>
+                        <td className="py-4 px-6 text-right">
+                          <div className="w-12 h-6 bg-slate-100 rounded ml-auto" />
+                        </td>
                       </tr>
                     ))
                   ) : calls.length > 0 ? (
@@ -323,32 +341,54 @@ export default function CallHistoryPage() {
                       const isPlaying = playingCallId === call.id;
                       return (
                         <React.Fragment key={call.id}>
-                          <tr 
+                          <tr
                             onClick={() => setSelectedCallForModal(call)}
                             className="border-b border-[#E5E7EB] hover:bg-slate-50/40 transition-all cursor-pointer"
                           >
-                            <td className="py-4 px-6 text-center" onClick={(e) => e.stopPropagation()}>
+                            <td
+                              className="py-4 px-6 text-center"
+                              onClick={(e) => e.stopPropagation()}
+                            >
                               <button
                                 type="button"
                                 onClick={() => handleToggleFavorite(call.id, call.isFavorite)}
-                                aria-label={call.isFavorite ? `Remove ${call.title} from starred calls` : `Add ${call.title} to starred calls`}
-                                title={call.isFavorite ? `Remove ${call.title} from starred calls` : `Add ${call.title} to starred calls`}
+                                aria-label={
+                                  call.isFavorite
+                                    ? `Remove ${call.title} from starred calls`
+                                    : `Add ${call.title} to starred calls`
+                                }
+                                title={
+                                  call.isFavorite
+                                    ? `Remove ${call.title} from starred calls`
+                                    : `Add ${call.title} to starred calls`
+                                }
                                 className={`p-1 rounded hover:bg-slate-100 transition-colors ${call.isFavorite ? 'text-amber-500' : 'text-slate-300'}`}
                               >
-                                <Star className={`w-4 h-4 ${call.isFavorite ? 'fill-current' : ''}`} />
+                                <Star
+                                  className={`w-4 h-4 ${call.isFavorite ? 'fill-current' : ''}`}
+                                />
                               </button>
                             </td>
-                            <td className="py-4 px-6 font-semibold text-slate-800">{call.clientName}</td>
+                            <td className="py-4 px-6 font-semibold text-slate-800">
+                              {call.clientName}
+                            </td>
                             <td className="py-4 px-6 font-medium text-slate-900">{call.title}</td>
                             <td className="py-4 px-6 text-slate-500">{formatDate(call.date)}</td>
-                            <td className="py-4 px-6 text-slate-500">{formatDuration(call.duration)}</td>
+                            <td className="py-4 px-6 text-slate-500">
+                              {formatDuration(call.duration)}
+                            </td>
                             <td className="py-4 px-6">
                               <SentimentBadge sentiment={call.overallSentiment} />
                             </td>
-                            <td className="py-4 px-6 font-bold text-slate-700">{call.averageScore.toFixed(1)}/5</td>
-                            <td className="py-4 px-6 text-right" onClick={(e) => e.stopPropagation()}>
+                            <td className="py-4 px-6 font-bold text-slate-700">
+                              {call.averageScore.toFixed(1)}/5
+                            </td>
+                            <td
+                              className="py-4 px-6 text-right"
+                              onClick={(e) => e.stopPropagation()}
+                            >
                               <div className="flex items-center justify-end gap-2">
-                                <Link 
+                                <Link
                                   href={`/calls/${call.id}`}
                                   className="p-2 rounded bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-all"
                                   title="View intelligence report"
@@ -374,7 +414,9 @@ export default function CallHistoryPage() {
                     <tr>
                       <td colSpan={8} className="py-16 text-center text-slate-400 space-y-3">
                         <Database className="w-10 h-10 text-slate-300 mx-auto" />
-                        <p className="text-xs font-semibold uppercase">No Recordings Found Matching Criteria</p>
+                        <p className="text-xs font-semibold uppercase">
+                          No Recordings Found Matching Criteria
+                        </p>
                       </td>
                     </tr>
                   )}
@@ -412,9 +454,7 @@ export default function CallHistoryPage() {
                 </button>
               </div>
             </div>
-
           </div>
-
         </div>
       </main>
 
@@ -457,31 +497,51 @@ export default function CallHistoryPage() {
                   <div className="flex items-center gap-3">
                     <button
                       type="button"
-                      onClick={() => setPlayingCallId(playingCallId === selectedCallForModal.id ? null : selectedCallForModal.id)}
-                      aria-label={playingCallId === selectedCallForModal.id ? 'Pause audio playback' : 'Play audio playback'}
-                      title={playingCallId === selectedCallForModal.id ? 'Pause audio playback' : 'Play audio playback'}
+                      onClick={() =>
+                        setPlayingCallId(
+                          playingCallId === selectedCallForModal.id ? null : selectedCallForModal.id
+                        )
+                      }
+                      aria-label={
+                        playingCallId === selectedCallForModal.id
+                          ? 'Pause audio playback'
+                          : 'Play audio playback'
+                      }
+                      title={
+                        playingCallId === selectedCallForModal.id
+                          ? 'Pause audio playback'
+                          : 'Play audio playback'
+                      }
                       className="w-10 h-10 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center shadow-sm transition-all"
                     >
-                      {playingCallId === selectedCallForModal.id ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
+                      {playingCallId === selectedCallForModal.id ? (
+                        <Pause className="w-4 h-4 fill-current" />
+                      ) : (
+                        <Play className="w-4 h-4 fill-current ml-0.5" />
+                      )}
                     </button>
                     <div>
-                      <span className="text-[10px] text-slate-400 font-bold uppercase block">Audio Record</span>
+                      <span className="text-[10px] text-slate-400 font-bold uppercase block">
+                        Audio Record
+                      </span>
                       <span className="text-xs font-bold text-slate-800">
-                        {playingCallId === selectedCallForModal.id ? 'Playing transcript audio...' : 'Audio recording ready'}
+                        {playingCallId === selectedCallForModal.id
+                          ? 'Playing transcript audio...'
+                          : 'Audio recording ready'}
                       </span>
                     </div>
                   </div>
-                  
+
                   {playingCallId === selectedCallForModal.id && (
                     <div className="h-6 flex items-center justify-between gap-0.5 pt-2">
                       {Array.from({ length: 36 }).map((_, i) => (
-                        <span 
-                          key={i} 
+                        <span
+                          key={i}
                           className="w-1 bg-indigo-500 rounded-full transition-all duration-300"
-                          style={{ 
+                          style={{
                             height: `${Math.max(4, Math.random() * 24)}px`,
                             animation: 'pulse 1.2s infinite ease-in-out',
-                            animationDelay: `${i * 0.05}s`
+                            animationDelay: `${i * 0.05}s`,
                           }}
                         />
                       ))}
@@ -491,10 +551,13 @@ export default function CallHistoryPage() {
 
                 {/* AI Executive Summary */}
                 <div className="space-y-2">
-                  <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">AI Generated Executive Summary</span>
+                  <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">
+                    AI Generated Executive Summary
+                  </span>
                   <div className="text-xs text-slate-600 leading-relaxed bg-white border border-[#E5E7EB] p-4 rounded-xl shadow-sm font-medium prose max-w-none">
                     <ReactMarkdown>
-                      {selectedCallForModal.summary || 'Summary data not available for this record.'}
+                      {selectedCallForModal.summary ||
+                        'Summary data not available for this record.'}
                     </ReactMarkdown>
                   </div>
                 </div>
@@ -512,7 +575,7 @@ export default function CallHistoryPage() {
                 >
                   Close
                 </button>
-                <Link 
+                <Link
                   href={`/calls/${selectedCallForModal.id}`}
                   className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold shadow-sm hover:shadow transition-all flex items-center gap-1"
                 >

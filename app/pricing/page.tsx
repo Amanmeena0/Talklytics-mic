@@ -66,12 +66,32 @@ export default function PricingPage() {
   ];
 
   const featuresMatrix = [
-    { name: 'Live Monitoring Limit', free: '3 hours/mo', pro: 'Unlimited', enterprise: 'Unlimited' },
-    { name: 'AI Coach cards', free: 'Basic suggestions', pro: 'Fully dynamic', enterprise: 'Custom fine-tuned' },
+    {
+      name: 'Live Monitoring Limit',
+      free: '3 hours/mo',
+      pro: 'Unlimited',
+      enterprise: 'Unlimited',
+    },
+    {
+      name: 'AI Coach cards',
+      free: 'Basic suggestions',
+      pro: 'Fully dynamic',
+      enterprise: 'Custom fine-tuned',
+    },
     { name: 'BANT scoring', free: 'Included', pro: 'Included', enterprise: 'Custom criteria' },
-    { name: 'CRM Integrations', free: '—', pro: 'HubSpot & Salesforce', enterprise: 'Custom CRM + API' },
+    {
+      name: 'CRM Integrations',
+      free: '—',
+      pro: 'HubSpot & Salesforce',
+      enterprise: 'Custom CRM + API',
+    },
     { name: 'Call database storage', free: '5 calls', pro: 'Unlimited', enterprise: 'Unlimited' },
-    { name: 'Support SLA', free: 'Email (48h)', pro: 'Slack & Email (4h)', enterprise: '24/7 Phone & Email (1h)' },
+    {
+      name: 'Support SLA',
+      free: 'Email (48h)',
+      pro: 'Slack & Email (4h)',
+      enterprise: '24/7 Phone & Email (1h)',
+    },
   ];
 
   const faqs = [
@@ -121,17 +141,27 @@ export default function PricingPage() {
 
           {/* Monthly / Yearly Toggle */}
           <div className="flex items-center justify-center gap-3 pt-6">
-            <span className={`text-xs font-semibold ${billingCycle === 'monthly' ? 'text-slate-900' : 'text-slate-400'}`}>Monthly</span>
+            <span
+              className={`text-xs font-semibold ${billingCycle === 'monthly' ? 'text-slate-900' : 'text-slate-400'}`}
+            >
+              Monthly
+            </span>
             <button
               onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
               className="w-12 h-6 bg-slate-200 rounded-full relative p-1 transition-all duration-300"
               aria-label="Billing Cycle Toggle"
             >
-              <div className={`w-4 h-4 bg-white rounded-full shadow transition-all duration-300 ${billingCycle === 'yearly' ? 'translate-x-6 bg-indigo-600' : 'translate-x-0'}`} />
+              <div
+                className={`w-4 h-4 bg-white rounded-full shadow transition-all duration-300 ${billingCycle === 'yearly' ? 'translate-x-6 bg-indigo-600' : 'translate-x-0'}`}
+              />
             </button>
-            <span className={`text-xs font-semibold ${billingCycle === 'yearly' ? 'text-indigo-600' : 'text-slate-400'} flex items-center gap-1.5`}>
+            <span
+              className={`text-xs font-semibold ${billingCycle === 'yearly' ? 'text-indigo-600' : 'text-slate-400'} flex items-center gap-1.5`}
+            >
               Yearly (Save 15%)
-              <span className="bg-indigo-50 text-indigo-700 text-[10px] px-2 py-0.5 rounded font-bold uppercase">Discounts</span>
+              <span className="bg-indigo-50 text-indigo-700 text-[10px] px-2 py-0.5 rounded font-bold uppercase">
+                Discounts
+              </span>
             </span>
           </div>
         </section>
@@ -145,8 +175,8 @@ export default function PricingPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
               className={`bg-white rounded-3xl p-8 border transition-all duration-300 flex flex-col justify-between hover:shadow-xl relative ${
-                plan.popular 
-                  ? 'border-indigo-600 ring-2 ring-indigo-600/10 shadow-md shadow-indigo-50/50' 
+                plan.popular
+                  ? 'border-indigo-600 ring-2 ring-indigo-600/10 shadow-md shadow-indigo-50/50'
                   : 'border-[#E5E7EB] hover:border-slate-300 shadow-sm'
               }`}
             >
@@ -163,7 +193,9 @@ export default function PricingPage() {
                 </div>
 
                 <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-extrabold text-slate-900 tracking-tight">{plan.price}</span>
+                  <span className="text-4xl font-extrabold text-slate-900 tracking-tight">
+                    {plan.price}
+                  </span>
                   <span className="text-xs text-slate-400 font-semibold">{plan.period}</span>
                 </div>
 
@@ -171,7 +203,10 @@ export default function PricingPage() {
 
                 <ul className="space-y-3">
                   {plan.features.map((feat) => (
-                    <li key={feat} className="flex items-start gap-2.5 text-xs text-slate-600 leading-normal">
+                    <li
+                      key={feat}
+                      className="flex items-start gap-2.5 text-xs text-slate-600 leading-normal"
+                    >
                       <Check className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
                       <span>{feat}</span>
                     </li>
@@ -199,8 +234,12 @@ export default function PricingPage() {
         {/* Feature Comparison Matrix */}
         <section className="max-w-4xl mx-auto px-6 py-16">
           <div className="text-center space-y-2 mb-10">
-            <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Compare Full Capability Matrix</h2>
-            <p className="text-xs text-slate-500">Find the optimal scale tier details for your organization.</p>
+            <h2 className="text-2xl font-bold text-slate-900 tracking-tight">
+              Compare Full Capability Matrix
+            </h2>
+            <p className="text-xs text-slate-500">
+              Find the optimal scale tier details for your organization.
+            </p>
           </div>
 
           <div className="bg-white border border-[#E5E7EB] rounded-3xl shadow-sm overflow-hidden">
@@ -218,9 +257,13 @@ export default function PricingPage() {
                   {featuresMatrix.map((row) => (
                     <tr key={row.name} className="hover:bg-slate-50/50 transition-colors">
                       <td className="py-4 px-6 font-bold text-slate-800">{row.name}</td>
-                      <td className="py-4 px-6 text-center text-slate-500 font-medium">{row.free}</td>
+                      <td className="py-4 px-6 text-center text-slate-500 font-medium">
+                        {row.free}
+                      </td>
                       <td className="py-4 px-6 text-center text-indigo-700 font-bold">{row.pro}</td>
-                      <td className="py-4 px-6 text-center text-slate-950 font-medium">{row.enterprise}</td>
+                      <td className="py-4 px-6 text-center text-slate-950 font-medium">
+                        {row.enterprise}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -233,12 +276,17 @@ export default function PricingPage() {
         <section className="max-w-3xl mx-auto px-6 py-8 space-y-6">
           <div className="text-center space-y-2 mb-6">
             <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Pricing FAQ</h2>
-            <p className="text-xs text-slate-500">Frequently asked questions about subscription schemes.</p>
+            <p className="text-xs text-slate-500">
+              Frequently asked questions about subscription schemes.
+            </p>
           </div>
 
           <div className="space-y-4">
             {faqs.map((faq) => (
-              <div key={faq.q} className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm space-y-2">
+              <div
+                key={faq.q}
+                className="bg-white border border-slate-100 rounded-2xl p-6 shadow-sm space-y-2"
+              >
                 <h4 className="text-xs font-bold text-slate-900 flex items-center gap-2">
                   <HelpCircle className="w-4 h-4 text-indigo-500" />
                   {faq.q}
@@ -253,7 +301,9 @@ export default function PricingPage() {
         <section className="max-w-7xl mx-auto px-6 py-12 border-t border-slate-200/50 flex flex-wrap justify-center items-center gap-12 text-slate-400">
           <div className="flex items-center gap-2">
             <Shield className="w-5 h-5 text-indigo-500" />
-            <span className="text-[10px] font-bold uppercase tracking-wider">SOC2 Type II Certified</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider">
+              SOC2 Type II Certified
+            </span>
           </div>
           <div className="flex items-center gap-2">
             <Shield className="w-5 h-5 text-indigo-500" />
@@ -261,7 +311,9 @@ export default function PricingPage() {
           </div>
           <div className="flex items-center gap-2">
             <Shield className="w-5 h-5 text-indigo-500" />
-            <span className="text-[10px] font-bold uppercase tracking-wider">ISO 27001 Certified</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider">
+              ISO 27001 Certified
+            </span>
           </div>
         </section>
       </main>

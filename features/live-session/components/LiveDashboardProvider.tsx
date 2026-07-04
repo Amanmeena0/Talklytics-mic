@@ -319,7 +319,14 @@ export default function LiveDashboardProvider({ children, id, wsUrl }: LiveDashb
     } else {
       window.location.href = '/calls';
     }
-  }, [liveData.callId, liveData.records, sessionTitle, sessionClientName, autoSummarize, elapsedMs]);
+  }, [
+    liveData.callId,
+    liveData.records,
+    sessionTitle,
+    sessionClientName,
+    autoSummarize,
+    elapsedMs,
+  ]);
 
   // ── Construct Context Value ──
   const contextValue = useMemo<LiveDataContextType>(() => {
