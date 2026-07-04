@@ -539,7 +539,7 @@ export default function CallHistoryPage() {
                           key={i}
                           className="w-1 bg-indigo-500 rounded-full transition-all duration-300"
                           style={{
-                            height: `${Math.max(4, Math.random() * 24)}px`,
+                            height: `${4 + ((i * 7 + 13) % 21)}px`,
                             animation: 'pulse 1.2s infinite ease-in-out',
                             animationDelay: `${i * 0.05}s`,
                           }}
