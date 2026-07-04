@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { LiveDataContext, type LiveDataContextType } from '@/shared/hooks/LiveDataContext';
 import useConvinceSense from '@/shared/hooks/useConvinceSense';
 import type { EngagementRecord } from '@/shared/types';
@@ -21,6 +21,10 @@ export default function LiveDashboardProvider({ children, id, wsUrl }: LiveDashb
   const [autoSummarize, setAutoSummarize] = useState<boolean>(true);
   const [sessionTitle, setSessionTitle] = useState<string>('');
   const [sessionClientName, setSessionClientName] = useState<string>('');
+  // New: client‑side timer state
+  const [startTime, setStartTime] = useState<number | null>(null);
+  const [elapsedMs, setElapsedMs] = useState<number>(0);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const dynamicWsUrl = useMemo(() => {
     if (!isLive || !isRecording) return null;
@@ -264,14 +268,49 @@ export default function LiveDashboardProvider({ children, id, wsUrl }: LiveDashb
     setSessionClientName(clientName);
     setAutoSummarize(autoSum);
     setIsRecording(true);
+    // Initialise client‑side timer
+    const now = Date.now();
+    setStartTime(now);
+    setElapsedMs(0);
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setElapsedMs(Date.now() - now);
+    }, 1000);
   }, []);
 
   // Stop recording session, disconnect WebSocket, and redirect to the saved Call page on backend
   const stopSession = useCallback(async () => {
     setIsRecording(false);
     setIsSaving(true);
+    // Clear client‑side timer
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+    // Compute final duration (ms)
+    const finalDuration = elapsedMs;
 
-    // Wait 2.5 seconds to let the backend finish generating the summary
+    // If auto‑summarize is disabled, manually POST the call data
+    if (!autoSummarize) {
+      try {
+        await clientFetch('/api/calls', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: sessionTitle,
+            clientName: sessionClientName,
+            duration: Math.floor(finalDuration / 1000),
+            records: liveData.records,
+            comments: [],
+            nextSteps: [],
+          }),
+        });
+      } catch (e) {
+        console.error('Failed to manually save call', e);
+      }
+    }
+
+    // Wait 2.5 seconds to let the backend finish generating the summary (when autoSummarize=true)
     await new Promise((resolve) => setTimeout(resolve, 2500));
 
     setIsSaving(false);
@@ -280,7 +319,7 @@ export default function LiveDashboardProvider({ children, id, wsUrl }: LiveDashb
     } else {
       window.location.href = '/calls';
     }
-  }, [liveData.callId]);
+  }, [liveData.callId, liveData.records, sessionTitle, sessionClientName, autoSummarize, elapsedMs]);
 
   // ── Construct Context Value ──
   const contextValue = useMemo<LiveDataContextType>(() => {
@@ -306,7 +345,8 @@ export default function LiveDashboardProvider({ children, id, wsUrl }: LiveDashb
         allHesitations: liveData.allHesitations,
         allIntents: liveData.allIntents,
         latestRecommendation: liveData.latestRecommendation,
-        sessionDuration: liveData.sessionDuration,
+        // Use client‑side elapsed time if available, otherwise fallback to backend timestamp
+        sessionDuration: startTime ? Math.floor(elapsedMs / 1000) : liveData.sessionDuration,
         toggleFavorite,
         addComment,
         updateNextStep,

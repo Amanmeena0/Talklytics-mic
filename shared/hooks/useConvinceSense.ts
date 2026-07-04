@@ -6,7 +6,7 @@ import type { EngagementRecord } from '@/shared/types';
 /** Connection status for the WebSocket stream */
 type ConnectionStatus = 'connecting' | 'connected' | 'disconnected' | 'error';
 
-const DEFAULT_WS_URL = 'ws://localhost:8000/ws/records';
+const DEFAULT_WS_URL = process.env.NEXT_PUBLIC_API_URL ? `${process.env.NEXT_PUBLIC_API_URL.replace('https://','wss://').replace('http://','ws://')}/ws/records` : 'ws://localhost:8000/ws/records';
 const RECONNECT_DELAY_MS = 3000;
 const MAX_RECONNECT_ATTEMPTS = 10;
 
